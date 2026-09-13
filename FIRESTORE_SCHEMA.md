@@ -70,29 +70,53 @@ Real-time guest responses synchronized via Firestore `onSnapshot`.
 
 ---
 
-### C. Orders & Transactions (`/nyota/orders/items/{orderId}`)
-Payment and licensing records for digital delivery and custom domains.
+### C. Orders & Shagun Payments (`/nyota/orders/items/{orderId}`)
+Payment and licensing records for ₹501 Shagun Money UPI transfers and admin verification.
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `id` | `string` | Order number (e.g. `"NYO-589200-4821"`) |
+| `id` | `string` | Order number (e.g. `"SHAGUN-849201-3829"`) |
 | `orderNumber` | `string` | Formatted receipt ID |
-| `invitationId` | `string` | Linked customized invitation |
-| `planId` | `string` | Selected package tier (`"starter"`, `"pro"`, `"couture"`) |
-| `planName` | `string` | Plan title (`"Luxe Celebration Pro"`) |
-| `amount` | `number` | Final total in USD |
-| `currency` | `string` | `"USD"` |
-| `discountApplied`| `number` | Coupon savings amount |
-| `couponCode` | `string` | Applied promo code |
-| `addOns` | `array<string>`| Selected add-ons (e.g. `["VIP Concierge", "Vanity Domain"]`) |
-| `customerName` | `string` | Cardholder / purchaser name |
-| `paymentStatus` | `string` | `"completed"` \| `"pending"` |
-| `paymentMethod` | `string` | `"card"` \| `"applepay"` \| `"paypal"` |
-| `createdAt` | `timestamp`| Timestamp of order completion |
+| `userId` | `string` | Google Auth User UID |
+| `userName` | `string` | Payer's Google display name |
+| `userEmail` | `string` | Payer's Google email address |
+| `userPhoto` | `string` | Google profile avatar URL |
+| `templateId` | `string` | Selected invitation template ID |
+| `templateName` | `string` | Template title (e.g. `"Royal Emerald & Gold Foil"`) |
+| `amount` | `number` | `501` (Auspicious Shagun amount in INR) |
+| `currency` | `string` | `"INR"` |
+| `amountFormatted` | `string` | `"₹501"` |
+| `note` | `string` | `"Shagun Money ₹501"` |
+| `paymentMethod` | `string` | `"PhonePe_UPI_QR"` |
+| `utr` | `string` | 12-digit UPI Reference / UTR Number from payment app |
+| `payerName` | `string` | Name on UPI payment receipt |
+| `status` | `string` | `"pending_verification"` \| `"verified"` \| `"rejected"` |
+| `invitationData` | `map` | Customized invitation draft payload |
+| `verifiedAt` | `timestamp`| Timestamp when admin clicks Verify |
+| `createdAt` | `timestamp`| Timestamp of order submission |
 
 ---
 
-### D. Newsletter Subscriptions (`/nyota/newsletter/items/{subscriberId}`)
+### D. Users & Access Permissions (`/nyota/users/items/{userId}`)
+User profiles and access permissions synced via 1-click Google Sign-In.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `uid` | `string` | Firebase Google Auth UID |
+| `displayName` | `string` | User full name |
+| `email` | `string` | User email address |
+| `photoURL` | `string` | User Google avatar photo |
+| `accessGranted` | `boolean` | `true` if ₹501 Shagun verified by Admin, `false` otherwise |
+| `paymentStatus` | `string` | `"unpaid"` \| `"pending_verification"` \| `"verified"` \| `"rejected"` |
+| `lastOrderId` | `string` | Associated Shagun Order ID |
+| `utr` | `string` | Submitted UPI UTR reference number |
+| `templateId` | `string` | Active selected template |
+| `verifiedAt` | `timestamp`| Date of admin verification |
+| `lastLogin` | `timestamp`| Server timestamp of last login |
+
+---
+
+### E. Newsletter Subscriptions (`/nyota/newsletter/items/{subscriberId}`)
 Lead capture for product announcements and seasonal wedding templates.
 
 | Field | Type | Description |
@@ -105,7 +129,7 @@ Lead capture for product announcements and seasonal wedding templates.
 
 ---
 
-### E. App Configuration & System Metadata (`/nyota/app_config/items/system`)
+### F. App Configuration & System Metadata (`/nyota/app_config/items/system`)
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
@@ -113,7 +137,7 @@ Lead capture for product announcements and seasonal wedding templates.
 | `version` | `string` | `"1.0.0"` |
 | `owner` | `string` | `"faizansalam"` |
 | `namespace` | `string` | `"nyota"` |
-| `features` | `map` | Feature flags for real-time RSVP, ambient audio, etc. |
+| `features` | `map` | Feature flags for real-time RSVP, ambient audio, admin portal, etc. |
 
 ---
 
@@ -121,15 +145,19 @@ Lead capture for product announcements and seasonal wedding templates.
 
 All database interactions in the client are encapsulated inside [`src/firebase/nyotaDb.js`](file:///Users/faizansalam/Desktop/Workspace/GitHub/nyota/src/firebase/nyotaDb.js):
 
+- `loginWithGoogle()` – 1-Click Google Sign-In and profile creation in `/nyota/users/items`.
+- `logoutUser()` – Signs out current user.
+- `subscribeToAuthUser(callback)` – Real-time auth state and user access permissions listener.
+- `submitShagunPaymentOrder(orderData)` – Records a ₹501 Shagun payment order with UPI UTR to `/nyota/orders/items`.
+- `subscribeToUserAccess(userId, callback)` – Listens to user verification in real time and automatically unlocks editor when admin approves.
+- `subscribeToAllShagunOrders(callback)` – Real-time listener for Admin Portal to view all pending and verified orders.
+- `verifyShagunOrder(orderId, userId)` – 1-Click admin action to verify payment and unlock client access.
+- `rejectShagunOrder(orderId, userId, reason)` – Admin action to reject suspicious payments.
 - `saveInvitationToCloud(invitationData)` – Saves draft or published invitations to `/nyota/invitations/items`.
 - `getInvitationById(id)` – Retrieves an invitation document.
-- `listAllInvitations()` – Queries invitations ordered by `updatedAt desc`.
 - `submitRsvpToCloud(rsvpData)` – Saves a guest RSVP to `/nyota/rsvps/items`.
 - `subscribeToRsvps(invitationId, callback)` – Listens to real-time `onSnapshot` changes.
 - `deleteRsvpFromCloud(rsvpId)` – Removes an RSVP document.
-- `createOrderRecord(orderData)` – Records a transaction to `/nyota/orders/items`.
-- `subscribeNewsletterToCloud(email, source)` – Subscribes an email to `/nyota/newsletter/items`.
-- `seedFirestoreNyotaCollection()` – Seeds initial template config and mock RSVPs into the `/nyota` collection.
 
 ---
 

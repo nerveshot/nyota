@@ -36,7 +36,7 @@ export default function InvitationCard({
   return (
     <div 
       id="printable-invitation"
-      className={`relative w-full max-w-lg mx-auto rounded-3xl p-6 sm:p-10 shadow-luxury transition-all duration-300 ${theme.bgClass} ${
+      className={`relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 shadow-luxury transition-all duration-300 ${theme.bgClass} ${
         isLight ? 'text-[#2C2419]' : 'text-slate-100'
       } border-2 ${theme.border} overflow-hidden select-none`}
       style={{

@@ -1,5 +1,12 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged 
+} from 'firebase/auth';
 
 /**
  * Firebase Client Configuration for Nyota Invitations
@@ -26,12 +33,16 @@ export const isFirebaseConfigured = () => {
 // Initialize Firebase safely
 let app;
 let db;
+let auth;
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 try {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   db = getFirestore(app);
+  auth = getAuth(app);
 } catch (error) {
   console.warn("Firebase initialization warning (using local fallback mode):", error.message);
 }
 
-export { app, db, firebaseConfig };
+export { app, db, auth, googleProvider, signInWithPopup, signOut, onAuthStateChanged, firebaseConfig };

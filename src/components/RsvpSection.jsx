@@ -112,7 +112,7 @@ export default function RsvpSection({
             Guest Portal & <span className="gold-gradient-text">Live Host Tracker</span>
           </h2>
           <p className="text-sm text-slate-300 max-w-lg mx-auto">
-            Experience how your guests submit their RSVPs, plus-ones, meal preferences, and heartfelt guestbook messages directly synced to Firestore <code className="text-champagne-300 font-mono">/nyota</code>.
+            Experience how your guests submit their RSVPs, plus-ones, meal preferences, and heartfelt guestbook messages in real-time.
           </p>
 
           {/* Toggle between Guest View and Host Analytics View */}
@@ -295,12 +295,12 @@ export default function RsvpSection({
                   {isSubmitting ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin text-slate-950" />
-                      <span>Saving to Firestore...</span>
+                      <span>Saving Response...</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4 text-slate-950" />
-                      <span>Confirm RSVP & Save to /nyota</span>
+                      <span>Confirm RSVP & Send Wishes</span>
                     </>
                   )}
                 </button>
@@ -317,7 +317,7 @@ export default function RsvpSection({
                 </h3>
                 <p className="text-sm text-slate-300 max-w-sm mx-auto">
                   {attendance === 'attending' 
-                    ? "Your RSVP has been securely saved in the database! We cannot wait to celebrate together." 
+                    ? "Your RSVP has been securely saved! We cannot wait to celebrate together." 
                     : "We will miss your presence, but thank you for sending your warm wishes!"
                   }
                 </p>
@@ -360,7 +360,7 @@ export default function RsvpSection({
               <div className="glass-panel p-4 rounded-2xl border border-champagne-500/20 text-center">
                 <div className="text-xs text-slate-400 uppercase font-mono">Total Responses</div>
                 <div className="text-3xl font-bold font-cinzel text-champagne-300 mt-1">{totalResponses}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Synced to /nyota/rsvps</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Live Real-time</div>
               </div>
 
               <div className="glass-panel p-4 rounded-2xl border border-champagne-500/20 text-center">
@@ -381,14 +381,14 @@ export default function RsvpSection({
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span>Firestore Live Sync</span>
+                  <span>Live Sync</span>
                 </div>
               </div>
 
               {loadingList ? (
                 <div className="py-12 text-center text-slate-400 flex items-center justify-center gap-2">
                   <RefreshCw className="w-4 h-4 animate-spin text-champagne-400" />
-                  <span>Loading RSVPs from /nyota collection...</span>
+                  <span>Loading RSVPs...</span>
                 </div>
               ) : guestList.length === 0 ? (
                 <div className="py-12 text-center text-slate-400">

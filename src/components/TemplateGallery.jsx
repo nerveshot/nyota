@@ -127,7 +127,7 @@ export default function TemplateGallery({ onOpenStudio, onOpenWebpageDemo }) {
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2.5 group"
             >
               <Play className="w-4 h-4 text-slate-950 fill-slate-950" />
-              <span>Launch Live Webpage Demo (Zareqia Style)</span>
+              <span>Launch Arabic Style Invitation</span>
               <Sparkles className="w-4 h-4 text-slate-950 group-hover:rotate-12 transition-transform" />
             </button>
 

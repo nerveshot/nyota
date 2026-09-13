@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Heart, Music, Volume2, VolumeX, Crown, Menu, X, ArrowRight } from 'lucide-react';
-import { musicEngine } from '../utils/audioPlayer';
+import { 
+  Sparkles, Heart, Crown, Menu, X, ArrowRight,
+  Shield, User, LogOut, CheckCircle2, Clock, Lock
+} from 'lucide-react';
+import { logoutUser, subscribeToAuthUser, subscribeToAllShagunOrders } from '../firebase/nyotaDb';
 
-export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onNavigate, onOpenWebpageDemo }) {
+export default function Navbar({ 
+  onOpenStudio, 
+  onOpenPricing, 
+  activeSection, 
+  onNavigate, 
+  onOpenWebpageDemo,
+  onOpenAdminPortal,
+  onOpenCheckout
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,20 +28,40 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleToggleMusic = () => {
-    if (isPlayingMusic) {
-      musicEngine.stopTrack();
-      setIsPlayingMusic(false);
-    } else {
-      musicEngine.startTrack('romanticPiano');
-      setIsPlayingMusic(true);
+  // Listen to user auth
+  useEffect(() => {
+    const unsub = subscribeToAuthUser((user) => {
+      setCurrentUser(user);
+    });
+    return () => {
+      if (typeof unsub === 'function') unsub();
+    };
+  }, []);
+
+  // Listen to orders for admin pending badge
+  useEffect(() => {
+    const unsub = subscribeToAllShagunOrders((orders) => {
+      const pending = orders.filter(o => o.status === 'pending_verification').length;
+      setPendingCount(pending);
+    });
+    return () => {
+      if (typeof unsub === 'function') unsub();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setUserDropdownOpen(false);
+    } catch (e) {
+      console.error(e);
     }
   };
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-[#0B0914]/90 backdrop-blur-md border-b border-champagne-500/20 py-3 shadow-xl' 
+        ? 'bg-[#0B0914]/95 backdrop-blur-md border-b border-champagne-500/20 py-3 shadow-xl' 
         : 'bg-transparent py-5'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -54,21 +87,21 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
         </button>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+        <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium">
           <button 
             onClick={() => onNavigate('events')}
             className={`transition-colors hover:text-champagne-400 ${
               activeSection === 'events' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            Events & Occasions
+            Events & Templates
           </button>
           <button 
             onClick={onOpenWebpageDemo}
             className="text-champagne-300 hover:text-champagne-200 flex items-center gap-1 font-semibold"
           >
             <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
-            <span>Live Webpage Demo</span>
+            <span>Arabic Style Invitation</span>
           </button>
           <button 
             onClick={onOpenStudio}
@@ -84,74 +117,124 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
               activeSection === 'rsvp' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            RSVP & Guestbook
+            RSVP Portal
           </button>
           <button 
             onClick={onOpenPricing}
-            className={`transition-colors hover:text-champagne-400 ${
+            className={`transition-colors hover:text-champagne-400 flex items-center gap-1 ${
               activeSection === 'pricing' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            Pricing & Packages
+            <span>Shagun ₹501</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-champagne-500/20 text-champagne-300 font-mono">Offer</span>
           </button>
           <button 
-            onClick={() => onNavigate('faq')}
-            className="text-slate-300 transition-colors hover:text-champagne-400"
+            onClick={() => onNavigate('contact')}
+            className="transition-colors hover:text-emerald-400 text-emerald-300/90 flex items-center gap-1"
           >
-            FAQ
+            <span>Contact / Custom</span>
+          </button>
+
+          {/* Admin Verification Portal Button */}
+          <button
+            onClick={onOpenAdminPortal}
+            className="px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all"
+          >
+            <Shield className="w-3.5 h-3.5 text-amber-400" />
+            <span>Admin Portal</span>
+            {pendingCount > 0 && (
+              <span className="w-4 h-4 rounded-full bg-amber-500 text-slate-950 font-bold text-[10px] flex items-center justify-center animate-pulse">
+                {pendingCount}
+              </span>
+            )}
           </button>
         </div>
 
-        {/* Right Action & Music Player */}
+        {/* Right Action Controls */}
         <div className="hidden sm:flex items-center gap-3">
-          {/* Ambient Music Toggle */}
-          <button
-            onClick={handleToggleMusic}
-            title={isPlayingMusic ? "Mute ambient music" : "Play ambient celebration music"}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all ${
-              isPlayingMusic 
-                ? 'bg-champagne-500/20 text-champagne-300 border-champagne-500/50 shadow-glow-gold' 
-                : 'bg-white/5 text-slate-300 border-white/10 hover:border-champagne-500/30'
-            }`}
-          >
-            {isPlayingMusic ? (
-              <>
-                <Volume2 className="w-3.5 h-3.5 text-champagne-400 animate-pulse" />
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-champagne-400 animate-ping"></span>
-                  Music Playing
+          {/* If user is logged in, show their compact profile badge */}
+          {currentUser && (
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center gap-2 p-1 pr-3 rounded-full bg-white/5 hover:bg-white/10 border border-champagne-400/40 transition-colors"
+              >
+                <img
+                  src={currentUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser.uid}`}
+                  alt={currentUser.displayName}
+                  className="w-7 h-7 rounded-full border border-champagne-400/80"
+                />
+                <span className="text-xs font-semibold text-white max-w-[100px] truncate">
+                  {currentUser.displayName}
                 </span>
-              </>
-            ) : (
-              <>
-                <Music className="w-3.5 h-3.5 text-slate-400" />
-                <span>Play Ambience</span>
-              </>
-            )}
-          </button>
+                {currentUser.accessGranted && (
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                )}
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 glass-panel p-3 rounded-2xl border border-white/15 shadow-2xl space-y-3 z-50 animate-fadeIn bg-[#0E0C1C]">
+                  <div className="border-b border-white/10 pb-2">
+                    <div className="text-xs font-bold text-white truncate">{currentUser.displayName}</div>
+                    <div className="text-[11px] text-slate-400 font-mono truncate">{currentUser.email}</div>
+                    
+                    <div className="mt-1.5">
+                      {currentUser.accessGranted ? (
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/40 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>Editor Verified & Active</span>
+                        </span>
+                      ) : currentUser.paymentStatus === 'pending_verification' ? (
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/40 flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>Awaiting ₹501 Verification</span>
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 text-[10px]">
+                          Free Guest View
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      onOpenCheckout && onOpenCheckout();
+                    }}
+                    className="w-full text-left py-1.5 px-2 rounded-lg text-xs font-semibold text-champagne-300 hover:bg-white/5 flex items-center justify-between"
+                  >
+                    <span>Pay ₹501 Shagun</span>
+                    <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left py-1.5 px-2 rounded-lg text-xs font-semibold text-rose-300 hover:bg-rose-500/10 flex items-center justify-between"
+                  >
+                    <span>Sign Out</span>
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Create Custom Invite Button */}
           <button
             onClick={onOpenStudio}
-            className="relative group overflow-hidden rounded-full p-[1px] font-medium text-sm transition-transform active:scale-95 shadow-glow-gold"
+            className="relative group overflow-hidden rounded-full p-[1px] font-medium text-xs sm:text-sm transition-transform active:scale-95 shadow-glow-gold"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 rounded-full animate-shimmer"></span>
-            <span className="relative flex items-center gap-2 px-5 py-2 rounded-full bg-[#0E0C1C] text-champagne-300 group-hover:bg-opacity-80 transition-all font-semibold">
+            <span className="relative flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0E0C1C] text-champagne-300 group-hover:bg-opacity-80 transition-all font-semibold">
               <span>Create Invite</span>
-              <ArrowRight className="w-4 h-4 text-champagne-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 text-champagne-400 group-hover:translate-x-1 transition-transform" />
             </span>
           </button>
         </div>
 
         {/* Mobile Menu Trigger */}
-        <div className="flex md:hidden items-center gap-2">
-          <button
-            onClick={handleToggleMusic}
-            className="p-2 rounded-lg bg-white/5 text-champagne-300 border border-white/10"
-            aria-label="Toggle ambient music"
-          >
-            {isPlayingMusic ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
-          </button>
+        <div className="flex lg:hidden items-center gap-2">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-lg bg-white/5 text-slate-300 border border-white/10"
@@ -165,37 +248,77 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-panel border-b border-champagne-500/20 px-4 pt-3 pb-6 mt-3 space-y-3">
+        <div className="lg:hidden glass-panel border-b border-champagne-500/20 px-4 pt-3 pb-6 mt-3 space-y-3 bg-[#0E0C1C]">
+          
+          {currentUser && (
+            <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="flex items-center gap-2.5">
+                <img
+                  src={currentUser.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser.uid}`}
+                  alt={currentUser.displayName}
+                  className="w-8 h-8 rounded-full border border-champagne-400"
+                />
+                <div>
+                  <div className="text-xs font-bold text-white">{currentUser.displayName}</div>
+                  <div className="text-[10px] text-slate-400">{currentUser.email}</div>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-rose-400 font-semibold"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+
           <button
-            onClick={() => { onNavigate('templates'); setMobileMenuOpen(false); }}
-            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium"
+            onClick={() => { onNavigate('events'); setMobileMenuOpen(false); }}
+            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium text-xs"
           >
-            Templates & Themes
+            Events & Templates
+          </button>
+          <button
+            onClick={() => { onOpenWebpageDemo(); setMobileMenuOpen(false); }}
+            className="block w-full text-left py-2 text-champagne-300 font-semibold text-xs"
+          >
+            ✨ Arabic Style Invitation
           </button>
           <button
             onClick={() => { onOpenStudio(); setMobileMenuOpen(false); }}
-            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium"
+            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium text-xs"
           >
             Customizer Studio
           </button>
           <button
-            onClick={() => { onNavigate('features'); setMobileMenuOpen(false); }}
-            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium"
+            onClick={() => { onOpenPricing(); setMobileMenuOpen(false); }}
+            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium text-xs"
           >
-            RSVP & Envelope Experience
+            Shagun Pricing (₹501)
           </button>
           <button
-            onClick={() => { onOpenPricing(); setMobileMenuOpen(false); }}
-            className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium"
+            onClick={() => { onNavigate('contact'); setMobileMenuOpen(false); }}
+            className="block w-full text-left py-2 text-emerald-300 hover:text-emerald-200 font-medium text-xs"
           >
-            Pricing & Packages
+            💬 Contact & Custom Orders (WhatsApp)
+          </button>
+          <button
+            onClick={() => { onOpenAdminPortal(); setMobileMenuOpen(false); }}
+            className="block w-full text-left py-2 text-amber-300 hover:text-amber-200 font-medium text-xs flex items-center justify-between"
+          >
+            <span>🔒 Admin Verification Portal</span>
+            {pendingCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-bold text-[10px]">
+                {pendingCount} Pending
+              </span>
+            )}
           </button>
           <div className="pt-2">
             <button
               onClick={() => { onOpenStudio(); setMobileMenuOpen(false); }}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-champagne-500 to-amber-600 text-slate-950 font-bold text-sm shadow-glow-gold"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-champagne-500 to-amber-600 text-slate-950 font-bold text-xs shadow-glow-gold"
             >
-              Start Creating Now
+              Start Creating Custom Invitation
             </button>
           </div>
         </div>

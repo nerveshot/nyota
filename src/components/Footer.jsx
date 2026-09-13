@@ -99,6 +99,11 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
                 </button>
               </li>
               <li>
+                <button onClick={() => onNavigate('contact')} className="hover:text-emerald-300 text-emerald-400/90 font-medium transition-colors">
+                  Contact & Custom Orders
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onNavigate('faq')} className="hover:text-champagne-300 transition-colors">
                   Help & FAQ
                 </button>

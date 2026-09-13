@@ -43,8 +43,8 @@ export default function TestimonialsFAQ() {
       a: 'You receive a personalized, private web link (e.g. nyota.invites/e/your-event) that you can send via WhatsApp, iMessage, Email, or Instagram. When guests tap the link on their phones or computers, they see a personalized wax-sealed envelope. Tapping the seal triggers an elegant 3D flap unboxing animation with ambient background music, followed by event details and the interactive RSVP form.'
     },
     {
-      q: 'Can I also print physical copies on cardstock?',
-      a: 'Yes! All templates include instant 4K high-resolution PNG downloads and print-ready PDF formats sized perfectly for standard 5x7" invitation cards. You can print them at home or send them to your favorite print shop (e.g. Staples, VistaPrint, Moo).'
+      q: 'Can I order a custom bespoke invitation design with special requirements?',
+      a: 'Yes! You can contact us directly on WhatsApp for bespoke custom invitations with custom caricature art, complex multi-day schedules, personalized palace themes, and tailored animations. Custom orders are priced individually based on your requirements.'
     },
     {
       q: 'How do I collect and export RSVP responses and dietary preferences?',

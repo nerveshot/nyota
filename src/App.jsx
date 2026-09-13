@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TemplateGallery from './components/TemplateGallery';
@@ -10,14 +10,17 @@ import CheckoutModal from './components/CheckoutModal';
 import ShareExportModal from './components/ShareExportModal';
 import TestimonialsFAQ from './components/TestimonialsFAQ';
 import Footer from './components/Footer';
-import FirebaseStatusBadge from './components/FirebaseStatusBadge';
 import PremiumWebpageInvitation from './components/PremiumWebpageInvitation';
+import AdminPortal from './components/AdminPortal';
+import ContactSection from './components/ContactSection';
 import { INVITATION_TEMPLATES, PRICING_PACKAGES } from './data/templates';
 import { Sparkles, ArrowRight, X, Heart, Shield, Music } from 'lucide-react';
+import { subscribeToAuthUser } from './firebase/nyotaDb';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'webpageDemo'
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'admin'
   const [selectedTemplate, setSelectedTemplate] = useState(INVITATION_TEMPLATES[0]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   // Modals state
   const [pricingOpen, setPricingOpen] = useState(false);
@@ -28,8 +31,18 @@ export default function App() {
   const [webpageDemoOpen, setWebpageDemoOpen] = useState(false);
 
   // Selected Plan for Checkout
-  const [preSelectedPlan, setPreSelectedPlan] = useState(PRICING_PACKAGES[1]);
+  const [preSelectedPlan, setPreSelectedPlan] = useState(PRICING_PACKAGES[0]);
   const [customizationPayload, setCustomizationPayload] = useState(null);
+
+  // Listen to auth user state
+  useEffect(() => {
+    const unsub = subscribeToAuthUser((user) => {
+      setCurrentUser(user);
+    });
+    return () => {
+      if (typeof unsub === 'function') unsub();
+    };
+  }, []);
 
   // Navigation Handlers
   const handleOpenStudio = (template = null) => {
@@ -63,8 +76,15 @@ export default function App() {
     }
   };
 
-  const handleOpenCheckout = (payload) => {
-    setCustomizationPayload(payload);
+  const handleOpenCheckout = (payload = null) => {
+    if (payload) {
+      setCustomizationPayload(payload);
+    } else {
+      setCustomizationPayload({
+        selectedTemplate,
+        invitationData: selectedTemplate?.defaults,
+      });
+    }
     setCheckoutOpen(true);
   };
 
@@ -76,13 +96,29 @@ export default function App() {
   const handleSelectPlanFromPricing = (plan) => {
     setPreSelectedPlan(plan);
     setPricingOpen(false);
-    setCheckoutOpen(true);
+    handleOpenCheckout({
+      selectedTemplate,
+      invitationData: selectedTemplate?.defaults,
+    });
   };
 
   const handleQuickPreview = (template) => {
     setSelectedTemplate(template);
     setQuickPreviewOpen(true);
   };
+
+  // If viewing Admin Portal
+  if (currentView === 'admin') {
+    return (
+      <AdminPortal
+        onBackToSite={() => setCurrentView('landing')}
+        onPreviewInvitation={(draft) => {
+          setSelectedTemplate({ ...selectedTemplate, defaults: draft });
+          setWebpageDemoOpen(true);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0B0914] text-slate-100 flex flex-col justify-between selection:bg-champagne-500/30 selection:text-champagne-300">
@@ -94,6 +130,8 @@ export default function App() {
         activeSection={currentView === 'studio' ? 'studio' : 'landing'}
         onNavigate={handleNavigate}
         onOpenWebpageDemo={() => setWebpageDemoOpen(true)}
+        onOpenAdminPortal={() => setCurrentView('admin')}
+        onOpenCheckout={() => handleOpenCheckout()}
       />
 
       {/* Main Content Area */}
@@ -119,81 +157,78 @@ export default function App() {
               invitationData={selectedTemplate.defaults}
             />
 
-            {/* Monetization & Pricing Section Preview */}
+            {/* Monetization & Pricing Section Preview (Single All-in-One ₹501 Shagun Package) */}
             <section id="pricing-section" className="py-20 relative">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-2xl mx-auto space-y-4 mb-12">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-champagne-500/10 border border-champagne-500/30 text-champagne-300 text-xs font-semibold uppercase tracking-wider">
                     <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
-                    <span>Monetization & Flexible Payment Options</span>
+                    <span>One Simple Price • Everything Included</span>
                   </div>
                   <h2 className="text-3xl sm:text-4xl lg:text-5xl font-cinzel font-bold text-white">
-                    Simple, Transparent <span className="gold-gradient-text">Pricing</span>
+                    All-Inclusive <span className="gold-gradient-text">₹501 Shagun Money</span>
                   </h2>
                   <p className="text-sm text-slate-300">
-                    Pay once per event with zero hidden subscriptions. Enjoy unlimited RSVPs, custom web links, and 4K print exports.
+                    Scan our PhonePe UPI QR code, pay ₹501 auspicious Shagun, and get instant 1-click admin verification to customize, live-edit, and publish your wedding invitation.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Single Grand Spotlight Card */}
+                <div className="max-w-2xl mx-auto">
                   {PRICING_PACKAGES.map((pkg) => (
                     <div
                       key={pkg.id}
-                      className={`relative rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 ${
-                        pkg.popular
-                          ? 'bg-gradient-to-b from-[#1E1838] via-[#141026] to-[#0D0A1B] border-2 border-champagne-400 shadow-glow-gold transform lg:-translate-y-2'
-                          : 'bg-[#120F24] border border-white/10 hover:border-champagne-500/30'
-                      }`}
+                      className="relative rounded-3xl p-6 sm:p-10 bg-gradient-to-b from-[#1E1838] via-[#141026] to-[#0D0A1B] border-2 border-champagne-400 shadow-glow-gold space-y-6"
                     >
-                      {pkg.popular && (
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-md">
-                          Most Popular Choice ⭐
-                        </div>
-                      )}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-md whitespace-nowrap">
+                        {pkg.shagunBadge || 'All-Inclusive Shagun ₹501 🕉️'}
+                      </div>
 
-                      <div className="space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 pt-2">
                         <div>
-                          <h3 className="font-cinzel text-xl font-bold text-white">
+                          <h3 className="font-cinzel text-2xl font-bold text-white">
                             {pkg.name}
                           </h3>
-                          <p className="text-xs text-slate-400 mt-1 min-h-[32px]">
+                          <p className="text-xs text-slate-300 mt-1 max-w-sm">
                             {pkg.description}
                           </p>
                         </div>
 
-                        <div className="flex items-baseline gap-2 pt-2 border-t border-white/10">
-                          <span className="text-4xl font-cinzel font-bold text-white">
-                            ${pkg.price}
+                        <div className="text-left sm:text-right flex-shrink-0">
+                          <div className="flex items-baseline gap-2 sm:justify-end">
+                            <span className="text-4xl font-cinzel font-bold gold-gradient-text">
+                              ₹501
+                            </span>
+                            <span className="text-xs text-slate-400 line-through">
+                              ₹2,100
+                            </span>
+                          </div>
+                          <span className="text-[11px] text-champagne-300/80 font-mono">
+                            One-time Shagun • Lifetime Access
                           </span>
-                          <span className="text-xs text-slate-400 line-through">
-                            ${pkg.originalPrice}
-                          </span>
-                          <span className="text-xs text-champagne-300 font-medium">
-                            / one-time
-                          </span>
-                        </div>
-
-                        <div className="space-y-2.5 pt-4">
-                          {pkg.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-xs text-slate-200">
-                              <span className="text-champagne-400 font-bold">✓</span>
-                              <span>{feature}</span>
-                            </div>
-                          ))}
                         </div>
                       </div>
 
-                      <div className="pt-8">
+                      {/* 2-Column Features Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {pkg.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-xs text-slate-200">
+                            <span className="text-champagne-400 font-bold">✓</span>
+                            <span>{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="pt-4">
                         <button
                           onClick={() => {
                             setPreSelectedPlan(pkg);
-                            handleOpenStudio(selectedTemplate);
+                            handleOpenCheckout({
+                              selectedTemplate,
+                              invitationData: selectedTemplate?.defaults,
+                            });
                           }}
-                          className={`w-full py-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
-                            pkg.popular
-                              ? 'bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 shadow-glow-gold hover:opacity-95'
-                              : 'bg-white/10 hover:bg-white/20 text-white border border-white/15'
-                          }`}
+                          className="w-full py-4 rounded-2xl text-sm font-bold transition-all shadow-glow-gold bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 hover:opacity-95 flex items-center justify-center gap-2 active:scale-95"
                         >
                           <Sparkles className="w-4 h-4" />
                           <span>{pkg.ctaText}</span>
@@ -208,26 +243,29 @@ export default function App() {
             {/* Testimonials & FAQ Accordion */}
             <TestimonialsFAQ />
 
+            {/* Direct WhatsApp Concierge, Custom Orders & Support Section */}
+            <ContactSection />
+
             {/* Bottom CTA Banner */}
             <section className="py-16 relative overflow-hidden">
               <div className="max-w-5xl mx-auto px-4 sm:px-6">
                 <div className="relative rounded-3xl p-8 sm:p-12 bg-gradient-to-r from-[#1C1636] via-[#2A1D45] to-[#16102D] border border-champagne-400/40 shadow-glow-gold text-center space-y-6 overflow-hidden">
                   <div className="space-y-3 relative z-10">
                     <h2 className="text-3xl sm:text-4xl font-cinzel font-bold text-white">
-                      Ready to Create Your <span className="gold-gradient-text">Dream Invitation?</span>
+                      Ready to Create Your <span className="gold-gradient-text">Dream Wedding Invitation?</span>
                     </h2>
                     <p className="text-sm text-slate-300 max-w-lg mx-auto">
-                      Choose from our curated templates, customize every word and color in real time, and share unforgettable experiences with your guests.
+                      Scan the QR code, pay ₹501 Shagun, and get instant admin verification to live-edit and publish your luxury cinematic webpage invitation.
                     </p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
                     <button
-                      onClick={() => handleOpenStudio()}
+                      onClick={() => handleOpenCheckout()}
                       className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-4 h-4" />
-                      <span>Start Customizing Now</span>
+                      <span>Pay ₹501 Shagun & Unlock Editor</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -260,13 +298,15 @@ export default function App() {
         onSelectPlan={handleSelectPlanFromPricing}
       />
 
-      {/* MODAL 2: CHECKOUT & PAYMENT */}
+      {/* MODAL 2: CHECKOUT & UPI SHAGUN PAYMENT */}
       <CheckoutModal
         isOpen={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
         customizationData={customizationPayload}
-        preSelectedPlan={preSelectedPlan}
-        onOpenExport={handleOpenExport}
+        onOpenStudio={() => {
+          setCheckoutOpen(false);
+          handleOpenStudio(selectedTemplate);
+        }}
       />
 
       {/* MODAL 3: SHARE & EXPORT */}
@@ -354,35 +394,31 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL 6: ZAREQIA-STYLE FULL WEBPAGE INVITATION PREVIEW */}
+      {/* MODAL 6: ARABIC STYLE FULL WEBPAGE INVITATION PREVIEW */}
       {webpageDemoOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/95 backdrop-blur-2xl flex flex-col items-center animate-fadeIn">
-          <div className="sticky top-4 right-4 z-50 self-end pr-6">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#05060F] animate-fadeIn">
+          {/* Floating Close Button */}
+          <div className="fixed top-4 right-4 z-[70]">
             <button
               onClick={() => setWebpageDemoOpen(false)}
-              className="px-4 py-2 rounded-full bg-black/70 hover:bg-black/90 text-white font-bold text-xs border border-white/20 shadow-2xl flex items-center gap-1.5 backdrop-blur-md"
+              className="px-4 py-2 rounded-full bg-black/80 hover:bg-black text-white font-bold text-xs border border-amber-400/40 shadow-2xl flex items-center gap-1.5 backdrop-blur-md transition-all transform hover:scale-105"
             >
-              <X className="w-4 h-4 text-champagne-400" />
-              <span>Close Webpage View</span>
+              <X className="w-4 h-4 text-amber-400" />
+              <span>Close Invitation</span>
             </button>
           </div>
 
-          <div className="w-full max-w-xl pb-16">
+          <div className="w-full min-h-screen">
             <PremiumWebpageInvitation
               invitationData={selectedTemplate?.defaults || INVITATION_TEMPLATES[0].defaults}
-              themeId={selectedTemplate?.themeId || 'emeraldGold'}
+              themeId={selectedTemplate?.themeId || 'royalRedNavyBlack'}
               fontPairingId={selectedTemplate?.fontPairingId || 'classicSerif'}
-              sealId={selectedTemplate?.sealId || 'botanical'}
-              sealColor={selectedTemplate?.sealColor || '#B88B42'}
               ambientTrackId={selectedTemplate?.ambientTrackId || 'romanticPiano'}
               onBack={() => setWebpageDemoOpen(false)}
             />
           </div>
         </div>
       )}
-
-      {/* Floating Firestore Connection & Namespace Status */}
-      <FirebaseStatusBadge />
 
     </div>
   );

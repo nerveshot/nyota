@@ -43,7 +43,7 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs sm:text-sm text-slate-200">
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <CheckCircle2 className="w-4 h-4 text-champagne-400 flex-shrink-0" />
-                <span>Instant 4K & PDF Export</span>
+                <span>Instant 4K Card Export</span>
               </div>
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <CheckCircle2 className="w-4 h-4 text-champagne-400 flex-shrink-0" />
@@ -71,7 +71,7 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
                 className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 hover:text-white font-semibold text-base border border-champagne-400/40 transition-all flex items-center justify-center gap-2.5 backdrop-blur-sm shadow-glow-gold"
               >
                 <Sparkles className="w-4 h-4 text-champagne-400" />
-                <span>Live Webpage Demo (Zareqia Style)</span>
+                <span>Arabic Style Invitation</span>
               </button>
             </div>
 

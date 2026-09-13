@@ -92,7 +92,7 @@ export default function ShareExportModal({ isOpen, onClose, exportData }) {
             Share Your <span className="gold-gradient-text">Invitation</span>
           </h2>
           <p className="text-xs text-slate-300">
-            Download ultra-high resolution digital cards, print PDF, or share 1-click WhatsApp invites.
+            Download ultra-high resolution 4K digital cards, share 1-click WhatsApp invites, or request custom bespoke designs.
           </p>
         </div>
 
@@ -131,25 +131,27 @@ export default function ShareExportModal({ isOpen, onClose, exportData }) {
             </div>
           </div>
 
-          {/* Action 2: Print PDF */}
+          {/* Action 2: Bespoke Custom Orders */}
           <div className="glass-panel p-4 rounded-2xl border border-white/10 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-roseGold-300 font-semibold text-sm">
-                <Printer className="w-4 h-4" />
-                <span>Print PDF & Physical Card</span>
+              <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
+                <Sparkles className="w-4 h-4" />
+                <span>Bespoke Custom Requests</span>
               </div>
               <p className="text-xs text-slate-400">
-                Formatted for 5x7" standard invitation cardstock with clean margins.
+                Want unique caricature art, special animations, or custom event features?
               </p>
             </div>
 
-            <button
-              onClick={handlePrint}
-              className="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15 transition-colors flex items-center justify-center gap-1.5"
+            <a
+              href="https://wa.me/919876543210?text=Hi!%20I%20would%20like%20to%20order%20a%20bespoke%20custom%20invitation%20webpage%20with%20custom%20requirements."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-semibold text-xs border border-amber-400/40 transition-colors flex items-center justify-center gap-1.5"
             >
-              <Printer className="w-3.5 h-3.5 text-champagne-400" />
-              <span>Print / Save to PDF</span>
-            </button>
+              <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+              <span>Contact for Custom Design</span>
+            </a>
           </div>
 
           {/* Action 3: WhatsApp Direct Blast */}
