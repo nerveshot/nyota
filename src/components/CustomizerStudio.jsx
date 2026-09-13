@@ -28,6 +28,16 @@ export default function CustomizerStudio({
   const [currentUser, setCurrentUser] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
 
+  // Theme & Styling States
+  const [themeId, setThemeId] = useState(currentTemplate.themeId || 'royalRedNavyBlack');
+  const [fontPairingId, setFontPairingId] = useState(currentTemplate.fontPairingId || 'classicSerif');
+  const [sealId, setSealId] = useState(currentTemplate.sealId || 'botanical');
+  const [sealColor, setSealColor] = useState(currentTemplate.sealColor || '#B88B42');
+  const [ambientTrackId, setAmbientTrackId] = useState(currentTemplate.ambientTrackId || 'romanticPiano');
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isCloudSaving, setIsCloudSaving] = useState(false);
+  const [cloudSaveMessage, setCloudSaveMessage] = useState('');
+
   useEffect(() => {
     const unsub = subscribeToAuthUser((user) => {
       setCurrentUser(user);
@@ -36,6 +46,27 @@ export default function CustomizerStudio({
       if (typeof unsub === 'function') unsub();
     };
   }, []);
+
+  // Synchronize when selectedTemplate changes
+  useEffect(() => {
+    if (selectedTemplate) {
+      if (selectedTemplate.themeId) setThemeId(selectedTemplate.themeId);
+      if (selectedTemplate.fontPairingId) setFontPairingId(selectedTemplate.fontPairingId);
+      if (selectedTemplate.sealId) setSealId(selectedTemplate.sealId);
+      if (selectedTemplate.sealColor) setSealColor(selectedTemplate.sealColor);
+      if (selectedTemplate.ambientTrackId) setAmbientTrackId(selectedTemplate.ambientTrackId);
+      if (selectedTemplate.defaults) {
+        setInvitationData(prev => ({
+          ...prev,
+          ...selectedTemplate.defaults,
+          sections: {
+            ...(prev.sections || {}),
+            ...(selectedTemplate.defaults.sections || {})
+          }
+        }));
+      }
+    }
+  }, [selectedTemplate]);
 
   // Invitation Content Fields
   const [invitationData, setInvitationData] = useState({

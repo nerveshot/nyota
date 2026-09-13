@@ -284,9 +284,6 @@ export default function PremiumWebpageInvitation({
               >
                 {bismillah}
               </div>
-              <div className="text-[10px] sm:text-xs uppercase tracking-[0.35em] text-champagne-300 font-mono">
-                ARABIC STYLE ROYAL WEDDING INVITATION
-              </div>
             </div>
 
             {/* Grand Moorish Royal Arch Preview Card (Black, Royal Red & Navy Blue) */}

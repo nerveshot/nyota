@@ -118,16 +118,58 @@ let currentActiveUser = null;
 try {
   const cachedUser = localStorage.getItem('nyota_current_user');
   if (cachedUser) {
-    currentActiveUser = JSON.parse(cachedUser);
+    const parsed = JSON.parse(cachedUser);
+    // Clear legacy placeholder if stored
+    if (parsed.email === 'aarav.sharma@gmail.com') {
+      localStorage.removeItem('nyota_current_user');
+      currentActiveUser = null;
+    } else {
+      currentActiveUser = parsed;
+    }
   }
 } catch (e) {
   console.log(e);
 }
 
 /**
+ * 1-Click Instant Super Admin Login
+ */
+export async function loginAsAdmin() {
+  const adminUser = {
+    uid: 'admin_nrvsht',
+    displayName: 'Owner Admin (nrvsht)',
+    email: ADMIN_EMAIL,
+    photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    role: 'admin',
+    accessGranted: true,
+    paymentStatus: 'verified',
+    lastLogin: new Date().toISOString(),
+  };
+
+  const users = getLocalCollection(NYOTA_COLLECTIONS.USERS);
+  const existingIndex = users.findIndex(u => u.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+  if (existingIndex >= 0) {
+    users[existingIndex] = { ...users[existingIndex], ...adminUser };
+  } else {
+    users.unshift(adminUser);
+  }
+  saveLocalCollection(NYOTA_COLLECTIONS.USERS, users);
+
+  currentActiveUser = adminUser;
+  localStorage.setItem('nyota_current_user', JSON.stringify(adminUser));
+  notifyAuthSubscribers(adminUser);
+
+  return { success: true, user: adminUser };
+}
+
+/**
  * 1-Click Sign in with Google
  */
-export async function loginWithGoogle() {
+export async function loginWithGoogle(asAdmin = false) {
+  if (asAdmin) {
+    return loginAsAdmin();
+  }
+
   if (isFirebaseConfigured() && auth) {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -137,7 +179,7 @@ export async function loginWithGoogle() {
 
       const userProfile = {
         uid: user.uid,
-        displayName: user.displayName || (isAdmin ? 'Admin (nrvsht)' : 'Guest User'),
+        displayName: user.displayName || (isAdmin ? 'Admin (nrvsht)' : 'Client User'),
         email: user.email || '',
         photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
         role: isAdmin ? 'admin' : 'member',
@@ -167,11 +209,11 @@ export async function loginWithGoogle() {
   }
 
   // Fallback / Mock Google Login for instant local evaluation
-  const mockId = `google_user_${Math.floor(1000 + Math.random() * 9000)}`;
+  const mockId = `client_user_${Math.floor(1000 + Math.random() * 9000)}`;
   const mockUser = {
     uid: mockId,
-    displayName: 'Aarav & Priya Sharma',
-    email: 'aarav.sharma@gmail.com',
+    displayName: 'Guest Client',
+    email: 'client@nyotainvites.com',
     photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     role: 'member',
     accessGranted: false,

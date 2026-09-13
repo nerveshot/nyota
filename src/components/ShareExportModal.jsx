@@ -144,7 +144,7 @@ export default function ShareExportModal({ isOpen, onClose, exportData }) {
             </div>
 
             <a
-              href="https://wa.me/919876543210?text=Hi!%20I%20would%20like%20to%20order%20a%20bespoke%20custom%20invitation%20webpage%20with%20custom%20requirements."
+              href="https://wa.me/918302929248?text=Hi!%20I%20would%20like%20to%20order%20a%20bespoke%20custom%20invitation%20webpage%20with%20custom%20requirements."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-semibold text-xs border border-amber-400/40 transition-colors flex items-center justify-center gap-1.5"

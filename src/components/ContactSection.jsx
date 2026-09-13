@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 // Configure the primary WhatsApp contact number here (with country code, e.g. 91 for India)
-export const OWNER_WHATSAPP_NUMBER = '919876543210'; // Replace with owner's WhatsApp number
+export const OWNER_WHATSAPP_NUMBER = '918302929248'; // Owner's WhatsApp number (+918302929248)
 
 export default function ContactSection({ whatsappNumber = OWNER_WHATSAPP_NUMBER }) {
   const [copiedNumber, setCopiedNumber] = useState(false);
