@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0B0914] text-slate-100 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Luxury Gradients and Effects */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF0C8 0%, #D4AA64 45%, #F5D38B 70%, #9B7029 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.silver-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #D1D5DB 45%, #E5E7EB 70%, #9CA3AF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rose-gradient-text {
+  background: linear-gradient(135deg, #FFE4E6 0%, #F472B6 45%, #FDA4AF 70%, #BE185D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-gradient {
+  border-image: linear-gradient(135deg, #D4AA64, #FAF5ED, #B88B42, #8F662C) 1;
+}
+
+.glass-panel {
+  background: rgba(18, 15, 36, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 170, 100, 0.15);
+}
+
+.glass-panel-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Foil Shimmer effect */
+.foil-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(212, 170, 100, 0) 0%,
+    rgba(255, 240, 200, 0.3) 50%,
+    rgba(212, 170, 100, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0914;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A244D;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AA64;
+}
+
+/* Perspective 3D for Envelope and Cards */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Print optimizations */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-invitation, #printable-invitation * {
+    visibility: visible;
+  }
+  #printable-invitation {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}
