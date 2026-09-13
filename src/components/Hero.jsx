@@ -67,10 +67,11 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
               </button>
 
               <button
-                onClick={onExploreTemplates}
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-base border border-white/15 hover:border-champagne-500/40 transition-all flex items-center justify-center gap-2.5 backdrop-blur-sm"
+                onClick={onPreviewZareqiaWebpage}
+                className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 hover:text-white font-semibold text-base border border-champagne-400/40 transition-all flex items-center justify-center gap-2.5 backdrop-blur-sm shadow-glow-gold"
               >
-                <span>Browse All Templates</span>
+                <Sparkles className="w-4 h-4 text-champagne-400" />
+                <span>Live Webpage Demo (Zareqia Style)</span>
               </button>
             </div>
 

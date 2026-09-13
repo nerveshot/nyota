@@ -7,6 +7,7 @@ import {
 import InvitationCard from './InvitationCard';
 import EnvelopeExperience from './EnvelopeExperience';
 import RsvpSection from './RsvpSection';
+import PremiumWebpageInvitation from './PremiumWebpageInvitation';
 import { COLOR_THEMES, FONT_PAIRINGS, WAX_SEALS, AMBIENT_TRACKS, INVITATION_TEMPLATES } from '../data/templates';
 import { musicEngine } from '../utils/audioPlayer';
 import { saveInvitationToCloud } from '../firebase/nyotaDb';
@@ -607,10 +608,22 @@ export default function CustomizerStudio({
           <div className="glass-panel p-2.5 rounded-2xl border border-champagne-500/20 flex flex-wrap items-center justify-between gap-3 shadow-md">
             
             {/* View Modes */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 overflow-x-auto">
+              <button
+                onClick={() => setPreviewMode('webpage')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                  previewMode === 'webpage'
+                    ? 'bg-gradient-to-r from-champagne-400 to-amber-500 text-slate-950 font-bold shadow-md'
+                    : 'text-champagne-300 bg-champagne-500/10 hover:bg-champagne-500/20 border border-champagne-500/30'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Webpage Experience (Zareqia Style)</span>
+              </button>
+
               <button
                 onClick={() => setPreviewMode('card')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   previewMode === 'card'
                     ? 'bg-champagne-500 text-slate-950 font-bold shadow-md'
                     : 'text-slate-300 hover:text-white'
@@ -622,26 +635,26 @@ export default function CustomizerStudio({
 
               <button
                 onClick={() => setPreviewMode('envelope')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   previewMode === 'envelope'
                     ? 'bg-champagne-500 text-slate-950 font-bold shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>3D Unboxing View</span>
+                <span>3D Unboxing</span>
               </button>
 
               <button
                 onClick={() => setPreviewMode('rsvp')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   previewMode === 'rsvp'
                     ? 'bg-champagne-500 text-slate-950 font-bold shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
-                <span>RSVP Portal View</span>
+                <span>RSVP View</span>
               </button>
             </div>
 
@@ -666,38 +679,57 @@ export default function CustomizerStudio({
           </div>
 
           {/* Live Preview Stage Container */}
-          <div className="glass-panel rounded-3xl p-4 sm:p-8 border border-champagne-500/20 shadow-2xl flex justify-center min-h-[580px] overflow-x-auto">
+          <div className="glass-panel rounded-3xl p-2 sm:p-6 border border-champagne-500/20 shadow-2xl flex justify-center min-h-[580px] overflow-x-auto">
             
             <div className={`transition-all duration-300 w-full ${
-              deviceMode === 'mobile' ? 'max-w-sm border-4 border-slate-700 rounded-[36px] p-4 bg-black/80 shadow-2xl' : 'max-w-xl'
+              deviceMode === 'mobile' || previewMode === 'webpage' ? 'max-w-md border-4 border-slate-700 rounded-[36px] overflow-hidden bg-black/95 shadow-2xl' : 'max-w-xl'
             }`}>
               
+              {previewMode === 'webpage' && (
+                <div className="max-h-[750px] overflow-y-auto">
+                  <PremiumWebpageInvitation
+                    invitationData={invitationData}
+                    themeId={themeId}
+                    fontPairingId={fontPairingId}
+                    sealId={sealId}
+                    sealColor={sealColor}
+                    ambientTrackId={ambientTrackId}
+                  />
+                </div>
+              )}
+
               {previewMode === 'card' && (
-                <InvitationCard
-                  invitationData={invitationData}
-                  themeId={themeId}
-                  fontPairingId={fontPairingId}
-                  sealId={sealId}
-                  sealColor={sealColor}
-                />
+                <div className="p-4">
+                  <InvitationCard
+                    invitationData={invitationData}
+                    themeId={themeId}
+                    fontPairingId={fontPairingId}
+                    sealId={sealId}
+                    sealColor={sealColor}
+                  />
+                </div>
               )}
 
               {previewMode === 'envelope' && (
-                <EnvelopeExperience
-                  invitationData={invitationData}
-                  themeId={themeId}
-                  fontPairingId={fontPairingId}
-                  sealId={sealId}
-                  sealColor={sealColor}
-                  ambientTrackId={ambientTrackId}
-                  onProceedToRsvp={() => setPreviewMode('rsvp')}
-                />
+                <div className="p-4">
+                  <EnvelopeExperience
+                    invitationData={invitationData}
+                    themeId={themeId}
+                    fontPairingId={fontPairingId}
+                    sealId={sealId}
+                    sealColor={sealColor}
+                    ambientTrackId={ambientTrackId}
+                    onProceedToRsvp={() => setPreviewMode('rsvp')}
+                  />
+                </div>
               )}
 
               {previewMode === 'rsvp' && (
-                <RsvpSection
-                  invitationData={invitationData}
-                />
+                <div className="p-4">
+                  <RsvpSection
+                    invitationData={invitationData}
+                  />
+                </div>
               )}
 
             </div>

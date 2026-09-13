@@ -11,11 +11,12 @@ import ShareExportModal from './components/ShareExportModal';
 import TestimonialsFAQ from './components/TestimonialsFAQ';
 import Footer from './components/Footer';
 import FirebaseStatusBadge from './components/FirebaseStatusBadge';
+import PremiumWebpageInvitation from './components/PremiumWebpageInvitation';
 import { INVITATION_TEMPLATES, PRICING_PACKAGES } from './data/templates';
 import { Sparkles, ArrowRight, X, Heart, Shield, Music } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio'
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'webpageDemo'
   const [selectedTemplate, setSelectedTemplate] = useState(INVITATION_TEMPLATES[0]);
 
   // Modals state
@@ -24,6 +25,7 @@ export default function App() {
   const [exportOpen, setExportOpen] = useState(false);
   const [quickPreviewOpen, setQuickPreviewOpen] = useState(false);
   const [demoEnvelopeOpen, setDemoEnvelopeOpen] = useState(false);
+  const [webpageDemoOpen, setWebpageDemoOpen] = useState(false);
 
   // Selected Plan for Checkout
   const [preSelectedPlan, setPreSelectedPlan] = useState(PRICING_PACKAGES[1]);
@@ -102,6 +104,7 @@ export default function App() {
               onOpenStudio={() => handleOpenStudio()}
               onExploreTemplates={() => handleNavigate('templates')}
               onPreviewDemoEnvelope={() => setDemoEnvelopeOpen(true)}
+              onPreviewZareqiaWebpage={() => setWebpageDemoOpen(true)}
             />
 
             {/* Template Gallery Catalog */}
@@ -345,6 +348,33 @@ export default function App() {
                 setDemoEnvelopeOpen(false);
                 handleOpenStudio(INVITATION_TEMPLATES[0]);
               }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 6: ZAREQIA-STYLE FULL WEBPAGE INVITATION PREVIEW */}
+      {webpageDemoOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/95 backdrop-blur-2xl flex flex-col items-center animate-fadeIn">
+          <div className="sticky top-4 right-4 z-50 self-end pr-6">
+            <button
+              onClick={() => setWebpageDemoOpen(false)}
+              className="px-4 py-2 rounded-full bg-black/70 hover:bg-black/90 text-white font-bold text-xs border border-white/20 shadow-2xl flex items-center gap-1.5 backdrop-blur-md"
+            >
+              <X className="w-4 h-4 text-champagne-400" />
+              <span>Close Webpage View</span>
+            </button>
+          </div>
+
+          <div className="w-full max-w-xl pb-16">
+            <PremiumWebpageInvitation
+              invitationData={selectedTemplate?.defaults || INVITATION_TEMPLATES[0].defaults}
+              themeId={selectedTemplate?.themeId || 'emeraldGold'}
+              fontPairingId={selectedTemplate?.fontPairingId || 'classicSerif'}
+              sealId={selectedTemplate?.sealId || 'botanical'}
+              sealColor={selectedTemplate?.sealColor || '#B88B42'}
+              ambientTrackId={selectedTemplate?.ambientTrackId || 'romanticPiano'}
+              onBack={() => setWebpageDemoOpen(false)}
             />
           </div>
         </div>
