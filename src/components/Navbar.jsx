@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Heart, Music, Volume2, VolumeX, Crown, Menu, X, ArrowRight } from 'lucide-react';
 import { musicEngine } from '../utils/audioPlayer';
 
-export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onNavigate }) {
+export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onNavigate, onOpenWebpageDemo }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,12 +56,19 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           <button 
-            onClick={() => onNavigate('templates')}
+            onClick={() => onNavigate('events')}
             className={`transition-colors hover:text-champagne-400 ${
-              activeSection === 'templates' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
+              activeSection === 'events' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            Templates & Themes
+            Events & Occasions
+          </button>
+          <button 
+            onClick={onOpenWebpageDemo}
+            className="text-champagne-300 hover:text-champagne-200 flex items-center gap-1 font-semibold"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
+            <span>Live Webpage Demo</span>
           </button>
           <button 
             onClick={onOpenStudio}
@@ -72,12 +79,12 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
             Customizer Studio
           </button>
           <button 
-            onClick={() => onNavigate('features')}
+            onClick={() => onNavigate('rsvp')}
             className={`transition-colors hover:text-champagne-400 ${
-              activeSection === 'features' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
+              activeSection === 'rsvp' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            RSVP & Envelope Experience
+            RSVP & Guestbook
           </button>
           <button 
             onClick={onOpenPricing}
@@ -85,7 +92,7 @@ export default function Navbar({ onOpenStudio, onOpenPricing, activeSection, onN
               activeSection === 'pricing' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            Pricing & Monetization
+            Pricing & Packages
           </button>
           <button 
             onClick={() => onNavigate('faq')}

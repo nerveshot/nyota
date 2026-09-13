@@ -93,6 +93,7 @@ export default function App() {
         onOpenPricing={() => setPricingOpen(true)}
         activeSection={currentView === 'studio' ? 'studio' : 'landing'}
         onNavigate={handleNavigate}
+        onOpenWebpageDemo={() => setWebpageDemoOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -102,15 +103,15 @@ export default function App() {
             {/* Hero Section */}
             <Hero
               onOpenStudio={() => handleOpenStudio()}
-              onExploreTemplates={() => handleNavigate('templates')}
+              onExploreTemplates={() => handleNavigate('events')}
               onPreviewDemoEnvelope={() => setDemoEnvelopeOpen(true)}
               onPreviewZareqiaWebpage={() => setWebpageDemoOpen(true)}
             />
 
-            {/* Template Gallery Catalog */}
+            {/* Custom Events & Occasions Showcase */}
             <TemplateGallery
-              onSelectTemplate={(template) => handleOpenStudio(template)}
-              onQuickPreview={handleQuickPreview}
+              onOpenStudio={() => handleOpenStudio()}
+              onOpenWebpageDemo={() => setWebpageDemoOpen(true)}
             />
 
             {/* Interactive RSVP & Guest Portal Demo Section */}
