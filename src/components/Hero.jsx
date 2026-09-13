@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles, Heart, Crown, ArrowRight, ShieldCheck, Download, Smartphone, Music, CheckCircle2 } from 'lucide-react';
 
-export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEnvelope }) {
+export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEnvelope, onPreviewZareqiaWebpage }) {
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       {/* Background Ambient Glow & Starfields */}
