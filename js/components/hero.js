@@ -3,6 +3,7 @@
 // ==========================================================================
 
 import { INVITATION_TEMPLATES, COLOR_THEMES } from '../templates.js';
+import { formatStackedNames } from '../utils/helpers.js';
 
 export function renderHero(containerId, options = {}) {
   const container = document.getElementById(containerId);
@@ -75,9 +76,7 @@ export function renderHero(containerId, options = {}) {
               ${sample.defaults.title}
             </p>
 
-            <h2 class="invitation-names font-serif" style="font-size: 2rem;">
-              ${sample.defaults.primaryNames}
-            </h2>
+            ${formatStackedNames(sample.defaults.primaryNames, { size: 'normal', fontClass: 'font-cinzel' })}
 
             <div class="invitation-date">
               ${sample.defaults.dateText}

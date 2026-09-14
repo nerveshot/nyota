@@ -4,7 +4,7 @@
 // ==========================================================================
 
 import { saveInvitation } from '../db.js';
-import { showToast } from '../utils/helpers.js';
+import { showToast, formatStackedNames } from '../utils/helpers.js';
 import { COLOR_THEMES, FONT_PAIRINGS, WAX_SEALS, AMBIENT_TRACKS, INVITATION_TEMPLATES } from '../templates.js';
 import { renderEnvelopeComponent } from './envelope.js';
 import { renderInvitationWebpage } from './invitation-view.js';
@@ -197,7 +197,7 @@ export function renderStudio(containerId, initialData = null) {
           ${state.data.bismillah ? `<div class="invitation-bismillah">${state.data.bismillah}</div>` : ''}
           <div class="invitation-tag">${state.data.tag}</div>
           <p style="font-size: 0.85rem; color: var(--text-muted);">${state.data.title}</p>
-          <h2 class="invitation-names ${currentFonts.heading}">${state.data.primaryNames}</h2>
+          ${formatStackedNames(state.data.primaryNames, { size: 'normal', fontClass: currentFonts.heading || 'font-cinzel' })}
           <div class="invitation-date">${state.data.dateText} • ${state.data.timeText}</div>
           <div class="invitation-venue">📍 ${state.data.venueName}</div>
         </div>

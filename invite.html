@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Special Wedding Celebration Invitation — Nyota</title>
-  <meta name="description" content="You are cordially invited to celebrate our wedding. Tap to open your interactive digital envelope and RSVP." />
+  <meta name="description" content="You are cordially invited to celebrate our wedding. Tap to open your interactive royal invitation and RSVP." />
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
@@ -21,12 +21,8 @@
 </head>
 <body style="background-color: #050308;">
 
-  <!-- Invitation Stage -->
-  <div id="invite-root">
-    <div style="min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem;">
-      <div id="envelope-guest-slot" style="width: 100%; max-width: 580px;"></div>
-    </div>
-  </div>
+  <!-- Invitation Stage Mount -->
+  <div id="invite-root"></div>
 
   <div id="toast-container"></div>
 
@@ -34,7 +30,6 @@
   <script type="module">
     import { getInvitationById } from './js/db.js';
     import { INVITATION_TEMPLATES } from './js/templates.js';
-    import { renderEnvelopeComponent } from './js/components/envelope.js';
     import { renderInvitationWebpage } from './js/components/invitation-view.js';
 
     async function startInvite() {
@@ -50,23 +45,11 @@
         }
       }
 
-      const root = document.getElementById('invite-root');
-      
-      renderEnvelopeComponent('envelope-guest-slot', {
-        invitationData,
+      renderInvitationWebpage('invite-root', invitationData, {
         themeId: invitationData.themeId || 'royalRedNavyBlack',
-        sealId: invitationData.sealId || 'botanical',
-        sealColor: invitationData.sealColor || '#B88B42',
+        fontPairingId: invitationData.fontPairingId || 'classicSerif',
         ambientTrackId: invitationData.ambientTrackId || 'romanticPiano',
-        onOpened: () => {
-          root.innerHTML = `<div id="webpage-mount"></div>`;
-          renderInvitationWebpage('webpage-mount', invitationData, {
-            themeId: invitationData.themeId || 'royalRedNavyBlack',
-            fontPairingId: invitationData.fontPairingId || 'classicSerif',
-            ambientTrackId: invitationData.ambientTrackId || 'romanticPiano'
-          });
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        startWithCurtains: true
       });
     }
 

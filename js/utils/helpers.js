@@ -86,3 +86,28 @@ export function closeModal(modalId) {
     document.body.style.overflow = '';
   }
 }
+
+export function formatStackedNames(names, options = {}) {
+  if (!names) return '';
+  const parts = names.split('&').map(s => s.trim());
+  const size = options.size || 'normal'; // 'normal' | 'lg' | 'sm'
+  const fontClass = options.fontClass || 'font-cinzel';
+
+  if (parts.length >= 2) {
+    const groom = parts[0];
+    const bride = parts[1];
+    const ampersandSize = size === 'lg' ? '2.2rem' : size === 'sm' ? '1.2rem' : '1.5rem';
+    const nameSize = size === 'lg' ? '2.75rem' : size === 'sm' ? '1.3rem' : '1.65rem';
+
+    return `
+      <div class="names-stacked-wrapper ${fontClass}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; margin: 0.5rem 0;">
+        <span class="gold-gradient-text" style="font-size: ${nameSize}; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">${groom}</span>
+        <span class="font-script gold-gradient-text" style="font-size: ${ampersandSize}; margin: 0.15rem 0; opacity: 0.95; line-height: 1;">&</span>
+        <span class="gold-gradient-text" style="font-size: ${nameSize}; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">${bride}</span>
+      </div>
+    `;
+  }
+
+  return `<h2 class="${fontClass} gold-gradient-text" style="font-size: 1.8rem; font-weight: 700;">${names}</h2>`;
+}
+

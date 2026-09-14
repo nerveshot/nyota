@@ -199,7 +199,7 @@ export const INVITATION_TEMPLATES = [
       duaBlessing: 'بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ',
       duaTranslation: 'May Allah bless you, shower His blessings upon you, and unite you both in goodness & harmony.',
       title: 'Cordially invite you to grace the blessed wedding celebration & Nikah of',
-      primaryNames: 'Zayd Al-Mansoor & Aaliyah Khan',
+      primaryNames: 'Faizan Salam & Mushira Shaikh',
       dateText: 'Saturday, October 24, 2026',
       timeText: 'Five O\'Clock In The Evening',
       venueName: 'The Royal Emirates Palace & Grand Ballroom',
@@ -238,7 +238,8 @@ export const INVITATION_TEMPLATES = [
           image: '/images/muslim-nikah.jpg',
         }
       ],
-      registryUrl: 'https://registry.example.com/zayd-aaliyah',
+      registryUrl: 'https://registry.example.com/faizan-mushira',
+      wishingWellAccount: 'shagun.faizan-mushira@upi',
     }
   }
 ];

@@ -52,12 +52,12 @@ export function renderCheckoutModal(containerId) {
           <form id="checkout-order-form">
             <div class="form-group">
               <label class="form-label">Host Name</label>
-              <input type="text" id="order-host-name" class="form-input" placeholder="e.g. Zayd Al-Mansoor" required />
+              <input type="text" id="order-host-name" class="form-input" placeholder="e.g. Faizan Salam" required />
             </div>
 
             <div class="form-group">
               <label class="form-label">Host Email / WhatsApp</label>
-              <input type="text" id="order-host-contact" class="form-input" placeholder="zayd@example.com or +91 9876543210" required />
+              <input type="text" id="order-host-contact" class="form-input" placeholder="faizan@example.com or +91 9876543210" required />
             </div>
 
             <div class="form-group">

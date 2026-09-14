@@ -1,7 +1,14 @@
 /* ==========================================================================
-   NYOTA 3D DIGITAL ENVELOPE & UNBOXING STYLES (PURE VANILLA CSS)
+   NYOTA ROYAL MULTI-STAGE CURTAIN & 3D DIGITAL ENVELOPE UNBOXING STYLES
+   Multi-Stage Walkthrough:
+   1. Outer Crimson Velvet Curtains with Golden Tassels & Bride/Groom Pulling
+   2. Crystal Chandelier Hallway with Sapphire Silk Curved Waterfall Curtains
+   3. Grand Main Wedding Arena Stage with Ascending Golden Bismillah
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   1. 3D DIGITAL ENVELOPE UNBOXING
+   -------------------------------------------------------------------------- */
 .envelope-stage {
   position: relative;
   width: 100%;
@@ -19,7 +26,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-lg);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(212, 175, 55, 0.25);
   border: 2px solid var(--gold-border);
   cursor: pointer;
   transform-style: preserve-3d;
@@ -30,7 +37,7 @@
 
 .envelope-wrapper:hover {
   transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 45px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.95), 0 0 45px rgba(212, 175, 55, 0.45);
 }
 
 .envelope-wrapper:active {
@@ -93,7 +100,6 @@
   color: #FFF;
 }
 
-/* Wax Seal Button */
 .wax-seal-btn {
   position: absolute;
   top: 50%;
@@ -155,56 +161,379 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-/* Card Slide-Out Animation */
-.invitation-card-container {
-  width: 100%;
-  max-width: 480px;
-  animation: cardSlideUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes cardSlideUp {
-  0% {
-    transform: translateY(30px) scale(0.94);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
-/* Mosque Curtains Entrance */
-.curtain-entrance-overlay {
+/* --------------------------------------------------------------------------
+   2. ROYAL MULTI-STAGE WALKTHROUGH ENTRANCE ANIMATION
+   -------------------------------------------------------------------------- */
+.royal-entrance-stage {
   position: fixed;
   inset: 0;
-  z-index: 1500;
-  background: #050308;
+  z-index: 2000;
+  background: #040207;
   display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  transition: opacity 1s ease;
+  transition: opacity 1.5s ease;
 }
 
-.curtain-panel-left, .curtain-panel-right {
-  width: 50%;
+.royal-entrance-stage.faded-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Backdrops Container */
+.walkthrough-backdrops-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Stage 1 Backdrop: Grand Crystal Chandelier Hallway */
+.chandelier-hallway-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 1.8s ease;
+}
+
+.chandelier-hallway-img {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  filter: brightness(0.95) saturate(1.08);
+  transition: transform 5s cubic-bezier(0.25, 1, 0.5, 1), filter 3s ease;
+}
+
+.royal-entrance-stage.entering .chandelier-hallway-img {
+  transform: scale(1.3) translateY(-20px);
+  filter: brightness(1.12) saturate(1.12);
+}
+
+.chandelier-lighting-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 230, 160, 0.5) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 75%);
+  opacity: 0;
+  transition: opacity 2s ease;
+  pointer-events: none;
+}
+
+.royal-entrance-stage.entering .chandelier-lighting-glow {
+  opacity: 1;
+}
+
+/* Stage 2 Backdrop: Main Grand Wedding Arena Stage */
+.wedding-arena-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1), transform 5s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.royal-entrance-stage.stage-2-active .wedding-arena-wrapper {
+  opacity: 1;
+  transform: scale(1.08) translateY(-10px);
+}
+
+.wedding-arena-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.06) contrast(1.04);
+  image-rendering: -webkit-optimize-contrast;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. CURTAIN SET 1: OUTER ROYAL CRIMSON VELVET (FRONT GATEWAY)
+   -------------------------------------------------------------------------- */
+.curtain-fabric-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 53%;
+  z-index: 30;
+  background: linear-gradient(90deg, 
+    #1E0208 0%, 
+    #5E0A1A 8%, 
+    #2E040D 16%, 
+    #7A1024 25%, 
+    #3D0510 33%, 
+    #8B152B 42%, 
+    #420612 50%, 
+    #7A1024 58%, 
+    #30040E 67%, 
+    #690D1E 75%, 
+    #24030A 83%, 
+    #540917 92%, 
+    #150105 100%
+  );
+  box-shadow: inset -25px 0 50px rgba(0,0,0,0.95), 20px 0 45px rgba(0,0,0,0.85);
+  transition: transform 3.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateX(0);
+}
+
+.curtain-fabric-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 53%;
+  z-index: 30;
+  background: linear-gradient(270deg, 
+    #1E0208 0%, 
+    #5E0A1A 8%, 
+    #2E040D 16%, 
+    #7A1024 25%, 
+    #3D0510 33%, 
+    #8B152B 42%, 
+    #420612 50%, 
+    #7A1024 58%, 
+    #30040E 67%, 
+    #690D1E 75%, 
+    #24030A 83%, 
+    #540917 92%, 
+    #150105 100%
+  );
+  box-shadow: inset 25px 0 50px rgba(0,0,0,0.95), -20px 0 45px rgba(0,0,0,0.85);
+  transition: transform 3.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateX(0);
+}
+
+.royal-entrance-stage.entering .curtain-fabric-left {
+  transform: translateX(-105%) scaleX(0.8);
+}
+
+.royal-entrance-stage.entering .curtain-fabric-right {
+  transform: translateX(105%) scaleX(0.8);
+}
+
+/* --------------------------------------------------------------------------
+   4. CURTAIN SET 2: INNER SAPPHIRE BLUE & GOLDEN WATERFALL SWEEP
+   (UNFOLDS IN DIFFERENT AUSTRIAN / TIE-BACK STYLE IN CHANDELIER HALLWAY)
+   -------------------------------------------------------------------------- */
+.hallway-curtains-stage2 {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.stage2-curtain-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 52%;
+  background: linear-gradient(90deg,
+    #050B1A 0%,
+    #0B1B3D 15%,
+    #122B68 30%,
+    #081430 45%,
+    #1A3B8B 60%,
+    #0B1B3D 75%,
+    #040914 100%
+  );
+  box-shadow: inset -20px 0 40px rgba(0,0,0,0.9), 15px 0 35px rgba(0,0,0,0.8);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform-origin: top left;
+  transition: transform 3.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 3.6s ease;
+  transform: translateX(0) scale(1);
+}
+
+.stage2-curtain-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 52%;
+  background: linear-gradient(270deg,
+    #050B1A 0%,
+    #0B1B3D 15%,
+    #122B68 30%,
+    #081430 45%,
+    #1A3B8B 60%,
+    #0B1B3D 75%,
+    #040914 100%
+  );
+  box-shadow: inset 20px 0 40px rgba(0,0,0,0.9), -15px 0 35px rgba(0,0,0,0.8);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform-origin: top right;
+  transition: transform 3.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 3.6s ease;
+  transform: translateX(0) scale(1);
+}
+
+/* Distinctive Austrian Tie-Back Swoosh Upward-Outward */
+.royal-entrance-stage.stage-2-active .stage2-curtain-left {
+  transform: translate(-105%, -15%) rotate(-8deg) scale(0.85);
+  opacity: 0.85;
+}
+
+.royal-entrance-stage.stage-2-active .stage2-curtain-right {
+  transform: translate(105%, -15%) rotate(8deg) scale(0.85);
+  opacity: 0.85;
+}
+
+/* Top Pelmet Bar & Scalloped Swag Valance */
+.curtain-valance-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 35;
+  transition: transform 3.5s ease, opacity 3.5s ease;
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.royal-entrance-stage.entering .curtain-valance-box {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.curtain-valance {
+  height: 54px;
+  background: linear-gradient(180deg, #4A0815 0%, #29030B 75%, #150105 100%);
+  border-bottom: 3px solid #D4AF37;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.9);
   position: relative;
-  transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-.curtain-panel-left {
-  background: linear-gradient(90deg, #1E0208 0%, #5E0A1A 25%, #2E040D 50%, #7A1024 75%, #150105 100%);
-  box-shadow: inset -25px 0 50px rgba(0, 0, 0, 0.9), 20px 0 45px rgba(0, 0, 0, 0.8);
+.curtain-swag-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -12px;
+  padding: 0 1rem;
 }
 
-.curtain-panel-right {
-  background: linear-gradient(270deg, #1E0208 0%, #5E0A1A 25%, #2E040D 50%, #7A1024 75%, #150105 100%);
-  box-shadow: inset 25px 0 50px rgba(0, 0, 0, 0.9), -20px 0 45px rgba(0, 0, 0, 0.8);
+.curtain-swag {
+  background: radial-gradient(ellipse at 50% 0%, #7A1024 0%, #3D0510 60%, #1A0106 100%);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 -4px 10px rgba(212,175,55,0.4);
 }
 
-.curtain-entrance-overlay.opened .curtain-panel-left {
-  transform: translateX(-100%);
+.curtain-jabot-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 68px;
+  height: 190px;
+  background: linear-gradient(135deg, #5E0A1A 0%, #2E040D 50%, #150105 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  box-shadow: 5px 10px 25px rgba(0,0,0,0.9);
+  pointer-events: none;
 }
 
-.curtain-entrance-overlay.opened .curtain-panel-right {
-  transform: translateX(100%);
+.curtain-jabot-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 68px;
+  height: 190px;
+  background: linear-gradient(225deg, #5E0A1A 0%, #2E040D 50%, #150105 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  box-shadow: -5px 10px 25px rgba(0,0,0,0.9);
+  pointer-events: none;
 }
+
+/* Damask and fringe textures */
+.gold-damask-overlay {
+  background-image: radial-gradient(#D4AF37 1px, transparent 1px), radial-gradient(#D4AF37 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  opacity: 0.2;
+}
+
+.gold-fringe-pattern {
+  background-image: repeating-linear-gradient(
+    90deg,
+    #D4AF37,
+    #D4AF37 3px,
+    #8A6B1A 3px,
+    #8A6B1A 6px
+  );
+}
+
+/* Character Pulling Animations */
+@keyframes tugPullLeft {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-6deg) scale(1.06) translateX(-6px); }
+  100% { transform: rotate(-10deg) scale(1.1) translateX(-10px); }
+}
+
+@keyframes tugPullRight {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(6deg) scale(1.06) translateX(6px); }
+  100% { transform: rotate(10deg) scale(1.1) translateX(10px); }
+}
+
+.animate-tug-left {
+  animation: tugPullLeft 1.3s ease-in-out infinite alternate;
+}
+
+.animate-tug-right {
+  animation: tugPullRight 1.3s ease-in-out infinite alternate;
+}
+
+/* Rising Glowing Bismillah Calligraphy & Royal Welcome Plaque */
+.bismillah-rising-hero {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  pointer-events: none;
+  padding: 1.5rem;
+  transition: all 3s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateY(0) scale(1.1);
+  opacity: 1;
+}
+
+.bismillah-rising-hero.rising {
+  transform: translateY(-28vh) scale(0.95);
+  opacity: 0.98;
+}
+
+.royal-welcome-plaque {
+  background: radial-gradient(ellipse at center, rgba(10, 2, 7, 0.92) 0%, rgba(4, 2, 7, 0.85) 60%, transparent 100%);
+  padding: 2.25rem 3.5rem;
+  border-radius: 50px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(139, 21, 43, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.royal-welcome-badge {
+  background: linear-gradient(135deg, rgba(42, 6, 20, 0.95) 0%, rgba(8, 20, 48, 0.95) 100%);
+  border: 2px solid #D4AF37;
+  border-radius: var(--radius-full);
+  padding: 0.65rem 2rem;
+  margin-top: 1rem;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.95), 0 0 25px rgba(212, 175, 55, 0.7);
+  font-family: var(--font-cinzel);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 15px rgba(212, 175, 55, 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+

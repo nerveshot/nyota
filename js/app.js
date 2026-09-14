@@ -150,25 +150,12 @@ class NyotaApp {
       renderAdminPortal('admin-mount-point');
 
     } else if (this.currentView === 'envelope_demo') {
-      mainContainer.innerHTML = `
-        <div style="min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem;">
-          <div id="envelope-demo-slot" style="width: 100%; max-width: 600px;"></div>
-        </div>
-      `;
-      renderEnvelopeComponent('envelope-demo-slot', {
-        invitationData: this.selectedTemplate.defaults || this.selectedTemplate,
+      mainContainer.innerHTML = `<div id="webpage-revealed-slot"></div>`;
+      renderInvitationWebpage('webpage-revealed-slot', this.selectedTemplate.defaults || this.selectedTemplate, {
         themeId: this.selectedTemplate.themeId || 'royalRedNavyBlack',
-        sealId: this.selectedTemplate.sealId || 'botanical',
-        sealColor: this.selectedTemplate.sealColor || '#B88B42',
+        fontPairingId: this.selectedTemplate.fontPairingId || 'classicSerif',
         ambientTrackId: this.selectedTemplate.ambientTrackId || 'romanticPiano',
-        onOpened: () => {
-          mainContainer.innerHTML = `<div id="webpage-revealed-slot"></div>`;
-          renderInvitationWebpage('webpage-revealed-slot', this.selectedTemplate.defaults || this.selectedTemplate, {
-            themeId: this.selectedTemplate.themeId || 'royalRedNavyBlack',
-            fontPairingId: this.selectedTemplate.fontPairingId || 'classicSerif',
-            ambientTrackId: this.selectedTemplate.ambientTrackId || 'romanticPiano'
-          });
-        }
+        startWithCurtains: true
       });
     }
   }

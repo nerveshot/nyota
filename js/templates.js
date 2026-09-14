@@ -137,7 +137,7 @@ export const INVITATION_TEMPLATES = [
       duaBlessing: 'بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ',
       duaTranslation: 'May Allah bless you, shower His blessings upon you, and unite you both in goodness & harmony.',
       title: 'Cordially invite you to grace the blessed wedding celebration & Nikah of',
-      primaryNames: 'Zayd Al-Mansoor & Aaliyah Khan',
+      primaryNames: 'Faizan Salam & Mushira Shaikh',
       dateText: 'Saturday, October 24, 2026',
       timeText: 'Five O\'Clock In The Evening',
       venueName: 'The Royal Emirates Palace & Grand Ballroom',
@@ -161,7 +161,7 @@ export const INVITATION_TEMPLATES = [
         { year: '2026', title: 'Nikah & Two Souls United', desc: 'Committing to a lifetime of love and companionship as husband and wife.', image: '/images/muslim-nikah.jpg' }
       ],
       wishingWellTitle: 'Digital Shagun / Wedding Gift Fund',
-      wishingWellAccount: 'shagun.zayd-aaliyah@upi',
+      wishingWellAccount: 'shagun.faizan-mushira@upi',
       wishingWellNote: 'Your prayers, love, and presence on our special day are the greatest blessings of all. For friends and family who wish to bestow a traditional digital Shagun:'
     }
   }
