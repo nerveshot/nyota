@@ -133,11 +133,6 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
                     </div>
                   </div>
                 </div>
-
-                {/* Top Glowing Crescent Accent */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/80 backdrop-blur-md border border-amber-400 flex items-center justify-center text-amber-300 text-sm shadow-glow-gold">
-                  🌙
-                </div>
               </div>
 
               {/* Floating feature pills around image */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, Shirt, Sparkles, Heart, ExternalLink, Music } from 'lucide-react';
+import { Calendar, MapPin, Clock, Shirt, Sparkles, Heart, ExternalLink, Music, Crown } from 'lucide-react';
 import { COLOR_THEMES, FONT_PAIRINGS, WAX_SEALS } from '../data/templates';
 
 export default function InvitationCard({
@@ -95,10 +95,14 @@ export default function InvitationCard({
         )}
       </div>
 
-      {/* Divider with Emblem */}
+      {/* Divider with Royal Crown Emblem */}
       <div className="flex items-center justify-center my-6 gap-3 relative z-10">
         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-champagne-400/30 to-transparent" />
-        <span className="text-champagne-400/80 text-sm">✦ ⚜ ✦</span>
+        <div className="flex items-center gap-1 text-champagne-400/90 text-xs">
+          <span>⚜</span>
+          <Crown className="w-3.5 h-3.5 text-champagne-400" />
+          <span>⚜</span>
+        </div>
         <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-champagne-400/30 to-transparent" />
       </div>
 

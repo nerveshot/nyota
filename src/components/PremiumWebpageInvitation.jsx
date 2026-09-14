@@ -4,12 +4,27 @@ import {
   Sparkles, Heart, Calendar, Clock, MapPin, Navigation, 
   Music, Volume2, VolumeX, Share2, Copy, Check, ChevronDown, 
   ExternalLink, Gift, Shirt, Send, MessageSquare, Compass, Eye, ArrowRight, ArrowLeft,
-  ShieldCheck, Car, Sparkle, Play, Users, QrCode, Moon, Star, Globe
+  ShieldCheck, Car, Sparkle, Play, Users, QrCode, Star, Globe, Crown
 } from 'lucide-react';
 import { musicEngine } from '../utils/audioPlayer';
 import RsvpSection from './RsvpSection';
 import ScratchCard from './ScratchCard';
 import { COLOR_THEMES, FONT_PAIRINGS } from '../data/templates';
+
+const getCoupleInitials = (names) => {
+  if (!names) return 'N & Y';
+  const parts = names.split('&').map(s => s.trim());
+  if (parts.length >= 2) {
+    const first = parts[0].charAt(0).toUpperCase() || 'A';
+    const second = parts[1].charAt(0).toUpperCase() || 'B';
+    return `${first} & ${second}`;
+  }
+  const words = names.trim().split(/\s+/);
+  if (words.length >= 2) {
+    return `${words[0].charAt(0).toUpperCase()} & ${words[words.length - 1].charAt(0).toUpperCase()}`;
+  }
+  return names.slice(0, 2).toUpperCase();
+};
 
 export default function PremiumWebpageInvitation({
   invitationData,
@@ -120,6 +135,8 @@ export default function PremiumWebpageInvitation({
   const showRsvp = sections.rsvp !== false;
   const showMusic = sections.music !== false;
 
+  const coupleInitials = getCoupleInitials(primaryNames);
+
   // Countdown timer effect
   useEffect(() => {
     const timer = setInterval(() => {
@@ -193,20 +210,20 @@ export default function PremiumWebpageInvitation({
       setIsPlayingMusic(true);
     }
 
-    // Step 1: Walk into mosque with glowing golden Bismillah in center
-    // Step 2: At 2.1s, Bismillah gracefully glides upwards into the top invitation header
+    // Step 1: Walk into mosque with glowing golden Bismillah in center as curtains gracefully part
+    // Step 2: At 3.0s, Bismillah gracefully glides upwards into the top invitation header
     setTimeout(() => {
       setIsBismillahRising(true);
-    }, 2100);
+    }, 3000);
 
-    // Step 3: At 3.6s, completely reveal the full royal invitation webpage
+    // Step 3: At 5.0s, completely reveal the full royal invitation webpage smoothly
     setTimeout(() => {
       setIsOpened(true);
       setTimeout(() => {
         const el = document.getElementById('invitation-hero');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 100);
-    }, 3600);
+    }, 5000);
   };
 
   const handleToggleMusic = () => {
@@ -290,7 +307,8 @@ export default function PremiumWebpageInvitation({
       </div>
 
       {/* ========================================================================= */}
-      {/* 1. ROYAL VELVET CURTAIN & GRAND MOSQUE ENTRANCE GATEWAY */}
+      {/* ========================================================================= */}
+      {/* 1. ROYAL VELVET MULTI-CURTAIN & GRAND MOSQUE ENTRANCE GATEWAY */}
       {/* ========================================================================= */}
       {!isOpened && (
         <div className={`fixed inset-0 z-50 overflow-hidden bg-black flex items-center justify-center transition-opacity duration-[1400ms] ${
@@ -302,21 +320,30 @@ export default function PremiumWebpageInvitation({
             <img
               src="/images/grand-mosque-entrance.jpg"
               alt="Grand Mosque Royal Entrance"
-              className={`w-full h-full object-cover transition-all duration-[3800ms] ${
+              className={`w-full h-full object-cover transition-all duration-[4200ms] ${
                 isEntering ? 'animate-mosque-enter brightness-110 filter' : 'scale-100 brightness-75'
               }`}
             />
-            {/* Ambient Mosque Twilight Overlay */}
+            {/* Ambient Mosque Twilight Overlay & Volumetric Golden Light Rays */}
             <div className={`absolute inset-0 transition-opacity duration-1000 ${
               isEntering 
-                ? 'bg-gradient-to-t from-black/40 via-transparent to-black/30 opacity-60' 
+                ? 'bg-gradient-to-t from-black/40 via-transparent to-black/20 opacity-60' 
                 : 'bg-black/65 backdrop-blur-[2px]'
             }`} />
+
+            {/* Glowing Golden Light Beams When Curtains Part */}
+            <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ${
+              isEntering ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              background: 'radial-gradient(circle at 50% 45%, rgba(255, 215, 0, 0.35) 0%, rgba(212, 175, 55, 0.15) 40%, transparent 70%)'
+            }}
+            />
 
             {/* Glowing Golden Bismillah Rising during Mosque Entrance Walkthrough */}
             {isEntering && (
               <div 
-                className={`absolute inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none px-4 transition-all duration-[1500ms] ease-out ${
+                className={`absolute inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none px-4 transition-all duration-[2400ms] ease-out ${
                   isBismillahRising 
                     ? '-translate-y-[26vh] sm:-translate-y-[30vh] md:-translate-y-[34vh] scale-90 opacity-95' 
                     : 'translate-y-0 scale-110 opacity-100'
@@ -333,67 +360,154 @@ export default function PremiumWebpageInvitation({
             )}
           </div>
 
-          {/* LEFT ROYAL CRIMSON VELVET CURTAIN */}
-          <div 
-            className={`absolute top-0 bottom-0 left-0 w-[53%] z-20 curtain-fabric-left transition-transform duration-[2500ms] ease-in-out flex flex-col justify-between ${
-              isEntering ? '-translate-x-[105%] scale-x-90' : 'translate-x-0'
+          {/* ========================================================================= */}
+          {/* LAYER 2 (INNER): ROYAL SHEER GOLD GOSSAMER SILK CURTAINS (STAGGERED UNFOLD) */}
+          {/* ========================================================================= */}
+          {/* Left Inner Sheer Golden Drape */}
+          <div
+            className={`absolute top-0 bottom-0 left-0 w-[52%] z-10 curtain-sheer-gold-left transition-transform duration-[4600ms] delay-[350ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? '-translate-x-[102%] scale-x-75 -skew-y-1' : 'translate-x-0'
             }`}
           >
-            {/* Gold Fringe & Braided Border on right edge */}
-            <div className="absolute top-0 bottom-0 right-0 w-2 gold-fringe-pattern shadow-[0_0_10px_#D4AF37]" />
-            <div className="absolute top-0 bottom-0 right-2 w-[1px] bg-amber-400/60" />
+            <div className="absolute inset-0 gold-damask-overlay pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-2 bg-gradient-to-b from-amber-300 via-yellow-100 to-amber-400 opacity-80 shadow-[0_0_12px_rgba(255,215,0,0.8)]" />
+          </div>
 
-            {/* Left Curtain Gold Tie-back Tassel */}
-            <div className="absolute top-1/2 -translate-y-1/2 right-2 flex items-center">
-              <div className="w-8 h-20 rounded-l-full bg-gradient-to-l from-amber-400 to-amber-600 border border-amber-300 shadow-glow-gold flex items-center justify-center">
-                <span className="text-slate-950 text-xs font-bold font-mono rotate-90">✦</span>
+          {/* Right Inner Sheer Golden Drape */}
+          <div
+            className={`absolute top-0 bottom-0 right-0 w-[52%] z-10 curtain-sheer-gold-right transition-transform duration-[4600ms] delay-[350ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? 'translate-x-[102%] scale-x-75 skew-y-1' : 'translate-x-0'
+            }`}
+          >
+            <div className="absolute inset-0 gold-damask-overlay pointer-events-none" />
+            <div className="absolute top-0 bottom-0 left-0 w-2 bg-gradient-to-b from-amber-300 via-yellow-100 to-amber-400 opacity-80 shadow-[0_0_12px_rgba(255,215,0,0.8)]" />
+          </div>
+
+          {/* ========================================================================= */}
+          {/* LAYER 1 (OUTER): ROYAL CRIMSON HEAVY VELVET CURTAINS */}
+          {/* ========================================================================= */}
+          {/* LEFT ROYAL CRIMSON VELVET CURTAIN */}
+          <div 
+            className={`absolute top-0 bottom-0 left-0 w-[53%] z-20 curtain-fabric-left transition-transform duration-[4200ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? '-translate-x-[105%] scale-x-85' : 'translate-x-0'
+            }`}
+          >
+            {/* Gold Damask Embossed Pattern Overlay */}
+            <div className="absolute inset-0 gold-damask-overlay pointer-events-none" />
+
+            {/* Gold Fringe & Braided Border on right edge */}
+            <div className="absolute top-0 bottom-0 right-0 w-2 gold-fringe-pattern shadow-[0_0_12px_#D4AF37]" />
+            <div className="absolute top-0 bottom-0 right-2 w-[1px] bg-amber-400/70" />
+
+            {/* Left Curtain Cartoon Bride Pulling Golden Rope (Transparent Cutout) */}
+            <div className="absolute top-[38%] -translate-y-1/2 right-1 sm:right-3 flex flex-col items-center z-30 pointer-events-none select-none">
+              {/* Golden Rope Cord leading from top valance */}
+              <div className="w-1.5 h-16 sm:h-24 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 shadow-glow-gold rounded-full mb-[-6px]" />
+              
+              {/* Free-standing Cutout Bride Character */}
+              <div className={`relative w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-transform duration-[4200ms] ${
+                isEntering ? 'animate-tug-left scale-110' : 'hover:scale-105'
+              }`}>
+                <img
+                  src="/images/cartoon-bride-pulling.png"
+                  alt="Royal Bride Pulling Curtain"
+                  className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)]"
+                />
+              </div>
+
+              {/* Golden Braided Tassel at Bottom of Rope */}
+              <div className="w-3.5 h-10 sm:w-5 sm:h-14 rounded-b-full bg-gradient-to-b from-amber-400 via-amber-500 to-amber-700 shadow-glow-gold mt-[-6px] border-t border-amber-200 flex items-center justify-center">
+                <Sparkles className="w-2.5 h-2.5 text-slate-950 animate-pulse" />
               </div>
             </div>
           </div>
 
           {/* RIGHT ROYAL CRIMSON VELVET CURTAIN */}
           <div 
-            className={`absolute top-0 bottom-0 right-0 w-[53%] z-20 curtain-fabric-right transition-transform duration-[2500ms] ease-in-out flex flex-col justify-between ${
-              isEntering ? 'translate-x-[105%] scale-x-90' : 'translate-x-0'
+            className={`absolute top-0 bottom-0 right-0 w-[53%] z-20 curtain-fabric-right transition-transform duration-[4200ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? 'translate-x-[105%] scale-x-85' : 'translate-x-0'
             }`}
           >
-            {/* Gold Fringe & Braided Border on left edge */}
-            <div className="absolute top-0 bottom-0 left-0 w-2 gold-fringe-pattern shadow-[0_0_10px_#D4AF37]" />
-            <div className="absolute top-0 bottom-0 left-2 w-[1px] bg-amber-400/60" />
+            {/* Gold Damask Embossed Pattern Overlay */}
+            <div className="absolute inset-0 gold-damask-overlay pointer-events-none" />
 
-            {/* Right Curtain Gold Tie-back Tassel */}
-            <div className="absolute top-1/2 -translate-y-1/2 left-2 flex items-center">
-              <div className="w-8 h-20 rounded-r-full bg-gradient-to-r from-amber-400 to-amber-600 border border-amber-300 shadow-glow-gold flex items-center justify-center">
-                <span className="text-slate-950 text-xs font-bold font-mono -rotate-90">✦</span>
+            {/* Gold Fringe & Braided Border on left edge */}
+            <div className="absolute top-0 bottom-0 left-0 w-2 gold-fringe-pattern shadow-[0_0_12px_#D4AF37]" />
+            <div className="absolute top-0 bottom-0 left-2 w-[1px] bg-amber-400/70" />
+
+            {/* Right Curtain Cartoon Groom Pulling Golden Rope (Transparent Cutout) */}
+            <div className="absolute top-[38%] -translate-y-1/2 left-1 sm:left-3 flex flex-col items-center z-30 pointer-events-none select-none">
+              {/* Golden Rope Cord leading from top valance */}
+              <div className="w-1.5 h-16 sm:h-24 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 shadow-glow-gold rounded-full mb-[-6px]" />
+              
+              {/* Free-standing Cutout Groom Character */}
+              <div className={`relative w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-transform duration-[4200ms] ${
+                isEntering ? 'animate-tug-right scale-110' : 'hover:scale-105'
+              }`}>
+                <img
+                  src="/images/cartoon-groom-pulling.png"
+                  alt="Royal Groom Pulling Curtain"
+                  className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)]"
+                />
+              </div>
+
+              {/* Golden Braided Tassel at Bottom of Rope */}
+              <div className="w-3.5 h-10 sm:w-5 sm:h-14 rounded-b-full bg-gradient-to-b from-amber-400 via-amber-500 to-amber-700 shadow-glow-gold mt-[-6px] border-t border-amber-200 flex items-center justify-center">
+                <Sparkles className="w-2.5 h-2.5 text-slate-950 animate-pulse" />
               </div>
             </div>
           </div>
 
-          {/* TOP CURTAIN VALANCE (PELMET) */}
-          <div className={`absolute top-0 inset-x-0 h-16 sm:h-20 z-25 curtain-valance transition-transform duration-[2200ms] ${
+          {/* ========================================================================= */}
+          {/* LAYER 3: TOP AUSTRIAN FESTOON SWAGS & PELMET VALANCE */}
+          {/* ========================================================================= */}
+          <div className={`absolute top-0 inset-x-0 z-25 transition-transform duration-[3800ms] ${
             isEntering ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
           }`}>
-            <div className="w-full h-full flex items-center justify-center relative">
-              <div className="w-12 h-12 rounded-full bg-[#1A030A] border-2 border-amber-400 shadow-glow-gold flex items-center justify-center text-amber-300 font-cinzel font-bold text-sm">
-                ✦
+            {/* Main Pelmet Bar */}
+            <div className="h-12 sm:h-14 curtain-valance flex items-center justify-center relative">
+              {/* Top Gold Trim */}
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-600 via-amber-300 to-amber-600 shadow-glow-gold" />
+            </div>
+
+            {/* 3-Tier Scalloped Austrian Swag Drapes */}
+            <div className="relative -mt-3 flex items-center justify-center gap-0 w-full px-2 sm:px-8">
+              {/* Left Swag */}
+              <div className="hidden sm:block flex-1 h-10 rounded-b-[100px] curtain-swag border-b-2 border-amber-400/80 shadow-lg relative overflow-hidden -mr-4">
+                <div className="w-full h-1 gold-fringe-pattern absolute bottom-0" />
+              </div>
+
+              {/* Center Grand Medallion Swag */}
+              <div className="w-48 sm:w-72 h-14 sm:h-16 rounded-b-[120px] curtain-swag border-b-2 border-amber-400 shadow-2xl relative z-10 flex items-center justify-center">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#1A030A] border-2 border-amber-400 shadow-glow-gold flex items-center justify-center text-amber-300">
+                  <Crown className="w-5 h-5 text-amber-300 drop-shadow-md" />
+                </div>
+                <div className="w-full h-1.5 gold-fringe-pattern absolute bottom-0 rounded-b-[120px]" />
+              </div>
+
+              {/* Right Swag */}
+              <div className="hidden sm:block flex-1 h-10 rounded-b-[100px] curtain-swag border-b-2 border-amber-400/80 shadow-lg relative overflow-hidden -ml-4">
+                <div className="w-full h-1 gold-fringe-pattern absolute bottom-0" />
               </div>
             </div>
-            {/* Gold Fringe Bottom Line */}
-            <div className="w-full h-1.5 gold-fringe-pattern" />
+
+            {/* Side Cascading Jabot Drapes (Left & Right Borders) */}
+            <div className="absolute top-0 left-0 w-12 sm:w-16 h-36 sm:h-48 curtain-jabot-left border-r border-amber-400/60 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-12 sm:w-16 h-36 sm:h-48 curtain-jabot-right border-l border-amber-400/60 pointer-events-none" />
           </div>
 
           {/* CENTER GATEWAY INVITATION CARD */}
-          <div className={`relative z-30 w-full max-w-lg p-4 sm:p-6 text-center transition-all duration-700 ${
+          <div className={`relative z-30 w-full max-w-lg p-4 sm:p-6 text-center transition-all duration-[1200ms] ${
             isEntering ? 'opacity-0 scale-75 -translate-y-12 pointer-events-none' : 'opacity-100 scale-100 translate-y-0'
           }`}>
             
             <div className="space-y-6 sm:space-y-8 flex flex-col items-center">
               
-              {/* Top Crescent & Star Emblem in Royal Red & Gold */}
+              {/* Top Flourish Emblem in Royal Red & Gold */}
               <div className="flex items-center justify-center gap-3">
                 <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent via-rose-500/80 to-amber-400/80" />
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4A0A17] to-[#0A1838] border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-glow-gold">
-                  <Moon className="w-5 h-5 fill-amber-300/20 text-amber-300" />
+                  <Crown className="w-5 h-5 text-amber-300 drop-shadow-sm" />
                 </div>
                 <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent via-rose-500/80 to-amber-400/80" />
               </div>
@@ -415,11 +529,12 @@ export default function PremiumWebpageInvitation({
                 {/* Gold Filigree Inner Border */}
                 <div className="absolute inset-2 rounded-t-[150px] rounded-b-2xl border border-amber-400/30 pointer-events-none" />
 
-                {/* Couple Initial Monogram Crest */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-blue-600 shadow-glow-gold flex items-center justify-center">
-                  <div className="w-full h-full bg-[#12040D] rounded-full flex items-center justify-center border-2 border-amber-300/50">
-                    <span className="font-cinzel text-lg sm:text-2xl font-bold gold-gradient-text">
-                      Z ✦ A
+                {/* Couple Initial Monogram Crest with Royal Crown */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-amber-500 shadow-glow-gold flex items-center justify-center">
+                  <div className="w-full h-full bg-[#12040D] rounded-full flex flex-col items-center justify-center border-2 border-amber-300/50 relative overflow-hidden">
+                    <Crown className="w-3.5 h-3.5 text-amber-300 drop-shadow-md mb-0.5" />
+                    <span className="font-cinzel text-xs sm:text-sm font-bold gold-gradient-text tracking-wider">
+                      {coupleInitials}
                     </span>
                   </div>
                 </div>
@@ -550,11 +665,12 @@ export default function PremiumWebpageInvitation({
             </div>
           </div>
 
-          {/* Couple Monogram Emblem with Crescent */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-blue-600 shadow-glow-gold flex items-center justify-center animate-float-gentle">
-            <div className="w-full h-full bg-[#12050E] rounded-full flex items-center justify-center border-2 border-amber-300/40">
-              <span className="font-cinzel text-xl sm:text-3xl font-bold gold-gradient-text">
-                Z ✦ A
+          {/* Couple Monogram Emblem with Royal Crown */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-amber-500 shadow-glow-gold flex items-center justify-center animate-float-gentle">
+            <div className="w-full h-full bg-[#12050E] rounded-full flex flex-col items-center justify-center border-2 border-amber-300/40 relative overflow-hidden">
+              <Crown className="w-5 h-5 text-amber-300 drop-shadow-md mb-1" />
+              <span className="font-cinzel text-sm sm:text-base font-bold gold-gradient-text tracking-wider">
+                {coupleInitials}
               </span>
             </div>
           </div>
@@ -605,11 +721,6 @@ export default function PremiumWebpageInvitation({
                     {primaryNames}
                   </div>
                 </div>
-              </div>
-
-              {/* Ornate Gold Crescent Accent */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/80 backdrop-blur-md border border-amber-400 flex items-center justify-center text-amber-300 text-sm shadow-glow-gold">
-                🌙
               </div>
             </div>
           </div>

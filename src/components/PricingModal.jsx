@@ -27,10 +27,10 @@ export default function PricingModal({ isOpen, onClose, onSelectPlan }) {
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-cinzel font-bold text-white">
-            All-Inclusive <span className="gold-gradient-text">₹501 Shagun Money</span>
+            All-Inclusive <span className="gold-gradient-text">₹1001 Shagun Money</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300">
-            No complicated tiers or hidden fees. Pay ₹501 auspicious Shagun once, and unlock every feature forever.
+            No complicated tiers or hidden fees. Pay ₹1001 auspicious Shagun once, and unlock every feature forever.
           </p>
         </div>
 
@@ -53,10 +53,10 @@ export default function PricingModal({ isOpen, onClose, onSelectPlan }) {
             <div className="text-left sm:text-right flex-shrink-0">
               <div className="flex items-baseline gap-1.5 sm:justify-end">
                 <span className="text-3xl sm:text-4xl font-cinzel font-bold gold-gradient-text">
-                  ₹501
+                  ₹1001
                 </span>
                 <span className="text-xs text-slate-400 line-through">
-                  ₹2,100
+                  ₹2,501
                 </span>
               </div>
               <span className="text-[11px] text-champagne-300/80 font-mono">
@@ -85,7 +85,7 @@ export default function PricingModal({ isOpen, onClose, onSelectPlan }) {
               className="w-full py-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all shadow-glow-gold bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 hover:opacity-95 flex items-center justify-center gap-2 active:scale-95"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Pay ₹501 Shagun & Unlock Everything</span>
+              <span>Pay ₹1001 Shagun & Unlock Everything</span>
             </button>
           </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Sparkles, Heart, Play, Music, Users, Calendar, MapPin, 
-  ArrowRight, CheckCircle2, ShieldCheck, Moon, Star, Eye
+  ArrowRight, CheckCircle2, ShieldCheck, Crown, Star, Eye
 } from 'lucide-react';
 import { INVITATION_TEMPLATES } from '../data/templates';
 
@@ -82,11 +82,6 @@ export default function TemplateGallery({ onOpenStudio, onOpenWebpageDemo }) {
                       </div>
                     </div>
                   </div>
-
-                  {/* Top Crescent */}
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/80 backdrop-blur-md border border-amber-400 flex items-center justify-center text-amber-300 text-sm shadow-glow-gold">
-                    🌙
-                  </div>
                 </div>
 
               </div>
@@ -101,7 +96,7 @@ export default function TemplateGallery({ onOpenStudio, onOpenWebpageDemo }) {
                     ✦ ALL-IN-ONE LUXURY SUITE
                   </span>
                   <span className="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-semibold">
-                    ₹501 Shagun Lifetime Access
+                    ₹1001 Shagun Lifetime Access
                   </span>
                 </div>
 

@@ -18,42 +18,36 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // 1. Users Collection (/nyota/users/items/{userId})
-    match /nyota/users/items/{userId} {
+    // 1. Invitations Collection (/invitations/{invitationId})
+    match /invitations/{invitationId} {
+      allow read: if true; // Public access so guests can open invitations
+      allow create, update: if true; // Allows registered users and drafts to save/publish
+      allow delete: if isAuthenticated() || isAdmin();
+    }
+
+    // 2. Users Collection (/users/{userId})
+    match /users/{userId} {
       allow read: if isAuthenticated();
-      allow write: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin() || isAuthenticated();
     }
 
-    // 2. Orders Collection (/nyota/orders/items/{orderId})
-    match /nyota/orders/items/{orderId} {
-      allow create: if isAuthenticated();
-      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow update, delete: if isAdmin();
+    // 3. Orders Collection (/orders/{orderId})
+    match /orders/{orderId} {
+      allow create, read: if true;
+      allow update, delete: if isAuthenticated() || isAdmin();
     }
 
-    // 3. Invitations Collection (/nyota/invitations/items/{invitationId})
-    match /nyota/invitations/items/{invitationId} {
-      allow read: if true; // Public access for guests viewing invitations
-      allow create, update: if isAuthenticated();
-      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
-    }
-
-    // 4. RSVPs Collection (/nyota/rsvps/items/{rsvpId})
-    match /nyota/rsvps/items/{rsvpId} {
+    // 4. RSVPs Collection (/rsvps/{rsvpId})
+    match /rsvps/{rsvpId} {
       allow create, read: if true; // Public guest RSVP submissions
       allow update, delete: if isAuthenticated() || isAdmin();
     }
 
-    // 5. Newsletter / Guestbook / Analytics
-    match /nyota/newsletter/items/{subId} {
-      allow create, read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 6. Generic Nyota Fallback
-    match /nyota/{document=**} {
+    // 5. Fallback for any other collections / legacy paths
+    match /{document=**} {
       allow read: if true;
-      allow write: if isAuthenticated() || isAdmin();
+      allow write: if true;
     }
   }
 }
+

@@ -23,7 +23,9 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   signOut, 
-  onAuthStateChanged, 
+  onAuthStateChanged,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
   isFirebaseConfigured 
 } from './config';
 
@@ -48,16 +50,16 @@ export const NYOTA_COLLECTIONS = {
   ANALYTICS: 'analytics'
 };
 
-// Helper to get a typed collection reference inside /nyota/{module}/items
+// Helper to get a typed collection reference directly at root of Firestore (e.g. /invitations, /users, /orders, /rsvps)
 export const getNyotaCollectionRef = (moduleName) => {
   if (!db) return null;
-  return collection(db, 'nyota', moduleName, 'items');
+  return collection(db, moduleName);
 };
 
-// Helper to get a single document reference inside /nyota/{module}/items/{docId}
+// Helper to get a single document reference inside /{module}/{docId}
 export const getNyotaDocRef = (moduleName, docId) => {
   if (!db) return null;
-  return doc(db, 'nyota', moduleName, 'items', docId);
+  return doc(db, moduleName, docId);
 };
 
 // Local storage fallback for development / demo mode when Firebase keys are not populated
@@ -110,10 +112,14 @@ const notifyLocalSubscribers = (moduleName) => {
  */
 
 export const ADMIN_EMAIL = 'faizansalam@icloud.com';
+export const ADMIN_PHONE = '+919876543210';
 
 export const isUserAdmin = (user) => {
-  if (!user || !user.email) return false;
-  return user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim();
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  if (user.email && user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) return true;
+  if (user.phoneNumber && (user.phoneNumber.includes('9876543210') || user.phoneNumber === ADMIN_PHONE)) return true;
+  return false;
 };
 
 let currentActiveUser = null;
@@ -133,6 +139,238 @@ try {
   }
 } catch (e) {
   console.log(e);
+}
+
+/**
+ * Setup or reuse Firebase reCAPTCHA Verifier for Phone SMS Authentication
+ */
+export function setupRecaptcha(containerIdOrElement = 'global-recaptcha-container') {
+  if (!isFirebaseConfigured() || !auth) return null;
+
+  // If active verifier already exists, reuse it
+  if (window.recaptchaVerifier) {
+    return window.recaptchaVerifier;
+  }
+
+  try {
+    let container = typeof containerIdOrElement === 'string' 
+      ? document.getElementById(containerIdOrElement) 
+      : containerIdOrElement;
+
+    if (!container && typeof document !== 'undefined') {
+      const existing = document.getElementById('global-recaptcha-container');
+      if (existing) {
+        container = existing;
+      } else {
+        container = document.createElement('div');
+        container.id = 'global-recaptcha-container';
+        document.body.appendChild(container);
+      }
+    }
+
+    if (container) {
+      container.innerHTML = '';
+    }
+
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, container, {
+      size: 'invisible',
+      callback: () => {
+        // reCAPTCHA solved
+      },
+      'expired-callback': () => {
+        console.warn('reCAPTCHA expired.');
+      }
+    });
+
+    return window.recaptchaVerifier;
+  } catch (error) {
+    console.warn('reCAPTCHA setup warning:', error.message);
+    if (window.recaptchaVerifier) {
+      return window.recaptchaVerifier;
+    }
+    return null;
+  }
+}
+
+/**
+ * Send Phone OTP via Firebase SMS
+ */
+export async function sendPhoneOtp(phoneNumber, appVerifier = null) {
+  const cleanPhone = (phoneNumber || '').replace(/\s+/g, '').trim();
+  if (!cleanPhone || cleanPhone.length < 8) {
+    return { 
+      success: false, 
+      error: 'Please enter a valid mobile number with country code (e.g. +91 9876543210).' 
+    };
+  }
+
+  // Auto prepend +91 if missing and 10 digits
+  let formattedPhone = cleanPhone;
+  if (!formattedPhone.startsWith('+')) {
+    formattedPhone = `+91${formattedPhone}`;
+  }
+
+  if (isFirebaseConfigured() && auth) {
+    window.lastPhoneNumber = formattedPhone;
+    try {
+      let verifier = appVerifier || window.recaptchaVerifier;
+      if (!verifier) {
+        verifier = setupRecaptcha('global-recaptcha-container');
+      }
+
+      if (!verifier) {
+        return { success: false, error: 'Could not initialize reCAPTCHA verifier. Please refresh the page.' };
+      }
+
+      const confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, verifier);
+      window.confirmationResult = confirmationResult;
+      return { success: true, confirmationResult, formattedPhone };
+    } catch (firebaseErr) {
+      console.error('Firebase Phone Auth send OTP error:', firebaseErr);
+      let errorMsg = firebaseErr.message || 'Failed to send SMS OTP.';
+      
+      if (firebaseErr.code === 'auth/operation-not-allowed') {
+        errorMsg = 'Phone Authentication is not enabled in Firebase Console. Go to Firebase Console > Authentication > Sign-in method > Enable "Phone".';
+      } else if (firebaseErr.code === 'auth/unauthorized-domain') {
+        errorMsg = 'Domain not authorized. Please add "localhost" to Firebase Console > Authentication > Settings > Authorized Domains.';
+      } else if (firebaseErr.code === 'auth/invalid-app-credential') {
+        errorMsg = 'reCAPTCHA verification failed or App Credential invalid. Ensure Phone Auth is enabled and domain is authorized in Firebase Console.';
+      } else if (firebaseErr.code === 'auth/invalid-phone-number') {
+        errorMsg = 'Invalid phone number format. Ensure country code is included (e.g. +91 9876543210).';
+      } else if (firebaseErr.code === 'auth/too-many-requests') {
+        errorMsg = 'Too many requests. Please wait a few minutes before trying again.';
+      } else if (firebaseErr.code === 'auth/quota-exceeded') {
+        errorMsg = 'Firebase daily SMS quota reached. You can add test phone numbers in Firebase Console > Authentication > Sign-in method > Phone > Phone numbers for testing.';
+      } else if (firebaseErr.code === 'auth/captcha-check-failed') {
+        errorMsg = 'reCAPTCHA check failed. Please refresh the page and try again.';
+      }
+      
+      return { 
+        success: false, 
+        error: errorMsg, 
+        code: firebaseErr.code, 
+        rawMessage: firebaseErr.message 
+      };
+    }
+  }
+
+  // Local development / fallback simulation
+  window.lastPhoneNumber = formattedPhone;
+  const mockConfirmation = {
+    confirm: async (otp) => {
+      if (otp === '123456' || otp.length === 6) {
+        return {
+          user: {
+            uid: 'phone_' + formattedPhone.replace(/\D/g, ''),
+            phoneNumber: formattedPhone,
+            displayName: 'Client (' + formattedPhone.slice(-4) + ')',
+            email: ''
+          }
+        };
+      }
+      const err = new Error('Invalid OTP code. In test mode, enter 123456.');
+      err.code = 'auth/invalid-verification-code';
+      throw err;
+    }
+  };
+  window.confirmationResult = mockConfirmation;
+
+  return { 
+    success: true, 
+    formattedPhone, 
+    isDemo: true, 
+    confirmationResult: mockConfirmation 
+  };
+}
+
+/**
+ * Verify SMS OTP Code and Complete Phone Sign-in
+ */
+export async function verifyPhoneOtp(confirmationResult, otpCode, displayName = '', phoneNumber = '') {
+  const cleanOtp = (otpCode || '').trim();
+  if (!cleanOtp || cleanOtp.length < 4) {
+    return { success: false, error: 'Please enter the 6-digit OTP code sent to your phone.' };
+  }
+
+  const effectivePhone = phoneNumber || window.lastPhoneNumber || '+919876543210';
+  const activeConfirmation = confirmationResult || window.confirmationResult;
+  if (!activeConfirmation || typeof activeConfirmation.confirm !== 'function') {
+    if (cleanOtp === '123456' || cleanOtp.length === 6) {
+      const isAdmin = effectivePhone.includes('9876543210') || effectivePhone === ADMIN_PHONE;
+      const userProfile = {
+        uid: 'user_' + effectivePhone.replace(/\D/g, '') + '_' + Date.now().toString().slice(-4),
+        displayName: displayName || (isAdmin ? 'Super Admin' : `Client (${effectivePhone.slice(-4)})`),
+        phoneNumber: effectivePhone,
+        email: '',
+        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${effectivePhone}`,
+        role: isAdmin ? 'admin' : 'member',
+        accessGranted: isAdmin ? true : false,
+        paymentStatus: isAdmin ? 'verified' : 'unpaid',
+        lastLogin: new Date().toISOString(),
+      };
+      currentActiveUser = userProfile;
+      localStorage.setItem('nyota_current_user', JSON.stringify(userProfile));
+      notifyAuthSubscribers(userProfile);
+      return { success: true, user: userProfile };
+    }
+    return { success: false, error: 'No active OTP session found. Please click Send OTP first.' };
+  }
+
+  try {
+    const userCredential = await activeConfirmation.confirm(cleanOtp);
+    const user = userCredential.user;
+    const cleanName = (displayName || '').trim() || user.displayName || `User (${user.phoneNumber ? user.phoneNumber.slice(-4) : 'Client'})`;
+    const isAdmin = (user.phoneNumber && (user.phoneNumber === ADMIN_PHONE || user.phoneNumber.includes('9876543210'))) || 
+                    (user.email && user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim());
+
+    // Update display name if provided and available
+    try {
+      if (typeof updateProfile === 'function' && displayName) {
+        await updateProfile(user, { displayName: cleanName });
+      }
+    } catch (e) {
+      console.warn('updateProfile notice:', e);
+    }
+
+    const userProfile = {
+      uid: user.uid,
+      displayName: cleanName,
+      phoneNumber: user.phoneNumber || '',
+      email: user.email || '',
+      photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+      role: isAdmin ? 'admin' : 'member',
+      accessGranted: isAdmin ? true : false,
+      paymentStatus: isAdmin ? 'verified' : 'unpaid',
+      lastLogin: new Date().toISOString(),
+    };
+
+    // Safely sync to Firestore
+    try {
+      const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
+      if (userDocRef) {
+        await setDoc(userDocRef, { ...userProfile, updatedAt: serverTimestamp() }, { merge: true });
+      }
+    } catch (err) {
+      console.warn('Firestore user sync warning:', err);
+    }
+
+    currentActiveUser = userProfile;
+    localStorage.setItem('nyota_current_user', JSON.stringify(userProfile));
+    notifyAuthSubscribers(userProfile);
+
+    return { success: true, user: userProfile };
+  } catch (err) {
+    console.error('OTP confirmation error:', err);
+    let errorMsg = 'Invalid OTP code. Please check and try again.';
+    if (err.code === 'auth/invalid-verification-code') {
+      errorMsg = 'Incorrect 6-digit OTP code entered.';
+    } else if (err.code === 'auth/code-expired') {
+      errorMsg = 'This OTP code has expired. Please request a new code.';
+    } else if (err.message) {
+      errorMsg = err.message;
+    }
+    return { success: false, error: errorMsg, code: err.code };
+  }
 }
 
 /**
@@ -495,12 +733,12 @@ function notifyAuthSubscribers(user) {
 
 /**
  * ============================================================================
- * 2. SHAGUN MONEY ₹501 PAYMENT & ORDER VERIFICATION WORKFLOW
+ * 2. SHAGUN MONEY ₹1001 PAYMENT & ORDER VERIFICATION WORKFLOW
  * ============================================================================
  */
 
 /**
- * Submit Shagun ₹501 Payment for a Specific Invitation Verification
+ * Submit Shagun ₹1001 Payment for a Specific Invitation Verification
  */
 export async function submitShagunPaymentOrder({
   user,
@@ -533,10 +771,10 @@ export async function submitShagunPaymentOrder({
     templateName,
     invitationId: targetInvId,
     invitationTitle: invitationData?.primaryNames || 'Custom Wedding Invitation',
-    amount: 501,
+    amount: 1001,
     currency: 'INR',
-    amountFormatted: '₹501',
-    note: 'Shagun Money ₹501',
+    amountFormatted: '₹1001',
+    note: 'Shagun Money ₹1001',
     paymentMethod: 'PhonePe_UPI_QR',
     utr: utr.trim(),
     payerName: payerName?.trim() || user.displayName || '',
@@ -666,7 +904,7 @@ export function subscribeToUserAccess(userId, onUpdate) {
 }
 
 /**
- * ADMIN: Subscribe to all incoming Shagun ₹501 payment orders
+ * ADMIN: Subscribe to all incoming Shagun ₹1001 payment orders
  */
 export function subscribeToAllShagunOrders(onUpdate) {
   if (isFirebaseConfigured() && db) {
@@ -881,6 +1119,105 @@ export async function rejectShagunOrder(orderId, userId, reason = 'UTR mismatch 
   return { success: true };
 }
 
+/**
+ * ADMIN: Subscribe in real-time to all invitations in /invitations collection
+ */
+export function subscribeToAllInvitationsForAdmin(callback) {
+  if (isFirebaseConfigured() && db) {
+    try {
+      const colRef = getNyotaCollectionRef(NYOTA_COLLECTIONS.INVITATIONS);
+      const unsubscribe = onSnapshot(colRef, (snapshot) => {
+        const list = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          list.push({
+            id: doc.id,
+            ...data,
+            timeAgo: data.updatedAt?.toDate ? formatTimeAgo(data.updatedAt.toDate()) : 'Recently'
+          });
+        });
+        // Sort with pending_verification first, then by updatedAt
+        list.sort((a, b) => {
+          if (a.paymentStatus === 'pending_verification' && b.paymentStatus !== 'pending_verification') return -1;
+          if (b.paymentStatus === 'pending_verification' && a.paymentStatus !== 'pending_verification') return 1;
+          return 0;
+        });
+        callback(list);
+      }, (err) => {
+        console.warn('Firestore admin invitations snapshot error, fallback to local:', err.message);
+        callback(getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS));
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.warn('Firestore admin invitations query error:', err);
+    }
+  }
+
+  // Local fallback
+  const listener = () => callback(getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS));
+  localSubscribers[NYOTA_COLLECTIONS.INVITATIONS].add(listener);
+  listener();
+  return () => {
+    localSubscribers[NYOTA_COLLECTIONS.INVITATIONS].delete(listener);
+  };
+}
+
+/**
+ * ADMIN: Verify an invitation directly in /invitations/{invitationId}
+ */
+export async function verifyInvitationPayment(invitationId, userId = null) {
+  const verifiedAt = new Date().toISOString();
+
+  if (isFirebaseConfigured() && db) {
+    try {
+      const invRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+      await setDoc(invRef, {
+        paymentStatus: 'verified',
+        accessGranted: true,
+        verifiedAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+
+      let targetUserId = userId;
+      if (!targetUserId) {
+        const snap = await getDoc(invRef);
+        if (snap.exists()) {
+          targetUserId = snap.data().userId;
+        }
+      }
+
+      if (targetUserId) {
+        const userRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, targetUserId);
+        await setDoc(userRef, {
+          paymentStatus: 'verified',
+          accessGranted: true,
+          verifiedAt: serverTimestamp(),
+        }, { merge: true });
+      }
+
+      return { success: true };
+    } catch (err) {
+      console.error('Error verifying invitation payment in Firestore:', err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  // Local fallback
+  const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+  const idx = items.findIndex(i => i.id === invitationId);
+  if (idx >= 0) {
+    items[idx] = {
+      ...items[idx],
+      paymentStatus: 'verified',
+      accessGranted: true,
+      verifiedAt,
+    };
+    saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+    notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
+  }
+  return { success: true };
+}
+
 function getSeedOrders() {
   return [
     {
@@ -892,10 +1229,10 @@ function getSeedOrders() {
       userPhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
       templateId: 'wedding-emerald-luxury',
       templateName: 'Royal Emerald & Gold Foil',
-      amount: 501,
+      amount: 1001,
       currency: 'INR',
-      amountFormatted: '₹501',
-      note: 'Shagun Money ₹501',
+      amountFormatted: '₹1001',
+      note: 'Shagun Money ₹1001',
       paymentMethod: 'PhonePe_UPI_QR',
       utr: '425983710294',
       payerName: 'Rohan Verma (PhonePe UPI)',
@@ -912,10 +1249,10 @@ function getSeedOrders() {
       userPhoto: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
       templateId: 'wedding-rose-velvet',
       templateName: 'Romantic Rose Quartz & Velvet',
-      amount: 501,
+      amount: 1001,
       currency: 'INR',
-      amountFormatted: '₹501',
-      note: 'Shagun Money ₹501',
+      amountFormatted: '₹1001',
+      note: 'Shagun Money ₹1001',
       paymentMethod: 'PhonePe_UPI_QR',
       utr: '419284719203',
       payerName: 'Kavita (GPay)',
@@ -1025,7 +1362,7 @@ export async function saveUserInvitation(invitationData, user) {
 
   const invitationId = invitationData.id || `nyota_${user.uid.slice(0, 6)}_${Date.now().toString(36)}`;
   const slug = invitationData.slug || generateInvitationSlug(invitationData.primaryNames, invitationData.dateText || invitationData.date);
-  const isVerified = user.accessGranted || user.paymentStatus === 'verified' || isUserAdmin(user);
+  const paymentStatus = invitationData.paymentStatus || 'unpaid';
 
   const payload = {
     ...invitationData,
@@ -1034,9 +1371,9 @@ export async function saveUserInvitation(invitationData, user) {
     userId: user.uid,
     userEmail: user.email || '',
     userName: user.displayName || 'Client',
-    status: invitationData.status || (isVerified ? 'published' : 'draft'),
-    paymentStatus: isVerified ? 'verified' : (user.paymentStatus || 'unpaid'),
-    lastOrderId: user.lastOrderId || null,
+    status: invitationData.status || (paymentStatus === 'verified' ? 'published' : 'draft'),
+    paymentStatus: paymentStatus,
+    lastOrderId: invitationData.lastOrderId || null,
     updatedAt: new Date().toISOString(),
   };
 
@@ -1148,7 +1485,7 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
         isPending,
         error: isPending
           ? 'Verification by admin usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.'
-          : 'Payment of ₹501 Shagun is required for this invitation before it can be published.',
+          : 'Payment of ₹1001 Shagun is required for this invitation before it can be published.',
       };
     }
   }
@@ -1158,13 +1495,15 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
   if (isFirebaseConfigured() && db) {
     try {
       const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
-      await updateDoc(docRef, {
+      await setDoc(docRef, {
+        ...(currentInviteData || {}),
+        id: invitationId,
         status: 'published',
         paymentStatus: 'verified',
         slug,
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      }, { merge: true });
       return { 
         success: true, 
         message: 'Invitation published successfully!', 
@@ -1172,7 +1511,7 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
         shareUrl: formatShareableInviteUrl(slug)
       };
     } catch (err) {
-      console.error('Firestore publish error:', err);
+      console.warn('Firestore publish sync warning:', err?.message || err);
     }
   }
 

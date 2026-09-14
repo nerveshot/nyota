@@ -9,7 +9,9 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
 } from 'firebase/auth';
 
 /**
@@ -62,5 +64,7 @@ export {
   updateProfile,
   signOut, 
   onAuthStateChanged, 
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
   firebaseConfig 
 };

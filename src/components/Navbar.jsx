@@ -100,7 +100,7 @@ export default function Navbar({
               activeSection === 'pricing' ? 'text-champagne-400 font-semibold' : 'text-slate-300'
             }`}
           >
-            <span>Pricing (₹501)</span>
+            <span>Pricing (₹1001)</span>
           </button>
 
           {currentUser && (
@@ -141,7 +141,7 @@ export default function Navbar({
                 <div className="absolute right-0 mt-2 w-64 glass-panel p-3 rounded-2xl border border-white/15 shadow-2xl space-y-3 z-50 animate-fadeIn bg-[#0E0C1C]">
                   <div className="border-b border-white/10 pb-2">
                     <div className="text-xs font-bold text-white truncate">{currentUser.displayName}</div>
-                    <div className="text-[11px] text-slate-400 font-mono truncate">{currentUser.email}</div>
+                    <div className="text-[11px] text-slate-400 font-mono truncate">{currentUser.phoneNumber || currentUser.email}</div>
                     
                     <div className="mt-1.5">
                       {currentUser.accessGranted ? (
@@ -152,7 +152,7 @@ export default function Navbar({
                       ) : currentUser.paymentStatus === 'pending_verification' ? (
                         <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/40 flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          <span>Awaiting ₹501 Verification</span>
+                          <span>Awaiting ₹1001 Verification</span>
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 text-[10px]">
@@ -180,8 +180,8 @@ export default function Navbar({
                     }}
                     className="w-full text-left py-1.5 px-2 rounded-lg text-xs font-semibold text-champagne-300 hover:bg-white/5 flex items-center justify-between cursor-pointer"
                   >
-                    <span>Pay ₹501 Shagun</span>
-                    <span className="text-[10px] text-champagne-400 font-mono">₹501</span>
+                    <span>Pay ₹1001 Shagun</span>
+                    <span className="text-[10px] text-champagne-400 font-mono">₹1001</span>
                   </button>
 
                   <button
@@ -292,7 +292,7 @@ export default function Navbar({
             }}
             className="block w-full text-left py-2 text-slate-200 hover:text-champagne-400 font-medium text-xs"
           >
-            Pricing (₹501 Shagun)
+            Pricing (₹1001 Shagun)
           </button>
 
           {currentUser && (

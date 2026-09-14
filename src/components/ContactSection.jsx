@@ -18,7 +18,7 @@ export default function ContactSection({ whatsappNumber = OWNER_WHATSAPP_NUMBER 
 
   // Support / Help message link
   const supportText = encodeURIComponent(
-    "Hi! 🛠️ I need assistance with my Nyota invitation / ₹501 payment verification / editor setup."
+    "Hi! 🛠️ I need assistance with my Nyota invitation / ₹1001 payment verification / editor setup."
   );
   const supportUrl = `https://wa.me/${whatsappNumber}?text=${supportText}`;
 
@@ -139,7 +139,7 @@ export default function ContactSection({ whatsappNumber = OWNER_WHATSAPP_NUMBER 
                   Need Help or Facing Any Issue?
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Have a question about your ₹501 Shagun payment verification, photo uploads, RSVP management, or invitation link sharing? We are here to help!
+                  Have a question about your ₹1001 Shagun payment verification, photo uploads, RSVP management, or invitation link sharing? We are here to help!
                 </p>
               </div>
 

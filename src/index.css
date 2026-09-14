@@ -201,38 +201,135 @@
 /* Royal Velvet Curtains & Mosque Entrance Animation */
 .curtain-fabric-left {
   background: linear-gradient(90deg, 
-    #2E040D 0%, 
-    #660C1D 12%, 
-    #3D0510 25%, 
-    #7A1024 38%, 
+    #1E0208 0%, 
+    #5E0A1A 8%, 
+    #2E040D 16%, 
+    #7A1024 25%, 
+    #3D0510 33%, 
+    #8B152B 42%, 
     #420612 50%, 
-    #690D1E 63%, 
-    #30040E 76%, 
-    #5E0A1A 88%, 
-    #1A0106 100%
+    #7A1024 58%, 
+    #30040E 67%, 
+    #690D1E 75%, 
+    #24030A 83%, 
+    #540917 92%, 
+    #150105 100%
   );
-  box-shadow: inset -20px 0 40px rgba(0,0,0,0.85), 15px 0 35px rgba(0,0,0,0.7);
+  box-shadow: inset -25px 0 50px rgba(0,0,0,0.9), 20px 0 45px rgba(0,0,0,0.8);
 }
 
 .curtain-fabric-right {
   background: linear-gradient(270deg, 
-    #2E040D 0%, 
-    #660C1D 12%, 
-    #3D0510 25%, 
-    #7A1024 38%, 
+    #1E0208 0%, 
+    #5E0A1A 8%, 
+    #2E040D 16%, 
+    #7A1024 25%, 
+    #3D0510 33%, 
+    #8B152B 42%, 
     #420612 50%, 
-    #690D1E 63%, 
-    #30040E 76%, 
-    #5E0A1A 88%, 
-    #1A0106 100%
+    #7A1024 58%, 
+    #30040E 67%, 
+    #690D1E 75%, 
+    #24030A 83%, 
+    #540917 92%, 
+    #150105 100%
   );
-  box-shadow: inset 20px 0 40px rgba(0,0,0,0.85), -15px 0 35px rgba(0,0,0,0.7);
+  box-shadow: inset 25px 0 50px rgba(0,0,0,0.9), -20px 0 45px rgba(0,0,0,0.8);
+}
+
+/* Layer 2: Inner Royal Sheer Golden Gossamer Silk Curtains */
+.curtain-sheer-gold-left {
+  background: linear-gradient(90deg,
+    rgba(212, 175, 55, 0.45) 0%,
+    rgba(245, 211, 139, 0.7) 15%,
+    rgba(180, 130, 30, 0.5) 30%,
+    rgba(255, 230, 160, 0.8) 45%,
+    rgba(160, 110, 20, 0.55) 60%,
+    rgba(245, 211, 139, 0.75) 75%,
+    rgba(138, 95, 15, 0.6) 90%,
+    rgba(212, 175, 55, 0.8) 100%
+  );
+  backdrop-filter: blur(4px);
+  box-shadow: inset -15px 0 30px rgba(138, 107, 26, 0.6), 10px 0 25px rgba(0,0,0,0.5);
+}
+
+.curtain-sheer-gold-right {
+  background: linear-gradient(270deg,
+    rgba(212, 175, 55, 0.45) 0%,
+    rgba(245, 211, 139, 0.7) 15%,
+    rgba(180, 130, 30, 0.5) 30%,
+    rgba(255, 230, 160, 0.8) 45%,
+    rgba(160, 110, 20, 0.55) 60%,
+    rgba(245, 211, 139, 0.75) 75%,
+    rgba(138, 95, 15, 0.6) 90%,
+    rgba(212, 175, 55, 0.8) 100%
+  );
+  backdrop-filter: blur(4px);
+  box-shadow: inset 15px 0 30px rgba(138, 107, 26, 0.6), -10px 0 25px rgba(0,0,0,0.5);
+}
+
+.gold-damask-overlay {
+  background-image: radial-gradient(#D4AF37 1px, transparent 1px), radial-gradient(#D4AF37 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  opacity: 0.18;
 }
 
 .curtain-valance {
   background: linear-gradient(180deg, #4A0815 0%, #29030B 75%, #150105 100%);
   border-bottom: 3px solid #D4AF37;
   box-shadow: 0 12px 30px rgba(0,0,0,0.85);
+}
+
+/* Layer 3: Top Austrian Festoon Swags */
+.curtain-swag {
+  background: radial-gradient(ellipse at 50% 0%, #7A1024 0%, #3D0510 60%, #1A0106 100%);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 -4px 10px rgba(212,175,55,0.4);
+}
+
+/* Layer 4: Side Cascading Jabot Drapes */
+.curtain-jabot-left {
+  background: linear-gradient(135deg, #5E0A1A 0%, #2E040D 50%, #150105 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  box-shadow: 5px 10px 25px rgba(0,0,0,0.9);
+}
+
+.curtain-jabot-right {
+  background: linear-gradient(225deg, #5E0A1A 0%, #2E040D 50%, #150105 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  box-shadow: -5px 10px 25px rgba(0,0,0,0.9);
+}
+
+@keyframes tugPullLeft {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-6deg) scale(1.06) translateX(-6px);
+  }
+  100% {
+    transform: rotate(-10deg) scale(1.1) translateX(-10px);
+  }
+}
+
+@keyframes tugPullRight {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(6deg) scale(1.06) translateX(6px);
+  }
+  100% {
+    transform: rotate(10deg) scale(1.1) translateX(10px);
+  }
+}
+
+.animate-tug-left {
+  animation: tugPullLeft 1.3s ease-in-out infinite alternate;
+}
+
+.animate-tug-right {
+  animation: tugPullRight 1.3s ease-in-out infinite alternate;
 }
 
 .gold-fringe-pattern {
@@ -250,7 +347,7 @@
     transform: scale(1) translateY(0px);
     opacity: 0.85;
   }
-  25% {
+  30% {
     opacity: 1;
   }
   100% {
@@ -260,7 +357,7 @@
 }
 
 .animate-mosque-enter {
-  animation: mosqueDollyZoom 3.8s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  animation: mosqueDollyZoom 5.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
 
 @keyframes bismillahGlow {

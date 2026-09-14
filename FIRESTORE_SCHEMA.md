@@ -71,7 +71,7 @@ Real-time guest responses synchronized via Firestore `onSnapshot`.
 ---
 
 ### C. Orders & Shagun Payments (`/nyota/orders/items/{orderId}`)
-Payment and licensing records for ₹501 Shagun Money UPI transfers and admin verification.
+Payment and licensing records for ₹1001 Shagun Money UPI transfers and admin verification.
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
@@ -83,10 +83,10 @@ Payment and licensing records for ₹501 Shagun Money UPI transfers and admin ve
 | `userPhoto` | `string` | Google profile avatar URL |
 | `templateId` | `string` | Selected invitation template ID |
 | `templateName` | `string` | Template title (e.g. `"Royal Emerald & Gold Foil"`) |
-| `amount` | `number` | `501` (Auspicious Shagun amount in INR) |
+| `amount` | `number` | `1001` (Auspicious Shagun amount in INR) |
 | `currency` | `string` | `"INR"` |
-| `amountFormatted` | `string` | `"₹501"` |
-| `note` | `string` | `"Shagun Money ₹501"` |
+| `amountFormatted` | `string` | `"₹1001"` |
+| `note` | `string` | `"Shagun Money ₹1001"` |
 | `paymentMethod` | `string` | `"PhonePe_UPI_QR"` |
 | `utr` | `string` | 12-digit UPI Reference / UTR Number from payment app |
 | `payerName` | `string` | Name on UPI payment receipt |
@@ -98,15 +98,16 @@ Payment and licensing records for ₹501 Shagun Money UPI transfers and admin ve
 ---
 
 ### D. Users & Access Permissions (`/nyota/users/items/{userId}`)
-User profiles and access permissions synced via 1-click Google Sign-In.
+User profiles and access permissions synced via Firebase Phone (SMS OTP) and Google Auth.
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `uid` | `string` | Firebase Google Auth UID |
+| `uid` | `string` | Firebase Auth UID |
+| `phoneNumber` | `string` | Verified phone number (e.g. `"+919876543210"`) |
 | `displayName` | `string` | User full name |
-| `email` | `string` | User email address |
-| `photoURL` | `string` | User Google avatar photo |
-| `accessGranted` | `boolean` | `true` if ₹501 Shagun verified by Admin, `false` otherwise |
+| `email` | `string` | User email address (if provided) |
+| `photoURL` | `string` | User profile avatar photo URL |
+| `accessGranted` | `boolean` | `true` if ₹1001 Shagun verified by Admin, `false` otherwise |
 | `paymentStatus` | `string` | `"unpaid"` \| `"pending_verification"` \| `"verified"` \| `"rejected"` |
 | `lastOrderId` | `string` | Associated Shagun Order ID |
 | `utr` | `string` | Submitted UPI UTR reference number |
@@ -148,7 +149,7 @@ All database interactions in the client are encapsulated inside [`src/firebase/n
 - `loginWithGoogle()` – 1-Click Google Sign-In and profile creation in `/nyota/users/items`.
 - `logoutUser()` – Signs out current user.
 - `subscribeToAuthUser(callback)` – Real-time auth state and user access permissions listener.
-- `submitShagunPaymentOrder(orderData)` – Records a ₹501 Shagun payment order with UPI UTR to `/nyota/orders/items`.
+- `submitShagunPaymentOrder(orderData)` – Records a ₹1001 Shagun payment order with UPI UTR to `/nyota/orders/items`.
 - `subscribeToUserAccess(userId, callback)` – Listens to user verification in real time and automatically unlocks editor when admin approves.
 - `subscribeToAllShagunOrders(callback)` – Real-time listener for Admin Portal to view all pending and verified orders.
 - `verifyShagunOrder(orderId, userId)` – 1-Click admin action to verify payment and unlock client access.

@@ -70,6 +70,9 @@ export default function CustomizerStudio({
       if (selectedTemplate.defaults) {
         setInvitationData(prev => ({
           ...prev,
+          id: selectedTemplate.defaults.id || selectedTemplate.id || null,
+          paymentStatus: selectedTemplate.defaults.paymentStatus || selectedTemplate.paymentStatus || 'unpaid',
+          status: selectedTemplate.defaults.status || selectedTemplate.status || 'draft',
           ...selectedTemplate.defaults,
           sections: {
             ...(prev.sections || {}),
@@ -80,6 +83,9 @@ export default function CustomizerStudio({
         // Direct invitation object from dashboard
         setInvitationData(prev => ({
           ...prev,
+          id: selectedTemplate.id || null,
+          paymentStatus: selectedTemplate.paymentStatus || 'unpaid',
+          status: selectedTemplate.status || 'draft',
           ...selectedTemplate,
         }));
       }
@@ -88,6 +94,9 @@ export default function CustomizerStudio({
 
   // Invitation Content Fields
   const [invitationData, setInvitationData] = useState({
+    id: currentTemplate.defaults?.id || null,
+    status: currentTemplate.defaults?.status || 'draft',
+    paymentStatus: currentTemplate.defaults?.paymentStatus || 'unpaid',
     bismillah: currentTemplate.defaults?.bismillah || 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
     tag: currentTemplate.defaults?.tag || 'TOGETHER WITH THEIR FAMILIES',
     quranVerse: currentTemplate.defaults?.quranVerse || '“And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.”',
@@ -256,8 +265,8 @@ export default function CustomizerStudio({
     }
   };
 
-  // Per-Invitation Payment Verification Check
-  const isThisInviteVerified = isUserAdmin(currentUser) || invitationData?.paymentStatus === 'verified' || invitationData?.status === 'published';
+  // Per-Invitation Payment Verification Check: Only verified if THIS invitation document's paymentStatus is 'verified'
+  const isThisInviteVerified = invitationData?.paymentStatus === 'verified';
   const isThisInvitePending = invitationData?.paymentStatus === 'pending_verification';
 
   const handlePublishClick = async () => {
@@ -379,7 +388,7 @@ export default function CustomizerStudio({
                 </span>
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-champagne-500/20 text-champagne-300 text-[11px] font-bold border border-champagne-500/30 flex items-center gap-1">
-                  <span>₹501 Shagun Per Invitation</span>
+                  <span>₹1001 Shagun Per Invitation</span>
                 </span>
               )}
             </div>
@@ -418,7 +427,7 @@ export default function CustomizerStudio({
             ) : (
               <>
                 <ShoppingBag className="w-4 h-4 text-slate-950" />
-                <span>Pay ₹501 Shagun & Publish</span>
+                <span>Pay ₹1001 Shagun & Publish</span>
               </>
             )}
           </button>
@@ -505,7 +514,7 @@ export default function CustomizerStudio({
                 <span>🛡️ Payment Verification in Progress</span>
               </div>
               <p className="text-[11px] text-amber-300/80">
-                You can continue editing and saving your draft in the meantime. As soon as admin verifies your ₹501 payment, your live webpage will be unlocked.
+                You can continue editing and saving your draft in the meantime. As soon as admin verifies your ₹1001 payment, your live webpage will be unlocked.
               </p>
             </div>
 

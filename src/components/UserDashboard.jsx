@@ -104,18 +104,18 @@ export default function UserDashboard({
             Client Portal Login Required
           </h2>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Please sign in or create an account with your email to view and manage your bought luxury invitations.
+            Please sign in with your phone number to view and manage your bought luxury invitations.
           </p>
           <div className="flex flex-col gap-3">
             <button
-              onClick={() => onOpenAuthModal('signin')}
-              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all"
+              onClick={() => onOpenAuthModal('phone')}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all cursor-pointer"
             >
-              Sign In to My Account
+              Sign In with Mobile OTP
             </button>
             <button
               onClick={onBackToSite}
-              className="w-full py-2.5 text-xs text-slate-400 hover:text-white transition-colors"
+              className="w-full py-2.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               Back to Home
             </button>
@@ -162,8 +162,8 @@ export default function UserDashboard({
                 <div className="text-xs font-bold text-white truncate max-w-[120px]">
                   {currentUser.displayName || 'Client User'}
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono truncate max-w-[120px]">
-                  {currentUser.email}
+                <div className="text-[10px] text-champagne-300 font-mono truncate max-w-[120px]">
+                  {currentUser.phoneNumber || currentUser.email || 'Verified Client'}
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function UserDashboard({
                 Payment Verification & Publishing Guidelines
               </div>
               <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                You can create and edit your invitations at any time. To publish your live shareable link for guests, your ₹501 Shagun payment must be verified by an administrator.
+                You can create and edit your invitations at any time. To publish your live shareable link for guests, your ₹1001 Shagun payment must be verified by an administrator.
               </p>
               <div className="p-2.5 rounded-xl bg-black/40 border border-amber-400/20 text-[11px] text-amber-200 font-medium">
                 ⚠️ <span className="font-bold">Important Notice:</span> Verification by admin usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.
@@ -251,9 +251,9 @@ export default function UserDashboard({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {invitations.map((inv) => {
-                const invVerified = isUserAdmin(currentUser) || inv.paymentStatus === 'verified' || inv.status === 'published';
+                const invVerified = inv.paymentStatus === 'verified';
                 const isPending = inv.paymentStatus === 'pending_verification';
-                const isPublished = inv.status === 'published';
+                const isPublished = inv.status === 'published' && invVerified;
                 const shareUrl = formatShareableInviteUrl(inv);
 
                 return (
@@ -288,7 +288,7 @@ export default function UserDashboard({
                           ) : (
                             <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-slate-300 text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
                               <Lock className="w-3 h-3" />
-                              <span>₹501 Unpaid</span>
+                              <span>₹1001 Unpaid</span>
                             </span>
                           )}
                         </div>
@@ -374,7 +374,7 @@ export default function UserDashboard({
                           className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                         >
                           <Lock className="w-3.5 h-3.5" />
-                          <span>Pay ₹501 Shagun to Publish</span>
+                          <span>Pay ₹1001 Shagun to Publish</span>
                         </button>
                       )}
 

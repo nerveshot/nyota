@@ -101,14 +101,35 @@ export default function App() {
   const handleOpenStudio = (template = null) => {
     if (template) {
       if (template.primaryNames) {
+        // Editing an existing invitation from dashboard
         setSelectedTemplate({
           ...INVITATION_TEMPLATES[0],
           defaults: template,
           ...template,
         });
       } else {
-        setSelectedTemplate(template);
+        // Selected a gallery template to start customizing
+        setSelectedTemplate({
+          ...template,
+          defaults: {
+            ...template.defaults,
+            id: null,
+            paymentStatus: 'unpaid',
+            status: 'draft',
+          }
+        });
       }
+    } else {
+      // Create new invite
+      setSelectedTemplate({
+        ...INVITATION_TEMPLATES[0],
+        defaults: {
+          ...INVITATION_TEMPLATES[0].defaults,
+          id: null,
+          paymentStatus: 'unpaid',
+          status: 'draft',
+        }
+      });
     }
     setCurrentView('studio');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -265,7 +286,7 @@ export default function App() {
               invitationData={selectedTemplate.defaults}
             />
 
-            {/* Monetization & Pricing Section Preview (Single All-in-One ₹501 Shagun Package) */}
+            {/* Monetization & Pricing Section Preview (Single All-in-One ₹1001 Shagun Package) */}
             <section id="pricing-section" className="py-20 relative">
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-2xl mx-auto space-y-4 mb-12">
@@ -274,10 +295,10 @@ export default function App() {
                     <span>One Simple Price • Everything Included</span>
                   </div>
                   <h2 className="text-3xl sm:text-4xl lg:text-5xl font-cinzel font-bold text-white">
-                    All-Inclusive <span className="gold-gradient-text">₹501 Shagun Money</span>
+                    All-Inclusive <span className="gold-gradient-text">₹1001 Shagun Money</span>
                   </h2>
                   <p className="text-sm text-slate-300">
-                    Scan our PhonePe UPI QR code, pay ₹501 auspicious Shagun, and get instant 1-click admin verification to customize, live-edit, and publish your wedding invitation.
+                    Scan our PhonePe UPI QR code, pay ₹1001 auspicious Shagun, and get instant 1-click admin verification to customize, live-edit, and publish your wedding invitation.
                   </p>
                 </div>
 
@@ -289,7 +310,7 @@ export default function App() {
                       className="relative rounded-3xl p-6 sm:p-10 bg-gradient-to-b from-[#1E1838] via-[#141026] to-[#0D0A1B] border-2 border-champagne-400 shadow-glow-gold space-y-6"
                     >
                       <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-md whitespace-nowrap">
-                        {pkg.shagunBadge || 'All-Inclusive Shagun ₹501 🕉️'}
+                        {pkg.shagunBadge || 'All-Inclusive Shagun ₹1001 🕉️'}
                       </div>
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 pt-2">
@@ -305,10 +326,10 @@ export default function App() {
                         <div className="text-left sm:text-right flex-shrink-0">
                           <div className="flex items-baseline gap-2 sm:justify-end">
                             <span className="text-4xl font-cinzel font-bold gold-gradient-text">
-                              ₹501
+                              ₹1001
                             </span>
                             <span className="text-xs text-slate-400 line-through">
-                              ₹2,100
+                              ₹2,501
                             </span>
                           </div>
                           <span className="text-[11px] text-champagne-300/80 font-mono">
@@ -363,7 +384,7 @@ export default function App() {
                       Ready to Create Your <span className="gold-gradient-text">Dream Wedding Invitation?</span>
                     </h2>
                     <p className="text-sm text-slate-300 max-w-lg mx-auto">
-                      Scan the QR code, pay ₹501 Shagun, and get instant admin verification to live-edit and publish your luxury cinematic webpage invitation.
+                      Scan the QR code, pay ₹1001 Shagun, and get instant admin verification to live-edit and publish your luxury cinematic webpage invitation.
                     </p>
                   </div>
 
@@ -373,7 +394,7 @@ export default function App() {
                       className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-4 h-4" />
-                      <span>Pay ₹501 Shagun & Unlock Editor</span>
+                      <span>Pay ₹1001 Shagun & Unlock Editor</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>

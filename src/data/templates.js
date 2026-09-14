@@ -247,12 +247,12 @@ export const PRICING_PACKAGES = [
   {
     id: 'all-in-one-shagun',
     name: 'All-In-One Complete Luxury Suite',
-    price: 501,
-    originalPrice: 2100,
+    price: 1001,
+    originalPrice: 2501,
     currencySymbol: '₹',
     currency: 'INR',
     popular: true,
-    shagunBadge: 'All-Inclusive Shagun ₹501 🕉️',
+    shagunBadge: 'All-Inclusive Shagun ₹1001 🕉️',
     description: 'One simple price. Everything included forever — live webpage, full customizer, 3D unboxing, real-time RSVPs, music, and instant admin verification.',
     features: [
       'Full Access to Customizer Studio (Unlimited Live Editing)',
@@ -269,7 +269,7 @@ export const PRICING_PACKAGES = [
       'Permanent Google Account Access & 1-Click Admin Verification'
     ],
     highlight: true,
-    ctaText: 'Pay ₹501 Shagun & Unlock Everything',
+    ctaText: 'Pay ₹1001 Shagun & Unlock Everything',
   }
 ];
 

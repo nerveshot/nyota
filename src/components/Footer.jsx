@@ -44,7 +44,7 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing, onOpen
             </p>
 
             <div className="text-[11px] text-champagne-400/80 font-mono">
-              ✦ Worldwide Instant Delivery • ₹501 Shagun Lifetime Access
+              ✦ Worldwide Instant Delivery • ₹1001 Shagun Lifetime Access
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing, onOpen
               </li>
               <li>
                 <button onClick={onOpenPricing} className="hover:text-champagne-300 transition-colors">
-                  Shagun Pricing (₹501)
+                  Shagun Pricing (₹1001)
                 </button>
               </li>
               <li>
