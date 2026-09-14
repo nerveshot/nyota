@@ -113,6 +113,7 @@ export default function CheckoutModal({
         utr: utr.trim(),
         payerName: payerName.trim() || currentUser.displayName,
         invitationData: customizationData?.invitationData || null,
+        invitationId: customizationData?.invitationId || customizationData?.invitationData?.id || null,
       });
 
       if (res.success) {

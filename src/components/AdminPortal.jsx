@@ -138,8 +138,8 @@ export default function AdminPortal({ onBackToSite, onPreviewInvitation }) {
     setActionLoadingId(order.id);
     setActionMessage('');
     try {
-      await verifyShagunOrder(order.id, order.userId);
-      setActionMessage(`✓ Order ${order.id} for ${order.userName} successfully verified! Editor access unlocked.`);
+      await verifyShagunOrder(order.id, order.userId, order.invitationId || order.invitationData?.id);
+      setActionMessage(`✓ Order ${order.id} for ${order.userName} successfully verified! Invitation publishing unlocked.`);
       setTimeout(() => setActionMessage(''), 4000);
     } catch (err) {
       console.error('Error verifying order:', err);

@@ -500,7 +500,7 @@ function notifyAuthSubscribers(user) {
  */
 
 /**
- * Submit Shagun ₹501 Payment for Verification
+ * Submit Shagun ₹501 Payment for a Specific Invitation Verification
  */
 export async function submitShagunPaymentOrder({
   user,
@@ -509,9 +509,10 @@ export async function submitShagunPaymentOrder({
   utr,
   payerName,
   invitationData = null,
+  invitationId = null,
 }) {
   if (!user || !user.uid) {
-    throw new Error('User must be signed in with Google to submit payment.');
+    throw new Error('User must be signed in to submit payment.');
   }
 
   if (!utr || utr.trim().length < 4) {
@@ -519,6 +520,7 @@ export async function submitShagunPaymentOrder({
   }
 
   const orderId = `SHAGUN-${Date.now().toString().slice(-6)}-${Math.floor(1000 + Math.random() * 9000)}`;
+  const targetInvId = invitationId || invitationData?.id || `nyota_${user.uid.slice(0, 6)}_${Date.now().toString(36)}`;
   
   const orderPayload = {
     id: orderId,
@@ -529,6 +531,8 @@ export async function submitShagunPaymentOrder({
     userPhoto: user.photoURL || '',
     templateId,
     templateName,
+    invitationId: targetInvId,
+    invitationTitle: invitationData?.primaryNames || 'Custom Wedding Invitation',
     amount: 501,
     currency: 'INR',
     amountFormatted: '₹501',
@@ -537,7 +541,7 @@ export async function submitShagunPaymentOrder({
     utr: utr.trim(),
     payerName: payerName?.trim() || user.displayName || '',
     status: 'pending_verification', // 'pending_verification' | 'verified' | 'rejected'
-    invitationData,
+    invitationData: invitationData ? { ...invitationData, id: targetInvId } : null,
     createdAt: new Date().toISOString(),
   };
 
@@ -550,19 +554,31 @@ export async function submitShagunPaymentOrder({
         createdAt: serverTimestamp(),
       });
 
-      // 2. Update user access doc in /nyota/users/items/{userId}
+      // 2. Update the specific invitation in /nyota/invitations/items/{targetInvId}
+      if (invitationData) {
+        const invDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, targetInvId);
+        await setDoc(invDocRef, {
+          ...invitationData,
+          id: targetInvId,
+          userId: user.uid,
+          userEmail: user.email || '',
+          userName: user.displayName || 'Client',
+          paymentStatus: 'pending_verification',
+          lastOrderId: orderId,
+          utr: utr.trim(),
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      }
+
+      // 3. Update user access doc
       const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
       await setDoc(userDocRef, {
         lastOrderId: orderId,
-        paymentStatus: 'pending_verification',
-        accessGranted: false,
-        utr: utr.trim(),
-        templateId,
-        templateName,
+        lastInvitationId: targetInvId,
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      return { success: true, orderId, order: orderPayload, source: 'firestore' };
+      return { success: true, orderId, invitationId: targetInvId, order: orderPayload, source: 'firestore' };
     } catch (err) {
       console.error('Firestore submitShagunPayment error:', err);
     }
@@ -574,30 +590,31 @@ export async function submitShagunPaymentOrder({
   saveLocalCollection(NYOTA_COLLECTIONS.ORDERS, orders);
   notifyLocalSubscribers(NYOTA_COLLECTIONS.ORDERS);
 
-  // Update local user record
-  const users = getLocalCollection(NYOTA_COLLECTIONS.USERS);
-  const uIndex = users.findIndex(u => u.uid === user.uid);
-  const updatedUserData = {
-    ...(users[uIndex] || user),
-    lastOrderId: orderId,
-    paymentStatus: 'pending_verification',
-    accessGranted: false,
-    utr: utr.trim(),
-    templateId,
-    templateName,
-  };
-  if (uIndex >= 0) {
-    users[uIndex] = updatedUserData;
-  } else {
-    users.unshift(updatedUserData);
+  // Update local invitation record
+  if (invitationData) {
+    const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+    const existingIndex = items.findIndex(i => i.id === targetInvId);
+    const updatedInv = {
+      ...(items[existingIndex] || invitationData),
+      id: targetInvId,
+      userId: user.uid,
+      userEmail: user.email || '',
+      userName: user.displayName || 'Client',
+      paymentStatus: 'pending_verification',
+      lastOrderId: orderId,
+      utr: utr.trim(),
+      updatedAt: new Date().toISOString(),
+    };
+    if (existingIndex >= 0) {
+      items[existingIndex] = updatedInv;
+    } else {
+      items.unshift(updatedInv);
+    }
+    saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+    notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
   }
-  saveLocalCollection(NYOTA_COLLECTIONS.USERS, users);
 
-  currentActiveUser = updatedUserData;
-  localStorage.setItem('nyota_current_user', JSON.stringify(updatedUserData));
-  notifyAuthSubscribers(updatedUserData);
-
-  return { success: true, orderId, order: orderPayload, source: 'local' };
+  return { success: true, orderId, invitationId: targetInvId, order: orderPayload, source: 'local' };
 }
 
 /**
@@ -694,9 +711,9 @@ export function subscribeToAllShagunOrders(onUpdate) {
 }
 
 /**
- * ADMIN: Verify payment order with 1-click and immediately grant user editor access
+ * ADMIN: Verify payment order with 1-click and immediately grant user editor access for this specific invitation
  */
-export async function verifyShagunOrder(orderId, userId) {
+export async function verifyShagunOrder(orderId, userId, invitationId = null) {
   const verifiedAt = new Date().toISOString();
 
   if (isFirebaseConfigured() && db) {
@@ -709,7 +726,28 @@ export async function verifyShagunOrder(orderId, userId) {
         verifiedAt: serverTimestamp(),
       });
 
-      // 2. Update User doc to grant access
+      // 2. Determine target invitation ID from argument or order document
+      let targetInvId = invitationId;
+      if (!targetInvId) {
+        const orderSnap = await getDoc(orderRef);
+        if (orderSnap.exists()) {
+          targetInvId = orderSnap.data().invitationId || orderSnap.data().invitationData?.id;
+        }
+      }
+
+      // 3. Mark the specific invitation verified in Firestore
+      if (targetInvId) {
+        const invRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, targetInvId);
+        await setDoc(invRef, {
+          paymentStatus: 'verified',
+          accessGranted: true,
+          verifiedOrderId: orderId,
+          verifiedAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      }
+
+      // 4. Update User doc
       if (userId) {
         const userRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, userId);
         await setDoc(userRef, {
@@ -729,6 +767,7 @@ export async function verifyShagunOrder(orderId, userId) {
   // Local fallback
   const orders = getLocalCollection(NYOTA_COLLECTIONS.ORDERS);
   const oIndex = orders.findIndex(o => o.id === orderId);
+  let targetInvId = invitationId;
   if (oIndex >= 0) {
     orders[oIndex] = {
       ...orders[oIndex],
@@ -736,8 +775,27 @@ export async function verifyShagunOrder(orderId, userId) {
       paymentStatus: 'verified',
       verifiedAt,
     };
+    if (!targetInvId) {
+      targetInvId = orders[oIndex].invitationId || orders[oIndex].invitationData?.id;
+    }
     saveLocalCollection(NYOTA_COLLECTIONS.ORDERS, orders);
     notifyLocalSubscribers(NYOTA_COLLECTIONS.ORDERS);
+  }
+
+  if (targetInvId) {
+    const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+    const iIndex = items.findIndex(i => i.id === targetInvId);
+    if (iIndex >= 0) {
+      items[iIndex] = {
+        ...items[iIndex],
+        paymentStatus: 'verified',
+        accessGranted: true,
+        verifiedOrderId: orderId,
+        verifiedAt,
+      };
+      saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+      notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
+    }
   }
 
   if (userId) {
@@ -875,12 +933,55 @@ function getSeedOrders() {
  * ============================================================================
  */
 
+/**
+ * Generate a clean, elegant URL slug from Primary Names & Date
+ * Example: "Zayd & Aaliyah", "24 October 2026" -> "zayd-and-aaliyah-24-october-2026"
+ */
+export function generateInvitationSlug(primaryNames = '', dateText = '') {
+  const cleanNames = String(primaryNames || 'royal-wedding')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  let cleanDate = '';
+  if (dateText) {
+    cleanDate = String(dateText)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  const combined = cleanDate ? `${cleanNames}-${cleanDate}` : cleanNames;
+  return combined.replace(/-+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80) || 'invitation';
+}
+
+/**
+ * Format shareable invitation link in canonical format: https://nyota.pages.dev/primary-names-with-date
+ */
+export function formatShareableInviteUrl(invitationOrSlug, useLocalOrigin = false) {
+  let slug = '';
+  if (typeof invitationOrSlug === 'string') {
+    slug = invitationOrSlug;
+  } else if (invitationOrSlug) {
+    slug = invitationOrSlug.slug || generateInvitationSlug(invitationOrSlug.primaryNames, invitationOrSlug.dateText || invitationOrSlug.date);
+  }
+  if (!slug) slug = 'invitation';
+
+  if (useLocalOrigin && typeof window !== 'undefined' && window.location.hostname !== 'nyota.pages.dev') {
+    return `${window.location.origin}/?invite=${slug}`;
+  }
+  return `https://nyota.pages.dev/${slug}`;
+}
+
 export async function saveInvitationToCloud(invitationData, customId = null) {
   const invitationId = customId || invitationData.id || `inv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const slug = invitationData.slug || generateInvitationSlug(invitationData.primaryNames, invitationData.dateText || invitationData.date);
   
   const payload = {
     ...invitationData,
     id: invitationId,
+    slug,
     updatedAt: new Date().toISOString(),
     status: invitationData.status || 'draft',
     viewCount: invitationData.viewCount || 0,
@@ -895,7 +996,7 @@ export async function saveInvitationToCloud(invitationData, customId = null) {
         createdAt: invitationData.createdAt || serverTimestamp(),
         updatedAt: serverTimestamp(),
       }, { merge: true });
-      return { success: true, id: invitationId, source: 'firestore' };
+      return { success: true, id: invitationId, slug, source: 'firestore' };
     } catch (err) {
       console.error('Firestore saveInvitation error:', err);
     }
@@ -911,7 +1012,7 @@ export async function saveInvitationToCloud(invitationData, customId = null) {
   saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
   notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
 
-  return { success: true, id: invitationId, source: 'local' };
+  return { success: true, id: invitationId, slug, source: 'local' };
 }
 
 /**
@@ -923,11 +1024,13 @@ export async function saveUserInvitation(invitationData, user) {
   }
 
   const invitationId = invitationData.id || `nyota_${user.uid.slice(0, 6)}_${Date.now().toString(36)}`;
+  const slug = invitationData.slug || generateInvitationSlug(invitationData.primaryNames, invitationData.dateText || invitationData.date);
   const isVerified = user.accessGranted || user.paymentStatus === 'verified' || isUserAdmin(user);
 
   const payload = {
     ...invitationData,
     id: invitationId,
+    slug,
     userId: user.uid,
     userEmail: user.email || '',
     userName: user.displayName || 'Client',
@@ -945,7 +1048,7 @@ export async function saveUserInvitation(invitationData, user) {
         createdAt: invitationData.createdAt || serverTimestamp(),
         updatedAt: serverTimestamp(),
       }, { merge: true });
-      return { success: true, id: invitationId, invitation: payload, source: 'firestore' };
+      return { success: true, id: invitationId, slug, invitation: payload, source: 'firestore' };
     } catch (err) {
       console.error('Firestore saveUserInvitation error:', err);
     }
@@ -961,7 +1064,7 @@ export async function saveUserInvitation(invitationData, user) {
   saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
   notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
 
-  return { success: true, id: invitationId, invitation: payload, source: 'local' };
+  return { success: true, id: invitationId, slug, invitation: payload, source: 'local' };
 }
 
 /**
@@ -1009,21 +1112,48 @@ export function subscribeToUserInvitations(userId, callback) {
 }
 
 /**
- * Publish User Invitation (Enforces Admin Verification Gate)
+ * Publish User Invitation (Enforces Per-Invitation Admin Payment Verification Gate)
  */
-export async function publishUserInvitation(invitationId, user) {
+export async function publishUserInvitation(invitationId, user, currentInviteData = null) {
   if (!user || !user.uid) {
     return { success: false, error: 'User must be signed in to publish.' };
   }
 
-  const isVerified = user.accessGranted || user.paymentStatus === 'verified' || isUserAdmin(user);
-  if (!isVerified) {
-    return {
-      success: false,
-      isPending: true,
-      error: 'Admin verification is required before publishing. Verification usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.',
-    };
+  // Super admin bypass
+  const isAdmin = isUserAdmin(user);
+
+  if (!isAdmin) {
+    let inviteDoc = currentInviteData;
+    if (!inviteDoc && isFirebaseConfigured() && db) {
+      try {
+        const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          inviteDoc = snap.data();
+        }
+      } catch (err) {
+        console.warn('Error fetching invitation for verification check:', err);
+      }
+    }
+    if (!inviteDoc) {
+      const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+      inviteDoc = items.find(i => i.id === invitationId);
+    }
+
+    const isThisInviteVerified = inviteDoc && (inviteDoc.paymentStatus === 'verified' || inviteDoc.status === 'published');
+    if (!isThisInviteVerified) {
+      const isPending = inviteDoc?.paymentStatus === 'pending_verification';
+      return {
+        success: false,
+        isPending,
+        error: isPending
+          ? 'Verification by admin usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.'
+          : 'Payment of ₹501 Shagun is required for this invitation before it can be published.',
+      };
+    }
   }
+
+  const slug = currentInviteData?.slug || generateInvitationSlug(currentInviteData?.primaryNames, currentInviteData?.dateText || currentInviteData?.date);
 
   if (isFirebaseConfigured() && db) {
     try {
@@ -1031,10 +1161,16 @@ export async function publishUserInvitation(invitationId, user) {
       await updateDoc(docRef, {
         status: 'published',
         paymentStatus: 'verified',
+        slug,
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
-      return { success: true, message: 'Invitation published successfully!' };
+      return { 
+        success: true, 
+        message: 'Invitation published successfully!', 
+        slug,
+        shareUrl: formatShareableInviteUrl(slug)
+      };
     } catch (err) {
       console.error('Firestore publish error:', err);
     }
@@ -1047,13 +1183,19 @@ export async function publishUserInvitation(invitationId, user) {
       ...items[idx],
       status: 'published',
       paymentStatus: 'verified',
+      slug,
       publishedAt: new Date().toISOString(),
     };
     saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
     notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
   }
 
-  return { success: true, message: 'Invitation published successfully!' };
+  return { 
+    success: true, 
+    message: 'Invitation published successfully!', 
+    slug,
+    shareUrl: formatShareableInviteUrl(slug)
+  };
 }
 
 /**
@@ -1076,15 +1218,25 @@ export async function deleteUserInvitation(invitationId, userId) {
   return { success: true };
 }
 
-export async function getInvitationById(invitationId) {
-  if (!invitationId) return null;
+export async function getInvitationById(identifier) {
+  if (!identifier) return null;
 
   if (isFirebaseConfigured() && db) {
     try {
-      const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+      // 1. Direct ID lookup
+      const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, identifier);
       const snapshot = await getDoc(docRef);
       if (snapshot.exists()) {
         return { id: snapshot.id, ...snapshot.data() };
+      }
+
+      // 2. Query by slug
+      const colRef = getNyotaCollectionRef(NYOTA_COLLECTIONS.INVITATIONS);
+      const q = query(colRef, where('slug', '==', identifier), limit(1));
+      const querySnap = await getDocs(q);
+      if (!querySnap.empty) {
+        const firstDoc = querySnap.docs[0];
+        return { id: firstDoc.id, ...firstDoc.data() };
       }
     } catch (err) {
       console.warn('Firestore getInvitation error:', err);
@@ -1092,7 +1244,7 @@ export async function getInvitationById(invitationId) {
   }
 
   const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
-  return items.find(i => i.id === invitationId) || null;
+  return items.find(i => i.id === identifier || i.slug === identifier) || null;
 }
 
 /**

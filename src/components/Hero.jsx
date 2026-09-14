@@ -110,7 +110,6 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
                     src="/images/royal-invitation-scroll.jpg"
                     alt="Royal Gold Invitation Scroll & Wax Seal"
                     loading="eager"
-                    fetchPriority="high"
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                   />

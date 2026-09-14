@@ -6,6 +6,7 @@ import RsvpSection from './components/RsvpSection';
 import TestimonialsFAQ from './components/TestimonialsFAQ';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import ErrorBoundary from './components/ErrorBoundary';
 import { INVITATION_TEMPLATES, PRICING_PACKAGES } from './data/templates';
 import { Sparkles, ArrowRight, X, Heart, Shield, Music } from 'lucide-react';
 import { subscribeToAuthUser, getInvitationById } from './firebase/nyotaDb';
@@ -57,10 +58,10 @@ export default function App() {
     };
   }, []);
 
-  // Fetch Firestore invitation if custom link parameter `?invite=<id>` is in URL
+  // Fetch Firestore invitation if custom link pathname or `?invite=<slug_or_id>` is in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const inviteId = params.get('invite');
+    const inviteParam = params.get('invite') || params.get('slug') || params.get('id');
     const viewParam = params.get('view');
     const adminParam = params.get('admin');
 
@@ -74,8 +75,16 @@ export default function App() {
       return;
     }
 
-    if (inviteId) {
-      getInvitationById(inviteId).then((data) => {
+    // Check pathname (e.g. /zayd-and-aaliyah-24-october-2026)
+    let pathSlug = window.location.pathname.replace(/^\/+|\/+$/g, '');
+    if (['admin', 'dashboard', 'studio', 'templates', 'index.html', ''].includes(pathSlug.toLowerCase())) {
+      pathSlug = '';
+    }
+
+    const targetIdentifier = inviteParam || pathSlug;
+
+    if (targetIdentifier) {
+      getInvitationById(targetIdentifier).then((data) => {
         if (data) {
           setSelectedTemplate((prev) => ({
             ...prev,
@@ -162,15 +171,17 @@ export default function App() {
   // If viewing Admin Portal
   if (currentView === 'admin') {
     return (
-      <Suspense fallback={<LoadingFallback />}>
-        <AdminPortal
-          onBackToSite={() => setCurrentView('landing')}
-          onPreviewInvitation={(draft) => {
-            setSelectedTemplate({ ...selectedTemplate, defaults: draft });
-            setWebpageDemoOpen(true);
-          }}
-        />
-      </Suspense>
+      <ErrorBoundary fallbackAction={() => setCurrentView('landing')}>
+        <Suspense fallback={<LoadingFallback />}>
+          <AdminPortal
+            onBackToSite={() => setCurrentView('landing')}
+            onPreviewInvitation={(draft) => {
+              setSelectedTemplate({ ...selectedTemplate, defaults: draft });
+              setWebpageDemoOpen(true);
+            }}
+          />
+        </Suspense>
+      </ErrorBoundary>
     );
   }
 
@@ -178,22 +189,24 @@ export default function App() {
   if (currentView === 'dashboard') {
     return (
       <div className="min-h-screen bg-[#0B0914] text-slate-100 flex flex-col justify-between">
-        <Suspense fallback={<LoadingFallback />}>
-          <UserDashboard
-            currentUser={currentUser}
-            onBackToSite={() => setCurrentView('landing')}
-            onOpenStudio={(inv) => handleOpenStudio(inv)}
-            onPreviewInvitation={(inv) => {
-              setSelectedTemplate({ ...selectedTemplate, defaults: inv });
-              setWebpageDemoOpen(true);
-            }}
-            onOpenAuthModal={(mode) => {
-              setAuthModalMode(mode || 'signin');
-              setAuthModalOpen(true);
-            }}
-            onOpenCheckout={(payload) => handleOpenCheckout(payload)}
-          />
-        </Suspense>
+        <ErrorBoundary fallbackAction={() => setCurrentView('landing')}>
+          <Suspense fallback={<LoadingFallback />}>
+            <UserDashboard
+              currentUser={currentUser}
+              onBackToSite={() => setCurrentView('landing')}
+              onOpenStudio={(inv) => handleOpenStudio(inv)}
+              onPreviewInvitation={(inv) => {
+                setSelectedTemplate({ ...selectedTemplate, defaults: inv });
+                setWebpageDemoOpen(true);
+              }}
+              onOpenAuthModal={(mode) => {
+                setAuthModalMode(mode || 'signin');
+                setAuthModalOpen(true);
+              }}
+              onOpenCheckout={(payload) => handleOpenCheckout(payload)}
+            />
+          </Suspense>
+        </ErrorBoundary>
         {authModalOpen && (
           <Suspense fallback={null}>
             <AuthModal
@@ -370,14 +383,16 @@ export default function App() {
           </div>
         ) : (
           /* Studio View */
-          <Suspense fallback={<LoadingFallback />}>
-            <CustomizerStudio
-              selectedTemplate={selectedTemplate}
-              onBackToGallery={handleBackToGallery}
-              onOpenCheckout={handleOpenCheckout}
-              onOpenExport={handleOpenExport}
-            />
-          </Suspense>
+          <ErrorBoundary fallbackAction={handleBackToGallery}>
+            <Suspense fallback={<LoadingFallback />}>
+              <CustomizerStudio
+                selectedTemplate={selectedTemplate}
+                onBackToGallery={handleBackToGallery}
+                onOpenCheckout={handleOpenCheckout}
+                onOpenExport={handleOpenExport}
+              />
+            </Suspense>
+          </ErrorBoundary>
         )}
       </main>
 

@@ -9,7 +9,9 @@ import {
   publishUserInvitation, 
   deleteUserInvitation,
   logoutUser,
-  isUserAdmin
+  isUserAdmin,
+  formatShareableInviteUrl,
+  generateInvitationSlug
 } from '../firebase/nyotaDb';
 
 export default function UserDashboard({ 
@@ -44,10 +46,10 @@ export default function UserDashboard({
     };
   }, [currentUser]);
 
-  const handleCopyLink = (invitationId) => {
-    const liveUrl = `${window.location.origin}/?invite=${invitationId}`;
+  const handleCopyLink = (inv) => {
+    const liveUrl = formatShareableInviteUrl(inv);
     navigator.clipboard.writeText(liveUrl);
-    setCopiedId(invitationId);
+    setCopiedId(inv.id);
     setActionMessage('Link copied to clipboard! Share on WhatsApp or Instagram.');
     setTimeout(() => {
       setCopiedId(null);
@@ -249,9 +251,10 @@ export default function UserDashboard({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {invitations.map((inv) => {
-                const invVerified = inv.paymentStatus === 'verified' || isVerified;
+                const invVerified = isUserAdmin(currentUser) || inv.paymentStatus === 'verified' || inv.status === 'published';
+                const isPending = inv.paymentStatus === 'pending_verification';
                 const isPublished = inv.status === 'published';
-                const shareUrl = `${window.location.origin}/?invite=${inv.id}`;
+                const shareUrl = formatShareableInviteUrl(inv);
 
                 return (
                   <div
@@ -277,15 +280,15 @@ export default function UserDashboard({
                               <CheckCircle2 className="w-3 h-3" />
                               <span>Verified</span>
                             </span>
-                          ) : inv.paymentStatus === 'pending_verification' ? (
-                            <span className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
+                          ) : isPending ? (
+                            <span className="px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold flex items-center gap-1 whitespace-nowrap animate-pulse">
                               <Clock className="w-3 h-3" />
                               <span>Verification Pending</span>
                             </span>
                           ) : (
                             <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-slate-300 text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
                               <Lock className="w-3 h-3" />
-                              <span>Draft</span>
+                              <span>₹501 Unpaid</span>
                             </span>
                           )}
                         </div>
@@ -312,7 +315,7 @@ export default function UserDashboard({
                             {shareUrl}
                           </span>
                           <button
-                            onClick={() => handleCopyLink(inv.id)}
+                            onClick={() => handleCopyLink(inv)}
                             className="p-1 rounded-lg bg-champagne-400 text-slate-950 hover:bg-champagne-300 transition-colors flex-shrink-0 cursor-pointer"
                             title="Copy Live Link"
                           >
@@ -354,9 +357,20 @@ export default function UserDashboard({
                           <Share2 className="w-3.5 h-3.5" />
                           <span>{publishLoadingId === inv.id ? 'Publishing...' : isPublished ? 'Re-Publish Live Link' : 'Publish Live Webpage'}</span>
                         </button>
+                      ) : isPending ? (
+                        <button
+                          onClick={() => {
+                            setActionMessage('Verification by admin usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.');
+                            setTimeout(() => setActionMessage(''), 6000);
+                          }}
+                          className="w-full py-2.5 px-4 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-xs hover:bg-amber-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <Clock className="w-3.5 h-3.5 animate-pulse" />
+                          <span>Verification Pending</span>
+                        </button>
                       ) : (
                         <button
-                          onClick={() => onOpenCheckout({ selectedTemplate: null, invitationData: inv })}
+                          onClick={() => onOpenCheckout({ selectedTemplate: null, invitationData: inv, invitationId: inv.id })}
                           className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                         >
                           <Lock className="w-3.5 h-3.5" />

@@ -3,7 +3,7 @@ import {
   Sparkles, Sliders, Type, Palette, Music, Users, Download, 
   Share2, ShoppingBag, Eye, Smartphone, Monitor, Plus, Trash2, 
   Check, ArrowLeft, Volume2, VolumeX, Heart, Crown, Shield, Lock, CheckCircle2, Clock,
-  Layers, Gift, Shirt, MapPin, Calendar, Send, Image, EyeOff, CheckSquare
+  Layers, Gift, Shirt, MapPin, Calendar, Send, Image, EyeOff, CheckSquare, Copy
 } from 'lucide-react';
 import InvitationCard from './InvitationCard';
 import EnvelopeExperience from './EnvelopeExperience';
@@ -17,14 +17,15 @@ import {
   publishUserInvitation, 
   subscribeToAuthUser, 
   subscribeToUserAccess, 
-  isUserAdmin 
+  isUserAdmin,
+  generateInvitationSlug,
+  formatShareableInviteUrl
 } from '../firebase/nyotaDb';
 
 export default function CustomizerStudio({
   selectedTemplate,
   onBackToGallery,
   onOpenCheckout,
-  onOpenExport,
 }) {
   const currentTemplate = selectedTemplate || INVITATION_TEMPLATES[0];
 
@@ -45,6 +46,7 @@ export default function CustomizerStudio({
   const [isCloudSaving, setIsCloudSaving] = useState(false);
   const [cloudSaveMessage, setCloudSaveMessage] = useState('');
   const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [pendingNoticeOpen, setPendingNoticeOpen] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -254,12 +256,15 @@ export default function CustomizerStudio({
     }
   };
 
-  const isVerified = currentUser?.accessGranted || currentUser?.paymentStatus === 'verified' || isUserAdmin(currentUser);
+  // Per-Invitation Payment Verification Check
+  const isThisInviteVerified = isUserAdmin(currentUser) || invitationData?.paymentStatus === 'verified' || invitationData?.status === 'published';
+  const isThisInvitePending = invitationData?.paymentStatus === 'pending_verification';
 
   const handlePublishClick = async () => {
     if (!currentUser) {
       onOpenCheckout({
         invitationData,
+        invitationId: invitationData?.id,
         themeId,
         fontPairingId,
         sealId,
@@ -270,8 +275,8 @@ export default function CustomizerStudio({
       return;
     }
 
-    // If verified, publish directly to Firestore
-    if (isVerified) {
+    // 1. If verified for this specific invitation, save and publish to Firestore
+    if (isThisInviteVerified) {
       setIsCloudSaving(true);
       try {
         const payload = {
@@ -286,27 +291,58 @@ export default function CustomizerStudio({
         };
         const saveRes = await saveUserInvitation(payload, currentUser);
         if (saveRes.success) {
-          await publishUserInvitation(saveRes.id, currentUser);
-          const liveUrl = `${window.location.origin}/?invite=${saveRes.id}`;
-          setPublishedUrl(liveUrl);
-          setPublishModalOpen(true);
+          const pubRes = await publishUserInvitation(saveRes.id, currentUser, payload);
+          if (pubRes.success) {
+            const slug = pubRes.slug || saveRes.slug || generateInvitationSlug(payload.primaryNames, payload.dateText);
+            const liveUrl = formatShareableInviteUrl(slug);
+            setPublishedUrl(liveUrl);
+            setPublishModalOpen(true);
+          } else {
+            setPendingNoticeOpen(true);
+          }
         }
       } catch (e) {
         console.error(e);
       } finally {
         setIsCloudSaving(false);
       }
+    } else if (isThisInvitePending) {
+      // 2. If payment is already submitted and pending admin verification
+      setPendingNoticeOpen(true);
     } else {
-      // If payment is pending or not yet submitted, trigger checkout / verification modal
-      onOpenCheckout({
-        invitationData,
-        themeId,
-        fontPairingId,
-        sealId,
-        sealColor,
-        ambientTrackId,
-        selectedTemplate: currentTemplate
-      });
+      // 3. If unpaid for this invitation, save draft first and open checkout
+      setIsCloudSaving(true);
+      try {
+        const payload = {
+          ...invitationData,
+          themeId,
+          fontPairingId,
+          sealId,
+          sealColor,
+          ambientTrackId,
+          templateId: currentTemplate.id,
+          templateName: currentTemplate.name,
+        };
+        const saveRes = await saveUserInvitation(payload, currentUser);
+        const targetId = saveRes.id || invitationData?.id;
+        if (saveRes.success) {
+          setInvitationData(prev => ({ ...prev, id: targetId }));
+        }
+        onOpenCheckout({
+          invitationData: { ...payload, id: targetId },
+          invitationId: targetId,
+          themeId,
+          fontPairingId,
+          sealId,
+          sealColor,
+          ambientTrackId,
+          selectedTemplate: currentTemplate
+        });
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsCloudSaving(false);
+      }
     }
   };
 
@@ -331,19 +367,19 @@ export default function CustomizerStudio({
                 Invitation Customizer Studio
               </h1>
               
-              {isVerified ? (
+              {isThisInviteVerified ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/40 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  <span>Verified Client Access</span>
+                  <span>Verified Invitation</span>
                 </span>
-              ) : currentUser?.paymentStatus === 'pending_verification' ? (
+              ) : isThisInvitePending ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-500/40 flex items-center gap-1 animate-pulse">
                   <Clock className="w-3 h-3 text-amber-400" />
-                  <span>Awaiting ₹501 Admin Approval</span>
+                  <span>Verification Pending (Admin Review)</span>
                 </span>
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-champagne-500/20 text-champagne-300 text-[11px] font-bold border border-champagne-500/30 flex items-center gap-1">
-                  <span>₹501 Shagun Offer</span>
+                  <span>₹501 Shagun Per Invitation</span>
                 </span>
               )}
             </div>
@@ -353,30 +389,15 @@ export default function CustomizerStudio({
           </div>
         </div>
 
-        {/* Top Action Buttons (Save Draft, Export & Buy) */}
+        {/* Top Action Buttons (Save Draft & Publish) */}
         <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
           <button
             onClick={handleSaveToCloud}
             disabled={isCloudSaving}
-            className="px-3.5 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Sparkles className={`w-3.5 h-3.5 ${isCloudSaving ? 'animate-spin' : ''}`} />
             <span>{cloudSaveMessage || (isCloudSaving ? 'Saving...' : 'Save Draft')}</span>
-          </button>
-
-          <button
-            onClick={() => onOpenExport({
-              invitationData,
-              themeId,
-              fontPairingId,
-              sealId,
-              sealColor,
-              ambientTrackId
-            })}
-            className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/15 transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Download className="w-4 h-4 text-champagne-400" />
-            <span>Export & Share</span>
           </button>
 
           <button
@@ -384,10 +405,15 @@ export default function CustomizerStudio({
             disabled={isCloudSaving}
             className="flex-1 md:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            {isVerified ? (
+            {isThisInviteVerified ? (
               <>
                 <Sparkles className="w-4 h-4 text-slate-950" />
                 <span>Publish Live Webpage</span>
+              </>
+            ) : isThisInvitePending ? (
+              <>
+                <Clock className="w-4 h-4 text-slate-950 animate-pulse" />
+                <span>Verification Pending</span>
               </>
             ) : (
               <>
@@ -451,6 +477,44 @@ export default function CustomizerStudio({
                 Done
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pending Verification Info Modal */}
+      {pendingNoticeOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-md glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/40 shadow-2xl space-y-6 text-center bg-[#0E0C1C]">
+            <div className="w-16 h-16 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg flex items-center justify-center">
+              <div className="w-full h-full bg-[#0E0C1C] rounded-full flex items-center justify-center">
+                <Clock className="w-8 h-8 text-amber-400 animate-pulse" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-cinzel font-bold text-white">
+                Verification Pending
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
+                Verification by admin usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-xs text-amber-200 text-left space-y-1 font-mono">
+              <div className="flex items-center gap-2 font-bold">
+                <span>🛡️ Payment Verification in Progress</span>
+              </div>
+              <p className="text-[11px] text-amber-300/80">
+                You can continue editing and saving your draft in the meantime. As soon as admin verifies your ₹501 payment, your live webpage will be unlocked.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setPendingNoticeOpen(false)}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all cursor-pointer"
+            >
+              I Understand
+            </button>
           </div>
         </div>
       )}
