@@ -4,36 +4,40 @@ import {
   getAuth, 
   GoogleAuthProvider, 
   signInWithPopup, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
 
 /**
  * Firebase Client Configuration for Nyota Invitations
- * Scoped strictly to the 'nyota' collection in the shared 'faizansalam' Firebase project.
+ * Project: nyotapages
  */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyMockKeyForDevelopmentOnly",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "faizansalam.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "faizansalam",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "faizansalam.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789012",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789012:web:abcdef123456"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBS5tnarLnakH6XmTLCmSKLnjVnjWAO2jU",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "nyotapages.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "nyotapages",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "nyotapages.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "302366148046",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:302366148046:web:d8fd3317971d94dfbb179f",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-ZSPRZ1TE3S"
 };
 
-// Check if valid Firebase credentials are provided via environment variables
+// Check if valid Firebase credentials are provided via environment variables or defaults
 export const isFirebaseConfigured = () => {
   return (
-    Boolean(import.meta.env.VITE_FIREBASE_API_KEY) &&
-    import.meta.env.VITE_FIREBASE_API_KEY !== "AIzaSyMockKeyForDevelopmentOnly" &&
-    Boolean(import.meta.env.VITE_FIREBASE_PROJECT_ID)
+    Boolean(firebaseConfig.apiKey) &&
+    firebaseConfig.apiKey !== "AIzaSyMockKeyForDevelopmentOnly" &&
+    Boolean(firebaseConfig.projectId)
   );
 };
 
 // Initialize Firebase safely
-let app;
-let db;
-let auth;
+let app = null;
+let db = null;
+let auth = null;
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
@@ -45,4 +49,16 @@ try {
   console.warn("Firebase initialization warning (using local fallback mode):", error.message);
 }
 
-export { app, db, auth, googleProvider, signInWithPopup, signOut, onAuthStateChanged, firebaseConfig };
+export { 
+  app, 
+  db, 
+  auth, 
+  googleProvider, 
+  signInWithPopup, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut, 
+  onAuthStateChanged, 
+  firebaseConfig 
+};

@@ -3,11 +3,12 @@ import confetti from 'canvas-confetti';
 import { 
   Sparkles, Heart, Calendar, Clock, MapPin, Navigation, 
   Music, Volume2, VolumeX, Share2, Copy, Check, ChevronDown, 
-  ExternalLink, Gift, Shirt, Send, MessageSquare, Compass, Eye, ArrowRight,
+  ExternalLink, Gift, Shirt, Send, MessageSquare, Compass, Eye, ArrowRight, ArrowLeft,
   ShieldCheck, Car, Sparkle, Play, Users, QrCode, Moon, Star, Globe
 } from 'lucide-react';
 import { musicEngine } from '../utils/audioPlayer';
 import RsvpSection from './RsvpSection';
+import ScratchCard from './ScratchCard';
 import { COLOR_THEMES, FONT_PAIRINGS } from '../data/templates';
 
 export default function PremiumWebpageInvitation({
@@ -20,6 +21,7 @@ export default function PremiumWebpageInvitation({
 }) {
   const [isOpened, setIsOpened] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
+  const [isBismillahRising, setIsBismillahRising] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);
 
@@ -118,23 +120,25 @@ export default function PremiumWebpageInvitation({
   const showRsvp = sections.rsvp !== false;
   const showMusic = sections.music !== false;
 
-  // Live countdown ticker
+  // Countdown timer effect
   useEffect(() => {
-    const targetDate = new Date('2026-10-24T17:00:00').getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
-      }
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        return prev;
+      });
     }, 1000);
-    return () => clearInterval(interval);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Cleanup music on unmount
+  useEffect(() => {
+    return () => {
+      musicEngine.stopTrack();
+    };
   }, []);
 
   // Story milestones
@@ -168,16 +172,16 @@ export default function PremiumWebpageInvitation({
     { name: 'Champagne Silk', hex: '#F5E6CC' },
   ];
 
-  // Smooth entrance unveiling
+  // Smooth entrance unveiling with Royal Velvet Curtain & Grand Mosque passage
   const handleOpenInvitation = () => {
     if (isEntering) return;
     setIsEntering(true);
 
     try {
       confetti({
-        particleCount: 130,
-        spread: 95,
-        origin: { y: 0.5 },
+        particleCount: 170,
+        spread: 110,
+        origin: { y: 0.45 },
         colors: ['#D4AF37', '#8B152B', '#0B1B3D', '#FFFFFF', '#F5D38B'],
       });
     } catch (e) {
@@ -189,13 +193,20 @@ export default function PremiumWebpageInvitation({
       setIsPlayingMusic(true);
     }
 
+    // Step 1: Walk into mosque with glowing golden Bismillah in center
+    // Step 2: At 2.1s, Bismillah gracefully glides upwards into the top invitation header
+    setTimeout(() => {
+      setIsBismillahRising(true);
+    }, 2100);
+
+    // Step 3: At 3.6s, completely reveal the full royal invitation webpage
     setTimeout(() => {
       setIsOpened(true);
       setTimeout(() => {
         const el = document.getElementById('invitation-hero');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 200);
-    }, 800);
+      }, 100);
+    }, 3600);
   };
 
   const handleToggleMusic = () => {
@@ -230,8 +241,30 @@ export default function PremiumWebpageInvitation({
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#05060F] via-[#100612] to-[#040207] text-slate-100 selection:bg-rose-500/30 selection:text-amber-200 relative overflow-x-hidden font-sans transition-colors duration-500">
       
-      {/* BACKGROUND ROYAL BLACK, RED & NAVY BLUE GLOWS & STAR LATTICE */}
+      {/* Floating Exit / Return Button */}
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="fixed top-5 left-5 z-50 px-3.5 py-2 rounded-2xl bg-black/80 hover:bg-black text-white border border-champagne-400/40 backdrop-blur-md text-xs font-semibold flex items-center gap-1.5 shadow-2xl transition-all cursor-pointer hover:scale-105"
+        >
+          <ArrowLeft className="w-4 h-4 text-champagne-400" />
+          <span>Exit Preview</span>
+        </button>
+      )}
+
+      {/* BACKGROUND ROYAL BLACK, RED, NAVY BLUE GLOWS, MOSQUE ARCH & STAR LATTICE */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        
+        {/* GRAND MOSQUE ILLUMINATED TOP BACKDROP (VISUAL CONTINUITY) */}
+        <div className="absolute top-0 inset-x-0 h-[650px] sm:h-[850px] md:h-[1050px] overflow-hidden pointer-events-none z-0">
+          <img
+            src="/images/grand-mosque-entrance.jpg"
+            alt="Grand Mosque Courtyard Backdrop"
+            className="w-full h-full object-cover object-top opacity-30 filter brightness-95"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#05060F]/30 via-[#0A0612]/75 to-[#040207]" />
+        </div>
+
         {/* Navy Blue Glow Orb */}
         <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] bg-[#0A1A40]/30 blur-[150px]" />
         
@@ -257,90 +290,179 @@ export default function PremiumWebpageInvitation({
       </div>
 
       {/* ========================================================================= */}
-      {/* 1. ROYAL ARABIAN GATEWAY (SMOOTH & ELEGANT OPENING EXPERIENCE) */}
+      {/* 1. ROYAL VELVET CURTAIN & GRAND MOSQUE ENTRANCE GATEWAY */}
       {/* ========================================================================= */}
       {!isOpened && (
-        <div className={`fixed inset-0 z-50 bg-[#04030A]/95 backdrop-blur-3xl flex flex-col items-center justify-center p-4 sm:p-6 transition-all duration-700 ${
-          isEntering ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+        <div className={`fixed inset-0 z-50 overflow-hidden bg-black flex items-center justify-center transition-opacity duration-[1400ms] ${
+          isBismillahRising ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}>
           
-          <div className="w-full max-w-lg text-center space-y-7 sm:space-y-9 animate-fadeIn flex flex-col items-center relative">
-            
-            {/* Top Crescent & Star Emblem in Royal Red & Gold */}
-            <div className="flex items-center justify-center gap-3">
-              <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent via-rose-500/80 to-amber-400/80" />
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4A0A17] to-[#0A1838] border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-glow-gold">
-                <Moon className="w-5 h-5 fill-amber-300/20 text-amber-300" />
-              </div>
-              <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent via-rose-500/80 to-amber-400/80" />
-            </div>
+          {/* BACKGROUND LAYER: CINEMATIC GRAND MOSQUE COURTYARD PASSAGE */}
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            <img
+              src="/images/grand-mosque-entrance.jpg"
+              alt="Grand Mosque Royal Entrance"
+              className={`w-full h-full object-cover transition-all duration-[3800ms] ${
+                isEntering ? 'animate-mosque-enter brightness-110 filter' : 'scale-100 brightness-75'
+              }`}
+            />
+            {/* Ambient Mosque Twilight Overlay */}
+            <div className={`absolute inset-0 transition-opacity duration-1000 ${
+              isEntering 
+                ? 'bg-gradient-to-t from-black/40 via-transparent to-black/30 opacity-60' 
+                : 'bg-black/65 backdrop-blur-[2px]'
+            }`} />
 
-            {/* Bismillah Arabic Calligraphy Card */}
-            <div className="space-y-3 px-4">
+            {/* Glowing Golden Bismillah Rising during Mosque Entrance Walkthrough */}
+            {isEntering && (
               <div 
-                className="text-2xl sm:text-4xl md:text-5xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text drop-shadow-lg leading-relaxed select-none"
-                style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
-                dir="rtl"
+                className={`absolute inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none px-4 transition-all duration-[1500ms] ease-out ${
+                  isBismillahRising 
+                    ? '-translate-y-[26vh] sm:-translate-y-[30vh] md:-translate-y-[34vh] scale-90 opacity-95' 
+                    : 'translate-y-0 scale-110 opacity-100'
+                }`}
               >
-                {bismillah}
+                <div 
+                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-amber-300 font-bold gold-gradient-text drop-shadow-[0_0_35px_rgba(212,175,55,0.95)] leading-relaxed select-none"
+                  style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                  dir="rtl"
+                >
+                  {bismillah}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* LEFT ROYAL CRIMSON VELVET CURTAIN */}
+          <div 
+            className={`absolute top-0 bottom-0 left-0 w-[53%] z-20 curtain-fabric-left transition-transform duration-[2500ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? '-translate-x-[105%] scale-x-90' : 'translate-x-0'
+            }`}
+          >
+            {/* Gold Fringe & Braided Border on right edge */}
+            <div className="absolute top-0 bottom-0 right-0 w-2 gold-fringe-pattern shadow-[0_0_10px_#D4AF37]" />
+            <div className="absolute top-0 bottom-0 right-2 w-[1px] bg-amber-400/60" />
+
+            {/* Left Curtain Gold Tie-back Tassel */}
+            <div className="absolute top-1/2 -translate-y-1/2 right-2 flex items-center">
+              <div className="w-8 h-20 rounded-l-full bg-gradient-to-l from-amber-400 to-amber-600 border border-amber-300 shadow-glow-gold flex items-center justify-center">
+                <span className="text-slate-950 text-xs font-bold font-mono rotate-90">✦</span>
               </div>
             </div>
+          </div>
 
-            {/* Grand Moorish Royal Arch Preview Card (Black, Royal Red & Navy Blue) */}
-            <div className="relative w-full max-w-[340px] sm:max-w-[400px] p-6 sm:p-8 rounded-t-[160px] rounded-b-3xl bg-gradient-to-b from-[#1C0612] via-[#0D1024] to-[#05030A] border-2 border-amber-400/60 shadow-[0_0_40px_rgba(139,21,43,0.35)] space-y-4 text-center group hover:border-amber-400/90 transition-all">
+          {/* RIGHT ROYAL CRIMSON VELVET CURTAIN */}
+          <div 
+            className={`absolute top-0 bottom-0 right-0 w-[53%] z-20 curtain-fabric-right transition-transform duration-[2500ms] ease-in-out flex flex-col justify-between ${
+              isEntering ? 'translate-x-[105%] scale-x-90' : 'translate-x-0'
+            }`}
+          >
+            {/* Gold Fringe & Braided Border on left edge */}
+            <div className="absolute top-0 bottom-0 left-0 w-2 gold-fringe-pattern shadow-[0_0_10px_#D4AF37]" />
+            <div className="absolute top-0 bottom-0 left-2 w-[1px] bg-amber-400/60" />
+
+            {/* Right Curtain Gold Tie-back Tassel */}
+            <div className="absolute top-1/2 -translate-y-1/2 left-2 flex items-center">
+              <div className="w-8 h-20 rounded-r-full bg-gradient-to-r from-amber-400 to-amber-600 border border-amber-300 shadow-glow-gold flex items-center justify-center">
+                <span className="text-slate-950 text-xs font-bold font-mono -rotate-90">✦</span>
+              </div>
+            </div>
+          </div>
+
+          {/* TOP CURTAIN VALANCE (PELMET) */}
+          <div className={`absolute top-0 inset-x-0 h-16 sm:h-20 z-25 curtain-valance transition-transform duration-[2200ms] ${
+            isEntering ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+          }`}>
+            <div className="w-full h-full flex items-center justify-center relative">
+              <div className="w-12 h-12 rounded-full bg-[#1A030A] border-2 border-amber-400 shadow-glow-gold flex items-center justify-center text-amber-300 font-cinzel font-bold text-sm">
+                ✦
+              </div>
+            </div>
+            {/* Gold Fringe Bottom Line */}
+            <div className="w-full h-1.5 gold-fringe-pattern" />
+          </div>
+
+          {/* CENTER GATEWAY INVITATION CARD */}
+          <div className={`relative z-30 w-full max-w-lg p-4 sm:p-6 text-center transition-all duration-700 ${
+            isEntering ? 'opacity-0 scale-75 -translate-y-12 pointer-events-none' : 'opacity-100 scale-100 translate-y-0'
+          }`}>
+            
+            <div className="space-y-6 sm:space-y-8 flex flex-col items-center">
               
-              {/* Gold Filigree Inner Border */}
-              <div className="absolute inset-2 rounded-t-[150px] rounded-b-2xl border border-amber-400/30 pointer-events-none" />
+              {/* Top Crescent & Star Emblem in Royal Red & Gold */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent via-rose-500/80 to-amber-400/80" />
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4A0A17] to-[#0A1838] border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-glow-gold">
+                  <Moon className="w-5 h-5 fill-amber-300/20 text-amber-300" />
+                </div>
+                <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent via-rose-500/80 to-amber-400/80" />
+              </div>
 
-              {/* Couple Initial Monogram Crest */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-blue-600 shadow-glow-gold flex items-center justify-center">
-                <div className="w-full h-full bg-[#12040D] rounded-full flex items-center justify-center border-2 border-amber-300/50">
-                  <span className="font-cinzel text-lg sm:text-2xl font-bold gold-gradient-text">
-                    Z ✦ A
-                  </span>
+              {/* Bismillah Arabic Calligraphy Card */}
+              <div className="space-y-3 px-4">
+                <div 
+                  className="text-2xl sm:text-4xl md:text-5xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text drop-shadow-lg leading-relaxed select-none"
+                  style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                  dir="rtl"
+                >
+                  {bismillah}
                 </div>
               </div>
 
-              <div className="space-y-2 relative z-10">
-                <div className="text-[10px] text-rose-300 font-mono tracking-widest uppercase">
-                  Dawat-e-Khas • Nikah Ceremony
+              {/* Grand Moorish Royal Arch Preview Card (Black, Royal Red & Navy Blue) */}
+              <div className="relative w-full max-w-[340px] sm:max-w-[390px] p-6 sm:p-8 rounded-t-[160px] rounded-b-3xl bg-gradient-to-b from-[#1C0612]/95 via-[#0D1024]/95 to-[#05030A]/95 border-2 border-amber-400/60 shadow-[0_0_50px_rgba(139,21,43,0.5)] space-y-4 text-center group hover:border-amber-400/90 transition-all backdrop-blur-md">
+                
+                {/* Gold Filigree Inner Border */}
+                <div className="absolute inset-2 rounded-t-[150px] rounded-b-2xl border border-amber-400/30 pointer-events-none" />
+
+                {/* Couple Initial Monogram Crest */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto p-[2px] bg-gradient-to-br from-amber-300 via-rose-500 to-blue-600 shadow-glow-gold flex items-center justify-center">
+                  <div className="w-full h-full bg-[#12040D] rounded-full flex items-center justify-center border-2 border-amber-300/50">
+                    <span className="font-cinzel text-lg sm:text-2xl font-bold gold-gradient-text">
+                      Z ✦ A
+                    </span>
+                  </div>
                 </div>
-                <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-white gold-gradient-text leading-snug">
-                  {primaryNames}
-                </h2>
-                <p className="text-xs text-slate-300 font-mono pt-1">
-                  {dateText}
-                </p>
-              </div>
 
-              {/* Quranic Verse Snippet */}
-              <div className="pt-2 border-t border-amber-400/25">
-                <p className="text-[11px] text-amber-200/90 italic font-serif leading-relaxed line-clamp-2">
-                  {quranVerse}
-                </p>
-                <div className="text-[9px] text-amber-400/70 font-mono mt-1">
-                  {quranRef}
+                <div className="space-y-2 relative z-10">
+                  <div className="text-[10px] text-rose-300 font-mono tracking-widest uppercase">
+                    Dawat-e-Khas • Nikah Ceremony
+                  </div>
+                  <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-white gold-gradient-text leading-snug">
+                    {primaryNames}
+                  </h2>
+                </div>
+
+                {/* Quranic Verse Snippet */}
+                <div className="pt-2 border-t border-amber-400/25">
+                  <p className="text-[11px] text-amber-200/90 italic font-serif leading-relaxed line-clamp-2">
+                    {quranVerse}
+                  </p>
+                  <div className="text-[9px] text-amber-400/70 font-mono mt-1">
+                    {quranRef}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Smooth Open Invitation Action Button */}
-            <div className="space-y-3 pt-2 w-full max-w-xs">
-              <button
-                type="button"
-                onClick={handleOpenInvitation}
-                disabled={isEntering}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-500 to-amber-500 text-slate-950 font-bold text-sm sm:text-base shadow-glow-gold flex items-center justify-center gap-2.5 hover:opacity-95 transform hover:-translate-y-0.5 active:translate-y-0 transition-all"
-              >
-                <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950" />
-                <span>{isEntering ? 'Unveiling Invitation...' : 'Open Royal Invitation'}</span>
-                <ArrowRight className="w-4 h-4 text-slate-950" />
-              </button>
+              {/* Grand Open Invitation Action Button */}
+              <div className="space-y-3 pt-2 w-full max-w-xs">
+                <button
+                  type="button"
+                  onClick={handleOpenInvitation}
+                  disabled={isEntering}
+                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-500 to-amber-500 text-slate-950 font-bold text-sm sm:text-base shadow-glow-gold flex items-center justify-center gap-2.5 hover:opacity-95 transform hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950" />
+                  <span>Open Royal Invitation</span>
+                  <ArrowRight className="w-4 h-4 text-slate-950" />
+                </button>
 
-              <div className="text-[11px] text-amber-300/90 font-mono tracking-wide flex items-center justify-center gap-1.5 pt-1">
-                <Music className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
-                <span>Ambient celebration melody plays on opening</span>
+                <div className="text-[11px] text-amber-300/90 font-mono tracking-wide flex items-center justify-center gap-1.5 pt-1">
+                  <Music className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
+                  <span>Curtains open & ambient melody plays</span>
+                </div>
               </div>
+
             </div>
 
           </div>
@@ -482,9 +604,6 @@ export default function PremiumWebpageInvitation({
                   <div className="font-cinzel text-lg sm:text-2xl font-bold text-white gold-gradient-text">
                     {primaryNames}
                   </div>
-                  <div className="text-xs text-rose-200 font-mono tracking-widest mt-1">
-                    {dateText}
-                  </div>
                 </div>
               </div>
 
@@ -495,54 +614,59 @@ export default function PremiumWebpageInvitation({
             </div>
           </div>
 
-          {/* Date & Location Main Summary Card */}
-          <div className="p-5 sm:p-7 rounded-3xl border border-amber-400/40 max-w-2xl mx-auto space-y-4 shadow-luxury my-6 bg-gradient-to-br from-[#150614]/90 via-[#0B0E28]/90 to-[#06030F]/95 backdrop-blur-xl">
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-              <div className="space-y-1.5 text-center sm:text-left sm:border-r sm:border-white/10 sm:pr-4">
-                <div className="flex items-center justify-center sm:justify-start gap-2 text-rose-300 text-xs font-mono tracking-wider uppercase font-semibold">
-                  <Calendar className="w-4 h-4 text-rose-400" />
-                  <span>{dateText}</span>
+          {/* Date & Location Main Summary Card with Luxury Gold Scratch-to-Reveal */}
+          <ScratchCard
+            title="SCRATCH TO REVEAL DATE"
+            subtitle="Rub with your finger or mouse to unveil the wedding celebration date"
+          >
+            <div className="p-5 sm:p-7 rounded-3xl border border-amber-400/40 max-w-2xl mx-auto space-y-4 shadow-luxury bg-gradient-to-br from-[#150614]/95 via-[#0B0E28]/95 to-[#06030F]/95 backdrop-blur-xl">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="space-y-1.5 text-center sm:text-left sm:border-r sm:border-white/10 sm:pr-4">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 text-rose-300 text-xs font-mono tracking-wider uppercase font-semibold">
+                    <Calendar className="w-4 h-4 text-rose-400" />
+                    <span>{dateText}</span>
+                  </div>
+                  <div className="text-xs sm:text-sm font-semibold text-white flex items-center justify-center sm:justify-start gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-400/80" />
+                    <span>{timeText}</span>
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-semibold text-white flex items-center justify-center sm:justify-start gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-400/80" />
-                  <span>{timeText}</span>
+
+                <div className="space-y-1.5 text-center sm:text-left">
+                  <div className="font-bold text-white text-xs sm:text-sm flex items-center justify-center sm:justify-start gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                    <span>{venueName}</span>
+                  </div>
+                  <div className="text-[11px] sm:text-xs text-slate-300">{venueAddress}</div>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-center sm:text-left">
-                <div className="font-bold text-white text-xs sm:text-sm flex items-center justify-center sm:justify-start gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                  <span>{venueName}</span>
-                </div>
-                <div className="text-[11px] sm:text-xs text-slate-300">{venueAddress}</div>
-              </div>
-            </div>
-
-            {/* Action Navigation & Calendar Buttons */}
-            <div className={`pt-3 border-t border-white/10 grid grid-cols-1 ${showVenue ? 'sm:grid-cols-2' : ''} gap-2.5`}>
-              <a
-                href={googleCalendarUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#4A0A17] to-[#12234A] text-amber-200 text-xs font-semibold border border-amber-400/50 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 hover:opacity-90"
-              >
-                <Calendar className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                <span>Add To Google Calendar</span>
-              </a>
-
-              {showVenue && (
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('venue-section')}
-                  className="w-full py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-100 text-xs font-semibold border border-white/15 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+              {/* Action Navigation & Calendar Buttons */}
+              <div className={`pt-3 border-t border-white/10 grid grid-cols-1 ${showVenue ? 'sm:grid-cols-2' : ''} gap-2.5`}>
+                <a
+                  href={googleCalendarUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#4A0A17] to-[#12234A] text-amber-200 text-xs font-semibold border border-amber-400/50 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 hover:opacity-90"
                 >
-                  <Navigation className="w-3.5 h-3.5 text-rose-400 flex-shrink-0" />
-                  <span>Get Directions & Maps</span>
-                </button>
-              )}
+                  <Calendar className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span>Add To Google Calendar</span>
+                </a>
+
+                {showVenue && (
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('venue-section')}
+                    className="w-full py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-100 text-xs font-semibold border border-white/15 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+                  >
+                    <Navigation className="w-3.5 h-3.5 text-rose-400 flex-shrink-0" />
+                    <span>Get Directions & Maps</span>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          </ScratchCard>
 
         </section>
 

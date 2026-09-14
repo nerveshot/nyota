@@ -11,7 +11,14 @@ import RsvpSection from './RsvpSection';
 import PremiumWebpageInvitation from './PremiumWebpageInvitation';
 import { COLOR_THEMES, FONT_PAIRINGS, WAX_SEALS, AMBIENT_TRACKS, INVITATION_TEMPLATES } from '../data/templates';
 import { musicEngine } from '../utils/audioPlayer';
-import { saveInvitationToCloud, subscribeToAuthUser, subscribeToUserAccess } from '../firebase/nyotaDb';
+import { 
+  saveInvitationToCloud, 
+  saveUserInvitation, 
+  publishUserInvitation, 
+  subscribeToAuthUser, 
+  subscribeToUserAccess, 
+  isUserAdmin 
+} from '../firebase/nyotaDb';
 
 export default function CustomizerStudio({
   selectedTemplate,
@@ -37,6 +44,9 @@ export default function CustomizerStudio({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isCloudSaving, setIsCloudSaving] = useState(false);
   const [cloudSaveMessage, setCloudSaveMessage] = useState('');
+  const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [publishedUrl, setPublishedUrl] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     const unsub = subscribeToAuthUser((user) => {
@@ -64,53 +74,66 @@ export default function CustomizerStudio({
             ...(selectedTemplate.defaults.sections || {})
           }
         }));
+      } else if (selectedTemplate.primaryNames) {
+        // Direct invitation object from dashboard
+        setInvitationData(prev => ({
+          ...prev,
+          ...selectedTemplate,
+        }));
       }
     }
   }, [selectedTemplate]);
 
   // Invitation Content Fields
   const [invitationData, setInvitationData] = useState({
+    bismillah: currentTemplate.defaults?.bismillah || 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
     tag: currentTemplate.defaults?.tag || 'TOGETHER WITH THEIR FAMILIES',
-    title: currentTemplate.defaults?.title || 'The Wedding Celebration Of',
-    primaryNames: currentTemplate.defaults?.primaryNames || 'Elena Vance & Arthur Pendelton',
+    quranVerse: currentTemplate.defaults?.quranVerse || '“And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.”',
+    quranRef: currentTemplate.defaults?.quranRef || 'Surah Ar-Rum (30:21)',
+    duaBlessing: currentTemplate.defaults?.duaBlessing || 'بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ',
+    duaTranslation: currentTemplate.defaults?.duaTranslation || 'May Allah bless you, shower His blessings upon you, and unite you both in goodness & harmony.',
+    title: currentTemplate.defaults?.title || 'Cordially invite you to grace the blessed wedding celebration & Nikah of',
+    primaryNames: currentTemplate.defaults?.primaryNames || 'Zayd Al-Mansoor & Aaliyah Khan',
     dateText: currentTemplate.defaults?.dateText || 'Saturday, October 24, 2026',
-    timeText: currentTemplate.defaults?.timeText || 'Four O\'clock In The Afternoon',
-    venueName: currentTemplate.defaults?.venueName || 'The St. Regis Grand Ballroom',
-    venueAddress: currentTemplate.defaults?.venueAddress || 'Two East 55th Street, New York, NY 10022',
-    receptionInfo: currentTemplate.defaults?.receptionInfo || 'Dinner, Dancing & Champagne Reception To Follow',
-    dressCode: currentTemplate.defaults?.dressCode || 'Black Tie Optional',
-    dressCodeNote: currentTemplate.defaults?.dressCodeNote || 'We kindly request our guests to dress in formal attire. Formal evening gowns and classic dark suits or tuxedos are warmly encouraged.',
+    timeText: currentTemplate.defaults?.timeText || 'Five O\'Clock In The Evening',
+    venueName: currentTemplate.defaults?.venueName || 'The Royal Emirates Palace & Grand Ballroom',
+    venueAddress: currentTemplate.defaults?.venueAddress || 'West Corniche Road, Grand Palace Avenue, NY 10022',
+    venueImage: currentTemplate.defaults?.venueImage || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200&auto=format&fit=crop&q=80',
+    heroPhoto: currentTemplate.defaults?.heroPhoto || '/images/muslim-royal-couple.jpg',
+    receptionInfo: currentTemplate.defaults?.receptionInfo || 'Grand Royal Walima Banquet & Celebrations to Follow',
+    dressCode: currentTemplate.defaults?.dressCode || 'Royal Arabian / Traditional Formal / Black Tie',
+    dressCodeNote: currentTemplate.defaults?.dressCodeNote || 'We warmly encourage our cherished guests to embrace royal jewel tones, traditional formal attire (Sherwanis, Anarkalis, Abayas, Lehengas) or classic evening gowns & tuxedos.',
     rsvpDeadline: currentTemplate.defaults?.rsvpDeadline || 'Kindly RSVP by September 15, 2026',
-    hostMessage: currentTemplate.defaults?.hostMessage || 'We would be profoundly honored by your presence.',
-    registryUrl: currentTemplate.defaults?.registryUrl || 'https://registry.example.com/elena-arthur',
-    wishingWellTitle: currentTemplate.defaults?.wishingWellTitle || 'Honeymoon Fund • Chase / Zelle',
-    wishingWellAccount: currentTemplate.defaults?.wishingWellAccount || 'US94830294829103948 (Elena & Arthur)',
-    wishingWellNote: currentTemplate.defaults?.wishingWellNote || 'Your love, presence, and prayers on our special day are the greatest gifts of all. For those who wish to contribute toward our honeymoon adventures:',
+    hostMessage: currentTemplate.defaults?.hostMessage || 'With the grace and blessings of Allah (SWT), we invite you to celebrate our sacred union and share in our joy, prayers, and lifelong memories.',
+    registryUrl: currentTemplate.defaults?.registryUrl || 'https://registry.example.com/zayd-aaliyah',
+    wishingWellTitle: currentTemplate.defaults?.wishingWellTitle || 'Digital Shagun / Wedding Gift Fund',
+    wishingWellAccount: currentTemplate.defaults?.wishingWellAccount || 'shagun.zayd-aaliyah@upi',
+    wishingWellNote: currentTemplate.defaults?.wishingWellNote || 'Your prayers, love, and presence on our special day are the greatest blessings of all. For friends and family who wish to bestow a traditional digital Shagun or gift:',
     itinerary: currentTemplate.defaults?.itinerary || [
-      { time: '4:00 PM', event: 'Guest Arrival & Welcome Drinks' },
-      { time: '4:30 PM', event: 'Vow Ceremony in the Rose Garden' },
-      { time: '6:00 PM', event: 'Cocktails & Hors d\'œuvres' },
-      { time: '7:30 PM', event: 'Grand Dinner & Toasts' },
-      { time: '9:00 PM', event: 'Live Music & Dancing under the Stars' },
+      { time: '4:00 PM', event: 'Holy Nikah Ceremony & Sacred Vows' },
+      { time: '5:30 PM', event: 'Dawat-e-Khas & Welcome Refreshments' },
+      { time: '7:00 PM', event: 'Baraat Arrival & Royal Reception' },
+      { time: '8:30 PM', event: 'Grand Walima Feast & Dinner Banquet' },
+      { time: '11:00 PM', event: 'Rukhsati & Heartfelt Duas' },
     ],
     loveStories: currentTemplate.defaults?.loveStories || [
       {
-        year: '2021',
-        title: 'The First Encounter',
-        desc: 'A chance meeting on a rainy autumn evening in Manhattan that turned into hours of endless conversation over espresso.',
-        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&auto=format&fit=crop&q=80',
+        year: '2022',
+        title: 'Written in Destiny (Qadr)',
+        desc: 'An arranged family introduction that blossomed into deep mutual respect, shared faith, laughter, and an unbreakable bond.',
+        image: '/images/muslim-destiny.jpg',
       },
       {
         year: '2024',
-        title: 'Under Lake Como Stars',
-        desc: 'Surrounded by the serene Italian waters and candlelight, Arthur asked the question that changed forever.',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
+        title: 'The Blessed Engagement',
+        desc: 'Surrounded by our families and sincere prayers, our rings were exchanged under golden lights with the blessings of elders.',
+        image: '/images/muslim-engagement.jpg',
       },
       {
         year: '2026',
-        title: 'Forever Begins',
-        desc: 'Gathered with our most cherished family and friends to exchange sacred vows and dance through the night.',
-        image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&auto=format&fit=crop&q=80',
+        title: 'Nikah & Two Souls United',
+        desc: 'Committing to a lifetime of love, companionship, and faith as husband and wife under the grace of Allah (SWT).',
+        image: '/images/muslim-nikah.jpg',
       }
     ],
     sections: {
@@ -206,10 +229,21 @@ export default function CustomizerStudio({
         sealColor,
         ambientTrackId,
         templateId: currentTemplate.id,
+        templateName: currentTemplate.name,
       };
-      const res = await saveInvitationToCloud(payload);
-      if (res.success) {
-        setCloudSaveMessage('✓ Draft Saved');
+
+      if (currentUser?.uid) {
+        const res = await saveUserInvitation(payload, currentUser);
+        if (res.success) {
+          setCloudSaveMessage('✓ Saved to Cloud');
+        } else {
+          setCloudSaveMessage('Error saving');
+        }
+      } else {
+        const res = await saveInvitationToCloud(payload);
+        if (res.success) {
+          setCloudSaveMessage('✓ Draft Saved');
+        }
       }
     } catch (err) {
       console.error('Save error:', err);
@@ -220,7 +254,61 @@ export default function CustomizerStudio({
     }
   };
 
-  const isVerified = currentUser?.accessGranted || currentUser?.paymentStatus === 'verified';
+  const isVerified = currentUser?.accessGranted || currentUser?.paymentStatus === 'verified' || isUserAdmin(currentUser);
+
+  const handlePublishClick = async () => {
+    if (!currentUser) {
+      onOpenCheckout({
+        invitationData,
+        themeId,
+        fontPairingId,
+        sealId,
+        sealColor,
+        ambientTrackId,
+        selectedTemplate: currentTemplate
+      });
+      return;
+    }
+
+    // If verified, publish directly to Firestore
+    if (isVerified) {
+      setIsCloudSaving(true);
+      try {
+        const payload = {
+          ...invitationData,
+          themeId,
+          fontPairingId,
+          sealId,
+          sealColor,
+          ambientTrackId,
+          templateId: currentTemplate.id,
+          templateName: currentTemplate.name,
+        };
+        const saveRes = await saveUserInvitation(payload, currentUser);
+        if (saveRes.success) {
+          await publishUserInvitation(saveRes.id, currentUser);
+          const liveUrl = `${window.location.origin}/?invite=${saveRes.id}`;
+          setPublishedUrl(liveUrl);
+          setPublishModalOpen(true);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsCloudSaving(false);
+      }
+    } else {
+      // If payment is pending or not yet submitted, trigger checkout / verification modal
+      onOpenCheckout({
+        invitationData,
+        themeId,
+        fontPairingId,
+        sealId,
+        sealColor,
+        ambientTrackId,
+        selectedTemplate: currentTemplate
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto">
@@ -231,7 +319,7 @@ export default function CustomizerStudio({
         <div className="flex items-center gap-3">
           <button
             onClick={onBackToGallery}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-all flex items-center gap-1.5 text-xs font-semibold"
+            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Templates</span>
@@ -270,7 +358,7 @@ export default function CustomizerStudio({
           <button
             onClick={handleSaveToCloud}
             disabled={isCloudSaving}
-            className="px-3.5 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5"
+            className="px-3.5 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Sparkles className={`w-3.5 h-3.5 ${isCloudSaving ? 'animate-spin' : ''}`} />
             <span>{cloudSaveMessage || (isCloudSaving ? 'Saving...' : 'Save Draft')}</span>
@@ -285,23 +373,16 @@ export default function CustomizerStudio({
               sealColor,
               ambientTrackId
             })}
-            className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/15 transition-all flex items-center justify-center gap-2"
+            className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-semibold text-xs border border-white/15 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Download className="w-4 h-4 text-champagne-400" />
             <span>Export & Share</span>
           </button>
 
           <button
-            onClick={() => onOpenCheckout({
-              invitationData,
-              themeId,
-              fontPairingId,
-              sealId,
-              sealColor,
-              ambientTrackId,
-              selectedTemplate: currentTemplate
-            })}
-            className="flex-1 md:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2"
+            onClick={handlePublishClick}
+            disabled={isCloudSaving}
+            className="flex-1 md:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             {isVerified ? (
               <>
@@ -318,6 +399,61 @@ export default function CustomizerStudio({
         </div>
 
       </div>
+
+      {/* Publish Live Link Success Modal */}
+      {publishModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-lg glass-panel p-6 sm:p-8 rounded-3xl border border-champagne-400 shadow-[0_0_60px_rgba(212,175,55,0.25)] space-y-6 text-center bg-[#0E0C1C]">
+            <div className="w-16 h-16 rounded-full mx-auto p-[2px] bg-gradient-to-br from-emerald-400 to-teal-600 shadow-lg flex items-center justify-center">
+              <div className="w-full h-full bg-[#0E0C1C] rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-2xl font-cinzel font-bold text-white">
+                Invitation Published Live!
+              </h3>
+              <p className="text-xs text-slate-300 max-w-sm mx-auto">
+                Your wedding invitation webpage is now live and stored on Cloud Firestore. Guests can open this link to view the invitation and submit RSVPs.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-black/60 border border-white/15 flex items-center justify-between gap-2 text-left">
+              <span className="text-xs font-mono text-champagne-300 truncate">
+                {publishedUrl}
+              </span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(publishedUrl);
+                  setCopiedLink(true);
+                  setTimeout(() => setCopiedLink(false), 2500);
+                }}
+                className="px-3 py-2 rounded-xl bg-champagne-400 text-slate-950 font-bold text-xs hover:bg-champagne-300 transition-colors flex items-center gap-1 flex-shrink-0 cursor-pointer"
+              >
+                {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedLink ? 'Copied!' : 'Copy Link'}</span>
+              </button>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => window.open(publishedUrl, '_blank')}
+                className="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Eye className="w-4 h-4 text-champagne-400" />
+                <span>Open in New Tab</span>
+              </button>
+              <button
+                onClick={() => setPublishModalOpen(false)}
+                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Studio Workspace: Left Controls (5 cols), Right Preview Canvas (7 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

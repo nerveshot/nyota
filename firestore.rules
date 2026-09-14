@@ -1,45 +1,59 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // =========================================================================
-    // NYOTA NAMESPACE RULES
-    // Isolated top-level 'nyota' collection for the Nyota Invitations platform
-    // Shared Firebase project: faizansalam
-    // =========================================================================
-    match /nyota/{module}/items/{documentId} {
-      
-      // 1. Invitations (/nyota/invitations/items/{id})
-      // Public read for published invitations, write for creators/authenticated hosts
-      allow read: if true;
-      allow create, update: if request.resource.data.keys().hasAll(['title', 'primaryNames']);
-      allow delete: if request.auth != null;
-
-      // 2. RSVPs (/nyota/rsvps/items/{id})
-      // Public read and create for invited guests
-      allow read: if true;
-      allow create: if request.resource.data.name is string && request.resource.data.name.size() > 0;
-      allow update, delete: if true; // Host or guest management
-
-      // 3. Orders (/nyota/orders/items/{id})
-      // Secure creation for checkout purchases
-      allow read: if true;
-      allow create: if request.resource.data.amount is number;
-      allow update, delete: if request.auth != null;
-
-      // 4. Newsletter (/nyota/newsletter/items/{id})
-      allow read: if request.auth != null;
-      allow create, update: if request.resource.data.email is string;
-
-      // 5. System Config & Templates
-      allow read: if true;
-      allow write: if request.auth != null;
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
-    // Default fallback for any other top-level collection in faizansalam project:
-    // Retain existing security rules for non-nyota projects
-    match /{document=**} {
-      allow read, write: if false;
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email.lower() == 'faizansalam@icloud.com' ||
+        request.auth.token.email.lower() == 'faizansalam'
+      );
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Users Collection (/nyota/users/items/{userId})
+    match /nyota/users/items/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // 2. Orders Collection (/nyota/orders/items/{orderId})
+    match /nyota/orders/items/{orderId} {
+      allow create: if isAuthenticated();
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    // 3. Invitations Collection (/nyota/invitations/items/{invitationId})
+    match /nyota/invitations/items/{invitationId} {
+      allow read: if true; // Public access for guests viewing invitations
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // 4. RSVPs Collection (/nyota/rsvps/items/{rsvpId})
+    match /nyota/rsvps/items/{rsvpId} {
+      allow create, read: if true; // Public guest RSVP submissions
+      allow update, delete: if isAuthenticated() || isAdmin();
+    }
+
+    // 5. Newsletter / Guestbook / Analytics
+    match /nyota/newsletter/items/{subId} {
+      allow create, read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 6. Generic Nyota Fallback
+    match /nyota/{document=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() || isAdmin();
     }
   }
 }

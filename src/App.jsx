@@ -12,13 +12,15 @@ import TestimonialsFAQ from './components/TestimonialsFAQ';
 import Footer from './components/Footer';
 import PremiumWebpageInvitation from './components/PremiumWebpageInvitation';
 import AdminPortal from './components/AdminPortal';
+import UserDashboard from './components/UserDashboard';
+import AuthModal from './components/AuthModal';
 import ContactSection from './components/ContactSection';
 import { INVITATION_TEMPLATES, PRICING_PACKAGES } from './data/templates';
 import { Sparkles, ArrowRight, X, Heart, Shield, Music } from 'lucide-react';
-import { subscribeToAuthUser } from './firebase/nyotaDb';
+import { subscribeToAuthUser, getInvitationById } from './firebase/nyotaDb';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'admin'
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'dashboard' | 'admin'
   const [selectedTemplate, setSelectedTemplate] = useState(INVITATION_TEMPLATES[0]);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -29,6 +31,8 @@ export default function App() {
   const [quickPreviewOpen, setQuickPreviewOpen] = useState(false);
   const [demoEnvelopeOpen, setDemoEnvelopeOpen] = useState(false);
   const [webpageDemoOpen, setWebpageDemoOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('signin'); // 'signin' | 'signup'
 
   // Selected Plan for Checkout
   const [preSelectedPlan, setPreSelectedPlan] = useState(PRICING_PACKAGES[0]);
@@ -44,10 +48,49 @@ export default function App() {
     };
   }, []);
 
+  // Fetch Firestore invitation if custom link parameter `?invite=<id>` is in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const inviteId = params.get('invite');
+    const viewParam = params.get('view');
+    const adminParam = params.get('admin');
+
+    if (adminParam === 'true') {
+      setCurrentView('admin');
+      return;
+    }
+
+    if (viewParam === 'dashboard') {
+      setCurrentView('dashboard');
+      return;
+    }
+
+    if (inviteId) {
+      getInvitationById(inviteId).then((data) => {
+        if (data) {
+          setSelectedTemplate((prev) => ({
+            ...prev,
+            defaults: data,
+            ...data,
+          }));
+          setWebpageDemoOpen(true);
+        }
+      });
+    }
+  }, []);
+
   // Navigation Handlers
   const handleOpenStudio = (template = null) => {
     if (template) {
-      setSelectedTemplate(template);
+      if (template.primaryNames) {
+        setSelectedTemplate({
+          ...INVITATION_TEMPLATES[0],
+          defaults: template,
+          ...template,
+        });
+      } else {
+        setSelectedTemplate(template);
+      }
     }
     setCurrentView('studio');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -120,6 +163,36 @@ export default function App() {
     );
   }
 
+  // If viewing User Dashboard
+  if (currentView === 'dashboard') {
+    return (
+      <div className="min-h-screen bg-[#0B0914] text-slate-100 flex flex-col justify-between">
+        <UserDashboard
+          currentUser={currentUser}
+          onBackToSite={() => setCurrentView('landing')}
+          onOpenStudio={(inv) => handleOpenStudio(inv)}
+          onPreviewInvitation={(inv) => {
+            setSelectedTemplate({ ...selectedTemplate, defaults: inv });
+            setWebpageDemoOpen(true);
+          }}
+          onOpenAuthModal={(mode) => {
+            setAuthModalMode(mode || 'signin');
+            setAuthModalOpen(true);
+          }}
+          onOpenCheckout={(payload) => handleOpenCheckout(payload)}
+        />
+        <AuthModal
+          isOpen={authModalOpen}
+          initialMode={authModalMode}
+          onClose={() => setAuthModalOpen(false)}
+          onSuccess={(user) => {
+            setCurrentUser(user);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#0B0914] text-slate-100 flex flex-col justify-between selection:bg-champagne-500/30 selection:text-champagne-300">
       
@@ -132,6 +205,11 @@ export default function App() {
         onOpenWebpageDemo={() => setWebpageDemoOpen(true)}
         onOpenAdminPortal={() => setCurrentView('admin')}
         onOpenCheckout={() => handleOpenCheckout()}
+        onOpenDashboard={() => setCurrentView('dashboard')}
+        onOpenAuthModal={(mode) => {
+          setAuthModalMode(mode || 'signin');
+          setAuthModalOpen(true);
+        }}
       />
 
       {/* Main Content Area */}
@@ -289,6 +367,10 @@ export default function App() {
         onNavigate={handleNavigate}
         onOpenStudio={() => handleOpenStudio()}
         onOpenPricing={() => setPricingOpen(true)}
+        onOpenAdminPortal={() => {
+          setCurrentView('admin');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
 
       {/* MODAL 1: PRICING COMPARISON */}
@@ -394,23 +476,12 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL 6: ARABIC STYLE FULL WEBPAGE INVITATION PREVIEW */}
+      {/* MODAL 6: ARABIC STYLE FULL WEBPAGE INVITATION PREVIEW / LIVE INVITATION */}
       {webpageDemoOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-[#05060F] animate-fadeIn">
-          {/* Floating Close Button */}
-          <div className="fixed top-4 right-4 z-[70]">
-            <button
-              onClick={() => setWebpageDemoOpen(false)}
-              className="px-4 py-2 rounded-full bg-black/80 hover:bg-black text-white font-bold text-xs border border-amber-400/40 shadow-2xl flex items-center gap-1.5 backdrop-blur-md transition-all transform hover:scale-105"
-            >
-              <X className="w-4 h-4 text-amber-400" />
-              <span>Close Invitation</span>
-            </button>
-          </div>
-
           <div className="w-full min-h-screen">
             <PremiumWebpageInvitation
-              invitationData={selectedTemplate?.defaults || INVITATION_TEMPLATES[0].defaults}
+              invitationData={selectedTemplate?.defaults || selectedTemplate || INVITATION_TEMPLATES[0].defaults}
               themeId={selectedTemplate?.themeId || 'royalRedNavyBlack'}
               fontPairingId={selectedTemplate?.fontPairingId || 'classicSerif'}
               ambientTrackId={selectedTemplate?.ambientTrackId || 'romanticPiano'}
@@ -419,6 +490,16 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* GLOBAL MODAL: CLIENT AUTH (SIGN IN / SIGN UP / FORGOT PASSWORD) */}
+      <AuthModal
+        isOpen={authModalOpen}
+        initialMode={authModalMode}
+        onClose={() => setAuthModalOpen(false)}
+        onSuccess={(user) => {
+          setCurrentUser(user);
+        }}
+      />
 
     </div>
   );

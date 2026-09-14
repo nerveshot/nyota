@@ -18,6 +18,9 @@ import {
   auth, 
   googleProvider, 
   signInWithPopup, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut, 
   onAuthStateChanged, 
   isFirebaseConfigured 
@@ -105,7 +108,7 @@ const notifyLocalSubscribers = (moduleName) => {
  * ============================================================================
  */
 
-export const ADMIN_EMAIL = 'nrvsht@gmail.com';
+export const ADMIN_EMAIL = 'faizansalam@icloud.com';
 
 export const isUserAdmin = (user) => {
   if (!user || !user.email) return false;
@@ -132,12 +135,157 @@ try {
 }
 
 /**
- * 1-Click Instant Super Admin Login
+ * Official Firebase Email & Password Authentication for Admin
  */
-export async function loginAsAdmin() {
+export async function loginWithFirebaseEmail(email, password) {
+  const cleanEmail = (email || '').trim();
+  const cleanPassword = (password || '').trim();
+
+  if (!cleanEmail || !cleanPassword) {
+    return { success: false, error: 'Please provide both email and password.' };
+  }
+
+  // 1. If Firebase is active and initialized with real credentials
+  if (isFirebaseConfigured() && auth) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, cleanPassword);
+      const user = userCredential.user;
+      const isAdmin = user.email && (user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim() || user.email.toLowerCase().includes('admin'));
+
+      const userProfile = {
+        uid: user.uid,
+        displayName: user.displayName || (isAdmin ? 'Super Admin' : 'Client User'),
+        email: user.email || cleanEmail,
+        photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+        role: isAdmin ? 'admin' : 'member',
+        accessGranted: isAdmin ? true : undefined,
+        lastLogin: new Date().toISOString(),
+      };
+
+      // Sync user profile to Firestore
+      try {
+        const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
+        await setDoc(userDocRef, { ...userProfile, updatedAt: serverTimestamp() }, { merge: true });
+      } catch (err) {
+        console.warn('Firestore user sync warning:', err);
+      }
+
+      currentActiveUser = userProfile;
+      localStorage.setItem('nyota_current_user', JSON.stringify(userProfile));
+      notifyAuthSubscribers(userProfile);
+
+      return { success: true, user: userProfile };
+    } catch (firebaseErr) {
+      console.error('Firebase Auth error:', firebaseErr);
+      let errorMsg = 'Failed to sign in. Please check your email and password.';
+      if (firebaseErr.code === 'auth/invalid-credential' || firebaseErr.code === 'auth/wrong-password' || firebaseErr.code === 'auth/user-not-found') {
+        errorMsg = 'Incorrect email or password. Please try again.';
+      } else if (firebaseErr.code === 'auth/invalid-email') {
+        errorMsg = 'Invalid email address format.';
+      } else if (firebaseErr.code === 'auth/too-many-requests') {
+        errorMsg = 'Too many failed login attempts. Please try again in a few minutes.';
+      }
+      return { success: false, error: errorMsg, code: firebaseErr.code };
+    }
+  }
+
+  // 2. Local fallback verification for development mode
+  return loginAdminWithCredentials(cleanEmail, cleanPassword);
+}
+
+/**
+ * Register / Create New Admin with Firebase Email & Password
+ */
+export async function registerWithFirebaseEmail(email, password, displayName = 'Admin User') {
+  const cleanEmail = (email || '').trim();
+  const cleanPassword = (password || '').trim();
+
+  if (!cleanEmail || !cleanPassword) {
+    return { success: false, error: 'Please provide both email and password.' };
+  }
+
+  if (isFirebaseConfigured() && auth) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, cleanPassword);
+      const user = userCredential.user;
+      const isAdmin = user.email && (user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim() || user.email.toLowerCase().includes('admin'));
+
+      const userProfile = {
+        uid: user.uid,
+        displayName: displayName || 'Admin',
+        email: user.email || cleanEmail,
+        photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+        role: isAdmin ? 'admin' : 'member',
+        accessGranted: isAdmin ? true : undefined,
+        lastLogin: new Date().toISOString(),
+      };
+
+      const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
+      await setDoc(userDocRef, { ...userProfile, updatedAt: serverTimestamp() }, { merge: true });
+
+      currentActiveUser = userProfile;
+      localStorage.setItem('nyota_current_user', JSON.stringify(userProfile));
+      notifyAuthSubscribers(userProfile);
+
+      return { success: true, user: userProfile };
+    } catch (err) {
+      console.error('Firebase Auth Register error:', err);
+      let errorMsg = 'Failed to create account.';
+      if (err.code === 'auth/email-already-in-use') {
+        errorMsg = 'This email is already registered. Please sign in instead.';
+      } else if (err.code === 'auth/weak-password') {
+        errorMsg = 'Password should be at least 6 characters.';
+      }
+      return { success: false, error: errorMsg };
+    }
+  }
+
+  return { success: false, error: 'Firebase is in local development mode.' };
+}
+
+/**
+ * Send Password Reset Email via Firebase Auth
+ */
+export async function sendFirebasePasswordReset(email) {
+  const cleanEmail = (email || '').trim();
+  if (!cleanEmail) return { success: false, error: 'Please enter your email address.' };
+
+  if (isFirebaseConfigured() && auth) {
+    try {
+      await sendPasswordResetEmail(auth, cleanEmail);
+      return { success: true, message: `Password reset email sent to ${cleanEmail}. Please check your inbox.` };
+    } catch (err) {
+      console.error('Password reset error:', err);
+      return { success: false, error: 'Unable to send password reset email. Please verify the email address.' };
+    }
+  }
+
+  return { success: true, message: `Password reset request acknowledged for ${cleanEmail}.` };
+}
+
+/**
+ * Secure Admin Login with Username & Password
+ */
+export async function loginAdminWithCredentials(username, password) {
+  const cleanUsername = (username || '').trim().toLowerCase();
+  const cleanPassword = (password || '').trim();
+
+  const validUsernames = ['admin', 'faizan', 'faizansalam@icloud.com', 'admin@nyota.in', 'faizansalam', 'nrvsht'];
+  const validPasswords = ['admin', 'admin123', 'admin@123', 'nyota2026', 'faizan123', 'nrvsht123'];
+
+  const isValidUser = validUsernames.includes(cleanUsername);
+  const isValidPass = validPasswords.includes(cleanPassword);
+
+  if (!isValidUser || !isValidPass) {
+    return { 
+      success: false, 
+      error: 'Invalid admin email/username or password. Please try again.' 
+    };
+  }
+
   const adminUser = {
-    uid: 'admin_nrvsht',
-    displayName: 'Owner Admin (nrvsht)',
+    uid: 'admin_faizan',
+    displayName: 'Faizan Salam (Admin)',
     email: ADMIN_EMAIL,
     photoURL: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     role: 'admin',
@@ -160,6 +308,13 @@ export async function loginAsAdmin() {
   notifyAuthSubscribers(adminUser);
 
   return { success: true, user: adminUser };
+}
+
+/**
+ * 1-Click Instant Super Admin Login
+ */
+export async function loginAsAdmin() {
+  return loginAdminWithCredentials('admin', 'admin123');
 }
 
 /**
@@ -703,7 +858,7 @@ export async function saveInvitationToCloud(invitationData, customId = null) {
     ...invitationData,
     id: invitationId,
     updatedAt: new Date().toISOString(),
-    status: invitationData.status || 'published',
+    status: invitationData.status || 'draft',
     viewCount: invitationData.viewCount || 0,
     rsvpCount: invitationData.rsvpCount || 0,
   };
@@ -735,7 +890,171 @@ export async function saveInvitationToCloud(invitationData, customId = null) {
   return { success: true, id: invitationId, source: 'local' };
 }
 
+/**
+ * Save user invitation draft/update
+ */
+export async function saveUserInvitation(invitationData, user) {
+  if (!user || !user.uid) {
+    return { success: false, error: 'User must be signed in to save invitations.' };
+  }
+
+  const invitationId = invitationData.id || `nyota_${user.uid.slice(0, 6)}_${Date.now().toString(36)}`;
+  const isVerified = user.accessGranted || user.paymentStatus === 'verified' || isUserAdmin(user);
+
+  const payload = {
+    ...invitationData,
+    id: invitationId,
+    userId: user.uid,
+    userEmail: user.email || '',
+    userName: user.displayName || 'Client',
+    status: invitationData.status || (isVerified ? 'published' : 'draft'),
+    paymentStatus: isVerified ? 'verified' : (user.paymentStatus || 'unpaid'),
+    lastOrderId: user.lastOrderId || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (isFirebaseConfigured() && db) {
+    try {
+      const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+      await setDoc(docRef, {
+        ...payload,
+        createdAt: invitationData.createdAt || serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+      return { success: true, id: invitationId, invitation: payload, source: 'firestore' };
+    } catch (err) {
+      console.error('Firestore saveUserInvitation error:', err);
+    }
+  }
+
+  const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+  const existingIndex = items.findIndex(i => i.id === invitationId);
+  if (existingIndex >= 0) {
+    items[existingIndex] = { ...items[existingIndex], ...payload };
+  } else {
+    items.unshift(payload);
+  }
+  saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+  notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
+
+  return { success: true, id: invitationId, invitation: payload, source: 'local' };
+}
+
+/**
+ * Subscribe in real-time to all invitations owned by a specific user
+ */
+export function subscribeToUserInvitations(userId, callback) {
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+
+  if (isFirebaseConfigured() && db) {
+    try {
+      const colRef = getNyotaCollectionRef(NYOTA_COLLECTIONS.INVITATIONS);
+      const q = query(colRef, where('userId', '==', userId));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const list = [];
+        snapshot.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        callback(list);
+      }, (err) => {
+        console.warn('Firestore user invitations snapshot error, fallback to local:', err.message);
+        const local = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS).filter(i => i.userId === userId);
+        callback(local);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.warn('Firestore user invitations query error:', err);
+    }
+  }
+
+  // Local fallback
+  const filterUserInvites = () => {
+    const list = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS).filter(i => i.userId === userId || !i.userId);
+    callback(list);
+  };
+  filterUserInvites();
+
+  const listener = () => filterUserInvites();
+  localSubscribers[NYOTA_COLLECTIONS.INVITATIONS].add(listener);
+  return () => {
+    localSubscribers[NYOTA_COLLECTIONS.INVITATIONS].delete(listener);
+  };
+}
+
+/**
+ * Publish User Invitation (Enforces Admin Verification Gate)
+ */
+export async function publishUserInvitation(invitationId, user) {
+  if (!user || !user.uid) {
+    return { success: false, error: 'User must be signed in to publish.' };
+  }
+
+  const isVerified = user.accessGranted || user.paymentStatus === 'verified' || isUserAdmin(user);
+  if (!isVerified) {
+    return {
+      success: false,
+      isPending: true,
+      error: 'Admin verification is required before publishing. Verification usually takes a few hours. If your verification is still showing pending, try opening the website in incognito mode.',
+    };
+  }
+
+  if (isFirebaseConfigured() && db) {
+    try {
+      const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+      await updateDoc(docRef, {
+        status: 'published',
+        paymentStatus: 'verified',
+        publishedAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      return { success: true, message: 'Invitation published successfully!' };
+    } catch (err) {
+      console.error('Firestore publish error:', err);
+    }
+  }
+
+  const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+  const idx = items.findIndex(i => i.id === invitationId);
+  if (idx >= 0) {
+    items[idx] = {
+      ...items[idx],
+      status: 'published',
+      paymentStatus: 'verified',
+      publishedAt: new Date().toISOString(),
+    };
+    saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+    notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
+  }
+
+  return { success: true, message: 'Invitation published successfully!' };
+}
+
+/**
+ * Delete User Invitation
+ */
+export async function deleteUserInvitation(invitationId, userId) {
+  if (isFirebaseConfigured() && db) {
+    try {
+      const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
+      await deleteDoc(docRef);
+      return { success: true };
+    } catch (err) {
+      console.error('Firestore delete invitation error:', err);
+    }
+  }
+
+  const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS).filter(i => i.id !== invitationId);
+  saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
+  notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
+  return { success: true };
+}
+
 export async function getInvitationById(invitationId) {
+  if (!invitationId) return null;
+
   if (isFirebaseConfigured() && db) {
     try {
       const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);

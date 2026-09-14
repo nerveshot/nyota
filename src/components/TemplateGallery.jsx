@@ -1,232 +1,152 @@
 import React from 'react';
 import { 
-  Sparkles, Heart, Cake, Baby, Wine, Briefcase, GraduationCap, 
-  ArrowRight, CheckCircle2, Play, Music, Users, Calendar, MapPin 
+  Sparkles, Heart, Play, Music, Users, Calendar, MapPin, 
+  ArrowRight, CheckCircle2, ShieldCheck, Moon, Star, Eye
 } from 'lucide-react';
+import { INVITATION_TEMPLATES } from '../data/templates';
 
 export default function TemplateGallery({ onOpenStudio, onOpenWebpageDemo }) {
-  const eventCategories = [
-    {
-      id: 'wedding',
-      title: 'Weddings & Engagements',
-      icon: Heart,
-      badge: 'Most Requested 💍',
-      tagline: 'Cinematic, romantic webpages celebrating your eternal love story.',
-      templates: [
-        'Royal Emerald & Gold Foil Edition',
-        'Romantic Rose Quartz & Velvet Love Story',
-        'Tuscan Vineyard & Candlelight Estate',
-        'Minimalist Modern Ivory & Champagne Luxe'
-      ],
-      color: 'from-emerald-950 via-[#0B2E21] to-[#04120D]',
-      accent: 'border-champagne-400/40 text-champagne-300',
-    },
-    {
-      id: 'birthday',
-      title: 'Birthdays & Milestones',
-      icon: Cake,
-      badge: 'High Energy 🎉',
-      tagline: 'Unforgettable celebrations from 1st birthdays to milestone 50ths.',
-      templates: [
-        'Milestone 30th / 50th Golden Rooftop Soirée',
-        'Electric Neon & Velvet Glow Disco Party',
-        'Sweet 16 & Quinceañera Fairytale Gala',
-        'Kids Safari & Little Prince/Princess Adventure'
-      ],
-      color: 'from-[#1E1238] via-[#2D164E] to-[#0D071B]',
-      accent: 'border-purple-400/40 text-purple-300',
-    },
-    {
-      id: 'babyshower',
-      title: 'Baby Showers & Reveals',
-      icon: Baby,
-      badge: 'Sweet & Heartwarming 🍼',
-      tagline: 'Welcoming your precious little miracles with family & friends.',
-      templates: [
-        'Little Star & Pastel Cloud Gender Reveal',
-        'Botanical Olive Branch & Linen Baby Shower',
-        'Teddy Bear High Tea & Sweet Welcome',
-        'Safari Meadow & Woodland Friends Theme'
-      ],
-      color: 'from-[#2B1E16] via-[#3D281D] to-[#170E09]',
-      accent: 'border-amber-400/40 text-amber-300',
-    },
-    {
-      id: 'anniversary',
-      title: 'Anniversaries & Romance',
-      icon: Wine,
-      badge: 'Cherished Milestones ✨',
-      tagline: 'Honoring decades of love, devotion, and vow renewals.',
-      templates: [
-        'Golden 50th Jubilee Gala Celebration',
-        'Silver 25th Diamond Candlelight Dinner',
-        'Vintage Wine Tasting & Vow Renewal',
-        'Intimate Courtyard Romance Soirée'
-      ],
-      color: 'from-[#2D121B] via-[#451B2A] to-[#1F0B12]',
-      accent: 'border-rose-400/40 text-rose-300',
-    },
-    {
-      id: 'corporate',
-      title: 'Galas & Corporate Events',
-      icon: Briefcase,
-      badge: 'Executive & VIP 🍸',
-      tagline: 'High-profile charity balls, summits, award shows, and galas.',
-      templates: [
-        'Grand Horizon Black Tie Charity Gala',
-        'Annual Innovation Summit & Keynote Mixer',
-        'Red Carpet Awards & VIP Champagne Reception',
-        'Executive Leadership Banquet & Fundraiser'
-      ],
-      color: 'from-[#121215] via-[#1C1C24] to-[#0A0A0C]',
-      accent: 'border-slate-400/40 text-slate-200',
-    },
-    {
-      id: 'graduation',
-      title: 'Graduations & Socials',
-      icon: GraduationCap,
-      badge: 'Commencements 🎓',
-      tagline: 'Honoring major academic triumphs, alumni reunions & housewarmings.',
-      templates: [
-        'Doctorate & Honors Commencement Gala',
-        'Alumni Homecoming & Reunion Dinner',
-        'Luxury Housewarming & Garden Social',
-        'Private Holiday Banquet & Feast'
-      ],
-      color: 'from-[#0B1E2B] via-[#102C3F] to-[#051119]',
-      accent: 'border-cyan-400/40 text-cyan-300',
-    }
+  const arabicTemplate = INVITATION_TEMPLATES[0];
+
+  const featuresList = [
+    { label: '3D Velvet Curtain & Grand Mosque Walkthrough', icon: '🕌' },
+    { label: 'Ascending Gold Calligraphy Bismillah Blessing', icon: '✨' },
+    { label: 'Interactive Scratch-to-Reveal Sacred Date Card', icon: '🪙' },
+    { label: 'Live Countdown Clock to Celebration Day', icon: '⏳' },
+    { label: 'Multi-Event Itinerary (Nikah, Walima, Baraat, Dawat-e-Khas)', icon: '👑' },
+    { label: 'Love Story Milestones & Photo Gallery', icon: '💍' },
+    { label: '1-Tap Google Maps Navigation & Google Calendar', icon: '📍' },
+    { label: 'Ambient Background Melody & Music Player', icon: '🎵' },
+    { label: 'Real-Time Guest RSVP & WhatsApp Confirmation', icon: '💌' },
+    { label: 'Digital Shagun / UPI Wishing Well Fund', icon: '🎁' }
   ];
 
   return (
-    <section id="events-section" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <section id="templates-section" className="py-20 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-champagne-500/10 border border-champagne-500/30 text-champagne-300 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-champagne-400" />
-            <span>Bespoke Digital Invitations</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider shadow-glow-gold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>Exclusive Luxury Collection</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-cinzel font-bold text-white leading-tight">
-            We Make Custom Invitations <br />
-            <span className="gold-gradient-text">For All Your Special Events</span>
+            The Royal <span className="gold-gradient-text">Arabic Style Invitation</span>
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Instead of boring static cards, we create complete **cinematic invitation webpages** equipped with 
-            ambient background music, 3D wax seal unboxings, live countdowns, photo love stories, Google Maps venue directions, 
-            and real-time RSVP guest tracking for every occasion.
+            An opulent royal Islamic palace celebration featuring 3D velvet curtains, Grand Mosque entrance animation, 
+            sacred Bismillah calligraphy, interactive scratch-to-reveal date card, ambient melodies, and real-time RSVPs.
           </p>
-
-          {/* Featured Live Webpage Demo CTA Banner */}
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={onOpenWebpageDemo}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2.5 group"
-            >
-              <Play className="w-4 h-4 text-slate-950 fill-slate-950" />
-              <span>Launch Arabic Style Invitation</span>
-              <Sparkles className="w-4 h-4 text-slate-950 group-hover:rotate-12 transition-transform" />
-            </button>
-
-            <button
-              onClick={onOpenStudio}
-              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-200 font-semibold text-sm border border-white/15 transition-all flex items-center justify-center gap-2"
-            >
-              <span>Open Customizer Studio</span>
-              <ArrowRight className="w-4 h-4 text-champagne-400" />
-            </button>
-          </div>
         </div>
 
-        {/* Event Occasions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {eventCategories.map((event) => {
-            const IconComp = event.icon;
+        {/* Exclusive Showcase Card for Arabic Style Invitation */}
+        <div className="relative rounded-3xl bg-gradient-to-br from-[#1C0612]/95 via-[#0D1024]/95 to-[#05030A]/95 border-2 border-amber-400/60 shadow-[0_0_60px_rgba(212,175,55,0.25)] p-6 sm:p-10 lg:p-12 backdrop-blur-xl">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            {/* Left: Visual Preview Arch */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full max-w-sm">
+                
+                {/* Outer Glow */}
+                <div className="absolute -inset-4 bg-gradient-to-br from-amber-400/20 via-rose-600/20 to-blue-600/20 rounded-[200px] blur-2xl pointer-events-none" />
 
-            return (
-              <div
-                key={event.id}
-                className="group relative rounded-3xl bg-[#120F24]/80 border border-champagne-500/20 hover:border-champagne-500/50 p-6 sm:p-8 shadow-xl hover:shadow-glow-gold transition-all duration-300 flex flex-col justify-between space-y-6"
-              >
-                <div className="space-y-4">
-                  {/* Top Category Icon & Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-champagne-400 to-amber-700 p-[1px] shadow-glow-gold flex items-center justify-center">
-                      <div className="w-full h-full bg-[#0E0C1C] rounded-[15px] flex items-center justify-center">
-                        <IconComp className="w-6 h-6 text-champagne-400" />
+                {/* Grand Moorish Arch Frame */}
+                <div className="relative aspect-[3/4] rounded-t-[180px] rounded-b-3xl overflow-hidden border-4 border-amber-400/70 shadow-2xl p-2 bg-gradient-to-b from-[#2A0510] via-[#0D1530] to-[#08020A] group">
+                  <div className="w-full h-full rounded-t-[170px] rounded-b-2xl overflow-hidden relative">
+                    <img
+                      src="/images/muslim-royal-couple.jpg"
+                      alt="Arabic Style Royal Wedding Invitation"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                    />
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-6 text-center space-y-2">
+                      <div 
+                        className="text-2xl font-serif text-amber-300 font-bold gold-gradient-text"
+                        style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                        dir="rtl"
+                      >
+                        بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                      </div>
+                      <div className="font-cinzel text-lg font-bold text-white gold-gradient-text">
+                        Zayd Al-Mansoor & Aaliyah Khan
+                      </div>
+                      <div className="text-[10px] text-amber-300/90 font-mono tracking-widest uppercase">
+                        Dawat-e-Khas • Nikah Ceremony
                       </div>
                     </div>
-
-                    <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-champagne-300">
-                      {event.badge}
-                    </span>
                   </div>
 
-                  {/* Title & Description */}
-                  <div>
-                    <h3 className="font-cinzel text-xl font-bold text-white group-hover:text-champagne-300 transition-colors">
-                      {event.title}
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-1">
-                      {event.tagline}
-                    </p>
+                  {/* Top Crescent */}
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/80 backdrop-blur-md border border-amber-400 flex items-center justify-center text-amber-300 text-sm shadow-glow-gold">
+                    🌙
                   </div>
-
-                  {/* Included Event Designs & Templates list */}
-                  <div className="pt-2 border-t border-white/10 space-y-2">
-                    <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                      Available Event Styles:
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {event.templates.map((tplName, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-xs text-slate-200">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-champagne-400 flex-shrink-0" />
-                          <span className="truncate">{tplName}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Action Button */}
-                <div className="pt-4 border-t border-white/10">
-                  <button
-                    onClick={onOpenWebpageDemo}
-                    className="w-full py-2.5 px-4 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 border border-champagne-400/30 text-champagne-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all group-hover:shadow-glow-gold"
-                  >
-                    <span>View Interactive Webpage Experience</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-champagne-400 group-hover:translate-x-1 transition-transform" />
-                  </button>
                 </div>
 
               </div>
-            );
-          })}
-        </div>
+            </div>
 
-        {/* Custom Event Notice Banner */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-champagne-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <h4 className="font-cinzel text-lg font-bold text-white">
-              Hosting a Unique Celebration or Cultural Tradition?
-            </h4>
-            <p className="text-xs text-slate-300 max-w-xl">
-              We customize language, fonts, multiple ceremonies (e.g. Mehndi, Sangeet, Haldi, Reception, Nikah, Quinceañera), 
-              multiple venue coordinates, and personalized music tracks to match your exact vision.
-            </p>
+            {/* Right: Details, Included Highlights & Action CTAs */}
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <span className="px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold font-mono">
+                    ✦ ALL-IN-ONE LUXURY SUITE
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-semibold">
+                    ₹501 Shagun Lifetime Access
+                  </span>
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-cinzel font-bold text-white">
+                  Arabic Style Royal Wedding & Nikah Webpage
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans pt-1">
+                  A timeless royal masterwork designed with Obsidian Black, Royal Crimson Red, and Deep Midnight Navy Blue accents, 
+                  trimmed with imperial gold foil borders and authentic Islamic calligraphy.
+                </p>
+              </div>
+
+              {/* Grid of features */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-white/10 text-left">
+                {featuresList.map((feat, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 text-xs text-slate-200">
+                    <span className="text-sm flex-shrink-0">{feat.icon}</span>
+                    <span className="font-sans leading-tight">{feat.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
+                <button
+                  onClick={onOpenWebpageDemo}
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-500 to-amber-500 text-slate-950 font-bold text-sm shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                >
+                  <Play className="w-4 h-4 text-slate-950 fill-slate-950" />
+                  <span>Launch Live Interactive Demo</span>
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                </button>
+
+                <button
+                  onClick={() => onOpenStudio(arabicTemplate)}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-100 font-semibold text-sm border border-amber-400/30 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                >
+                  <span>Customize This Invitation</span>
+                  <ArrowRight className="w-4 h-4 text-amber-400" />
+                </button>
+              </div>
+
+            </div>
+
           </div>
 
-          <button
-            onClick={onOpenStudio}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-champagne-400 to-amber-500 text-slate-950 font-bold text-xs shadow-glow-gold flex items-center gap-2 flex-shrink-0"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Design Custom Invitation</span>
-          </button>
         </div>
 
       </div>

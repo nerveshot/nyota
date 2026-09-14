@@ -43,7 +43,7 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs sm:text-sm text-slate-200">
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <CheckCircle2 className="w-4 h-4 text-champagne-400 flex-shrink-0" />
-                <span>Instant 4K Card Export</span>
+                <span>Cinematic Webpage Link</span>
               </div>
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <CheckCircle2 className="w-4 h-4 text-champagne-400 flex-shrink-0" />
@@ -93,82 +93,59 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
 
           </div>
 
-          {/* Right Column: Hero Visual Preview Card */}
+          {/* Right Column: Hero Visual Image Showcase */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-sm sm:max-w-md">
               
               {/* Decorative behind-the-card glow */}
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-champagne-500/40 via-roseGold-500/30 to-emeraldGlow-500/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+              <div className="absolute -inset-2 bg-gradient-to-tr from-amber-400/25 via-rose-600/20 to-blue-600/25 rounded-[40px] blur-2xl pointer-events-none animate-pulse"></div>
 
-              {/* Invitation Card Cardstock Container */}
-              <div className="relative rounded-2xl bg-gradient-to-br from-[#072017] via-[#0B2E21] to-[#04120D] border-2 border-champagne-400/40 p-6 sm:p-8 shadow-luxury text-center space-y-5 overflow-hidden">
-                
-                {/* Gold foil corner accents */}
-                <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-champagne-400/60 rounded-tl-lg pointer-events-none"></div>
-                <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-champagne-400/60 rounded-tr-lg pointer-events-none"></div>
-                <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-champagne-400/60 rounded-bl-lg pointer-events-none"></div>
-                <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-champagne-400/60 rounded-br-lg pointer-events-none"></div>
+              {/* Grand Moorish Arch Couple Image Container */}
+              <div 
+                onClick={onPreviewZareqiaWebpage}
+                className="relative rounded-t-[180px] rounded-b-3xl overflow-hidden border-4 border-amber-400/70 shadow-2xl p-2 bg-gradient-to-b from-[#2A0510] via-[#0D1530] to-[#08020A] group cursor-pointer transition-all hover:scale-[1.02] hover:border-amber-400"
+              >
+                <div className="w-full aspect-[3/4] rounded-t-[170px] rounded-b-2xl overflow-hidden relative">
+                  <img
+                    src="/images/muslim-royal-couple.jpg"
+                    alt="Arabic Style Royal Wedding Couple"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                  />
 
-                {/* Subtle botanical watermark icon */}
-                <div className="text-champagne-400/30 text-xs uppercase tracking-[0.3em] font-sans font-semibold pt-1">
-                  TOGETHER WITH THEIR FAMILIES
-                </div>
+                  {/* Gradient Overlay with Bismillah & Couple Name */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-6 text-center space-y-2">
+                    <div 
+                      className="text-2xl sm:text-3xl font-serif text-amber-300 font-bold gold-gradient-text drop-shadow-md"
+                      style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                      dir="rtl"
+                    >
+                      بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                    </div>
+                    
+                    <div className="font-cinzel text-lg sm:text-xl font-bold text-white gold-gradient-text">
+                      Zayd Al-Mansoor & Aaliyah Khan
+                    </div>
 
-                <div className="font-serif italic text-sm text-emerald-200/90">
-                  Request the honour of your presence
-                </div>
-
-                <div className="space-y-1">
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold gold-gradient-text tracking-wide">
-                    Elena & Arthur
-                  </h2>
-                  <div className="text-xs text-champagne-300/80 font-sans tracking-widest uppercase">
-                    ARE GETTING MARRIED
-                  </div>
-                </div>
-
-                <div className="py-2 border-y border-champagne-400/20 my-2 space-y-1">
-                  <div className="font-cinzel text-sm sm:text-base font-semibold text-white">
-                    SATURDAY, OCTOBER 24, 2026
-                  </div>
-                  <div className="text-xs text-emerald-200/70 font-sans">
-                    FOUR O'CLOCK IN THE AFTERNOON
-                  </div>
-                  <div className="text-xs text-champagne-300 font-medium">
-                    The St. Regis Grand Ballroom, New York
-                  </div>
-                </div>
-
-                {/* Wax Seal Badge in Hero */}
-                <div className="flex justify-center items-center gap-3 pt-2">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#E2C38F] via-[#B88B42] to-[#8F662C] p-[2px] shadow-glow-gold flex items-center justify-center">
-                    <div className="w-full h-full rounded-full bg-[#9B7029] flex items-center justify-center text-xl shadow-inner border border-champagne-300/40">
-                      🌿
+                    <div className="text-[10px] sm:text-xs text-rose-300 font-mono tracking-widest uppercase">
+                      Dawat-e-Khas • Nikah Ceremony
                     </div>
                   </div>
                 </div>
 
-                {/* Interactive Demo Action Bar on Card */}
-                <div className="pt-2">
-                  <button
-                    onClick={onPreviewDemoEnvelope}
-                    className="w-full py-2.5 px-4 rounded-xl bg-champagne-500/20 hover:bg-champagne-500/30 border border-champagne-400/40 text-champagne-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 group"
-                  >
-                    <span>Tap to Test Interactive Unboxing & Music</span>
-                    <Sparkles className="w-3.5 h-3.5 text-champagne-400 group-hover:rotate-12 transition-transform" />
-                  </button>
+                {/* Top Glowing Crescent Accent */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-black/80 backdrop-blur-md border border-amber-400 flex items-center justify-center text-amber-300 text-sm shadow-glow-gold">
+                  🌙
                 </div>
-
               </div>
 
-              {/* Floating feature pills around preview */}
-              <div className="absolute -bottom-4 -left-4 glass-panel px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs font-medium text-slate-200 shadow-xl border border-champagne-500/20 hidden sm:flex">
-                <Music className="w-4 h-4 text-champagne-400" />
-                <span>Ambient Romance Audio</span>
+              {/* Floating feature pills around image */}
+              <div className="absolute -bottom-4 -left-4 glass-panel px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs font-medium text-slate-200 shadow-xl border border-amber-500/30 hidden sm:flex">
+                <Music className="w-4 h-4 text-amber-400 animate-pulse" />
+                <span>Mosque Walkthrough & Audio</span>
               </div>
-              <div className="absolute -top-4 -right-4 glass-panel px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs font-medium text-emerald-300 shadow-xl border border-emerald-500/20 hidden sm:flex">
-                <Smartphone className="w-4 h-4 text-emerald-400" />
-                <span>Realtime RSVP Sync</span>
+              <div className="absolute -top-3 -right-3 glass-panel px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs font-medium text-amber-300 shadow-xl border border-amber-500/30 hidden sm:flex">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>Live Interactive RSVP</span>
               </div>
 
             </div>

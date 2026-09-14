@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Sparkles, Heart, Shield, Send, Check } from 'lucide-react';
+import { Sparkles, Heart, Shield, Send, Check, Lock } from 'lucide-react';
 import { subscribeNewsletterToCloud } from '../firebase/nyotaDb';
 
-export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
+export default function Footer({ onNavigate, onOpenStudio, onOpenPricing, onOpenAdminPortal }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -39,39 +39,39 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
             </div>
             
             <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
-              The premium custom invitation and guest experience platform. 
-              Designed for luxury weddings, memorable birthdays, executive galas, and life's sweetest milestones.
+              The premier luxury custom digital invitation platform. 
+              Specializing in cinematic royal wedding webpages with 3D curtain entrances, sacred Arabic calligraphy, and real-time RSVPs.
             </p>
 
             <div className="text-[11px] text-champagne-400/80 font-mono">
-              ✦ Worldwide Delivery • 100% Digital & Print Ready
+              ✦ Worldwide Instant Delivery • ₹501 Shagun Lifetime Access
             </div>
           </div>
 
           {/* Quick Links (2 cols) */}
           <div className="md:col-span-2 space-y-3">
             <div className="text-xs font-bold text-white uppercase tracking-wider font-cinzel">
-              Occasions
+              Ceremonies
             </div>
             <ul className="space-y-2 text-xs">
               <li>
                 <button onClick={() => onNavigate('templates')} className="hover:text-champagne-300 transition-colors">
-                  Wedding Invitations
+                  Holy Nikah & Vows
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('templates')} className="hover:text-champagne-300 transition-colors">
-                  Milestone Birthdays
+                  Dawat-e-Khas Reception
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('templates')} className="hover:text-champagne-300 transition-colors">
-                  Baby Showers & Reveals
+                  Grand Walima Banquet
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('templates')} className="hover:text-champagne-300 transition-colors">
-                  Black Tie Galas
+                  Rukhsati & Duas
                 </button>
               </li>
             </ul>
@@ -89,18 +89,13 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('features')} className="hover:text-champagne-300 transition-colors">
-                  RSVP & Unboxing Demo
-                </button>
-              </li>
-              <li>
                 <button onClick={onOpenPricing} className="hover:text-champagne-300 transition-colors">
-                  Pricing & Monetization
+                  Shagun Pricing (₹501)
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('contact')} className="hover:text-emerald-300 text-emerald-400/90 font-medium transition-colors">
-                  Contact & Custom Orders
+                  WhatsApp Support
                 </button>
               </li>
               <li>
@@ -108,16 +103,27 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
                   Help & FAQ
                 </button>
               </li>
+              {onOpenAdminPortal && (
+                <li>
+                  <button 
+                    onClick={onOpenAdminPortal} 
+                    className="hover:text-amber-300 text-amber-400/80 font-medium transition-colors flex items-center gap-1 pt-1 border-t border-white/5"
+                  >
+                    <Shield className="w-3 h-3 text-amber-400" />
+                    <span>Admin Portal</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 
           {/* Newsletter (4 cols) */}
           <div className="md:col-span-4 space-y-3">
             <div className="text-xs font-bold text-white uppercase tracking-wider font-cinzel">
-              Party Inspiration & Offers
+              Wedding Inspiration & Updates
             </div>
             <p className="text-slate-400 text-xs">
-              Subscribe to receive curated event aesthetics, wording guides, and exclusive discount codes.
+              Subscribe to receive royal event aesthetics, Arabic calligraphy guides, and wedding planning tips.
             </p>
 
             <form onSubmit={handleSubscribe} className="flex gap-2">
@@ -131,7 +137,7 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
               />
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl bg-champagne-500 text-slate-950 font-bold text-xs shadow-md hover:bg-champagne-400 transition-colors flex items-center gap-1 flex-shrink-0"
+                className="px-4 py-2 rounded-xl bg-champagne-500 text-slate-950 font-bold text-xs shadow-md hover:bg-champagne-400 transition-colors flex items-center gap-1 flex-shrink-0 cursor-pointer"
               >
                 {subscribed ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
                 <span>{subscribed ? 'Subscribed' : 'Join'}</span>
@@ -141,15 +147,29 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing }) {
 
         </div>
 
-        {/* Bottom copyright & credits */}
+        {/* Bottom copyright & Admin Link */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
           <div>
             © {new Date().getFullYear()} Nyota Luxury Invitations. All rights reserved.
           </div>
-          <div className="flex items-center gap-1 text-slate-400">
-            <span>Crafted with</span>
-            <Heart className="w-3 h-3 text-roseGold-400 fill-roseGold-400" />
-            <span>for unforgettable celebrations worldwide.</span>
+          
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 text-slate-400">
+              <span>Crafted with</span>
+              <Heart className="w-3 h-3 text-roseGold-400 fill-roseGold-400" />
+              <span>for unforgettable celebrations.</span>
+            </div>
+
+            {onOpenAdminPortal && (
+              <button
+                onClick={onOpenAdminPortal}
+                className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1 cursor-pointer pl-2 border-l border-white/10"
+                title="Super Admin Portal"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Admin Login</span>
+              </button>
+            )}
           </div>
         </div>
 
