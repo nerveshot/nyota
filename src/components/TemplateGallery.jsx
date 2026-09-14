@@ -60,6 +60,8 @@ export default function TemplateGallery({ onOpenStudio, onOpenWebpageDemo }) {
                     <img
                       src="/images/muslim-royal-couple.jpg"
                       alt="Arabic Style Royal Wedding Invitation"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                     />
 

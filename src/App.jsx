@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TemplateGallery from './components/TemplateGallery';
-import CustomizerStudio from './components/CustomizerStudio';
-import EnvelopeExperience from './components/EnvelopeExperience';
 import RsvpSection from './components/RsvpSection';
-import PricingModal from './components/PricingModal';
-import CheckoutModal from './components/CheckoutModal';
-import ShareExportModal from './components/ShareExportModal';
 import TestimonialsFAQ from './components/TestimonialsFAQ';
-import Footer from './components/Footer';
-import PremiumWebpageInvitation from './components/PremiumWebpageInvitation';
-import AdminPortal from './components/AdminPortal';
-import UserDashboard from './components/UserDashboard';
-import AuthModal from './components/AuthModal';
 import ContactSection from './components/ContactSection';
+import Footer from './components/Footer';
 import { INVITATION_TEMPLATES, PRICING_PACKAGES } from './data/templates';
 import { Sparkles, ArrowRight, X, Heart, Shield, Music } from 'lucide-react';
 import { subscribeToAuthUser, getInvitationById } from './firebase/nyotaDb';
+
+// Lazy load non-initial subviews & heavy modals to ensure lightning-fast initial page load
+const CustomizerStudio = lazy(() => import('./components/CustomizerStudio'));
+const EnvelopeExperience = lazy(() => import('./components/EnvelopeExperience'));
+const PricingModal = lazy(() => import('./components/PricingModal'));
+const CheckoutModal = lazy(() => import('./components/CheckoutModal'));
+const ShareExportModal = lazy(() => import('./components/ShareExportModal'));
+const PremiumWebpageInvitation = lazy(() => import('./components/PremiumWebpageInvitation'));
+const AdminPortal = lazy(() => import('./components/AdminPortal'));
+const UserDashboard = lazy(() => import('./components/UserDashboard'));
+const AuthModal = lazy(() => import('./components/AuthModal'));
+
+const LoadingFallback = () => (
+  <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 space-y-4">
+    <div className="w-12 h-12 rounded-full border-2 border-champagne-500/30 border-t-champagne-400 animate-spin" />
+    <span className="text-xs uppercase tracking-widest text-champagne-400 font-mono">Loading Experience...</span>
+  </div>
+);
 
 export default function App() {
   const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'studio' | 'dashboard' | 'admin'
@@ -153,13 +162,15 @@ export default function App() {
   // If viewing Admin Portal
   if (currentView === 'admin') {
     return (
-      <AdminPortal
-        onBackToSite={() => setCurrentView('landing')}
-        onPreviewInvitation={(draft) => {
-          setSelectedTemplate({ ...selectedTemplate, defaults: draft });
-          setWebpageDemoOpen(true);
-        }}
-      />
+      <Suspense fallback={<LoadingFallback />}>
+        <AdminPortal
+          onBackToSite={() => setCurrentView('landing')}
+          onPreviewInvitation={(draft) => {
+            setSelectedTemplate({ ...selectedTemplate, defaults: draft });
+            setWebpageDemoOpen(true);
+          }}
+        />
+      </Suspense>
     );
   }
 
@@ -167,28 +178,34 @@ export default function App() {
   if (currentView === 'dashboard') {
     return (
       <div className="min-h-screen bg-[#0B0914] text-slate-100 flex flex-col justify-between">
-        <UserDashboard
-          currentUser={currentUser}
-          onBackToSite={() => setCurrentView('landing')}
-          onOpenStudio={(inv) => handleOpenStudio(inv)}
-          onPreviewInvitation={(inv) => {
-            setSelectedTemplate({ ...selectedTemplate, defaults: inv });
-            setWebpageDemoOpen(true);
-          }}
-          onOpenAuthModal={(mode) => {
-            setAuthModalMode(mode || 'signin');
-            setAuthModalOpen(true);
-          }}
-          onOpenCheckout={(payload) => handleOpenCheckout(payload)}
-        />
-        <AuthModal
-          isOpen={authModalOpen}
-          initialMode={authModalMode}
-          onClose={() => setAuthModalOpen(false)}
-          onSuccess={(user) => {
-            setCurrentUser(user);
-          }}
-        />
+        <Suspense fallback={<LoadingFallback />}>
+          <UserDashboard
+            currentUser={currentUser}
+            onBackToSite={() => setCurrentView('landing')}
+            onOpenStudio={(inv) => handleOpenStudio(inv)}
+            onPreviewInvitation={(inv) => {
+              setSelectedTemplate({ ...selectedTemplate, defaults: inv });
+              setWebpageDemoOpen(true);
+            }}
+            onOpenAuthModal={(mode) => {
+              setAuthModalMode(mode || 'signin');
+              setAuthModalOpen(true);
+            }}
+            onOpenCheckout={(payload) => handleOpenCheckout(payload)}
+          />
+        </Suspense>
+        {authModalOpen && (
+          <Suspense fallback={null}>
+            <AuthModal
+              isOpen={authModalOpen}
+              initialMode={authModalMode}
+              onClose={() => setAuthModalOpen(false)}
+              onSuccess={(user) => {
+                setCurrentUser(user);
+              }}
+            />
+          </Suspense>
+        )}
       </div>
     );
   }
@@ -353,12 +370,14 @@ export default function App() {
           </div>
         ) : (
           /* Studio View */
-          <CustomizerStudio
-            selectedTemplate={selectedTemplate}
-            onBackToGallery={handleBackToGallery}
-            onOpenCheckout={handleOpenCheckout}
-            onOpenExport={handleOpenExport}
-          />
+          <Suspense fallback={<LoadingFallback />}>
+            <CustomizerStudio
+              selectedTemplate={selectedTemplate}
+              onBackToGallery={handleBackToGallery}
+              onOpenCheckout={handleOpenCheckout}
+              onOpenExport={handleOpenExport}
+            />
+          </Suspense>
         )}
       </main>
 
@@ -374,29 +393,41 @@ export default function App() {
       />
 
       {/* MODAL 1: PRICING COMPARISON */}
-      <PricingModal
-        isOpen={pricingOpen}
-        onClose={() => setPricingOpen(false)}
-        onSelectPlan={handleSelectPlanFromPricing}
-      />
+      {pricingOpen && (
+        <Suspense fallback={null}>
+          <PricingModal
+            isOpen={pricingOpen}
+            onClose={() => setPricingOpen(false)}
+            onSelectPlan={handleSelectPlanFromPricing}
+          />
+        </Suspense>
+      )}
 
       {/* MODAL 2: CHECKOUT & UPI SHAGUN PAYMENT */}
-      <CheckoutModal
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        customizationData={customizationPayload}
-        onOpenStudio={() => {
-          setCheckoutOpen(false);
-          handleOpenStudio(selectedTemplate);
-        }}
-      />
+      {checkoutOpen && (
+        <Suspense fallback={null}>
+          <CheckoutModal
+            isOpen={checkoutOpen}
+            onClose={() => setCheckoutOpen(false)}
+            customizationData={customizationPayload}
+            onOpenStudio={() => {
+              setCheckoutOpen(false);
+              handleOpenStudio(selectedTemplate);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* MODAL 3: SHARE & EXPORT */}
-      <ShareExportModal
-        isOpen={exportOpen}
-        onClose={() => setExportOpen(false)}
-        exportData={customizationPayload}
-      />
+      {exportOpen && (
+        <Suspense fallback={null}>
+          <ShareExportModal
+            isOpen={exportOpen}
+            onClose={() => setExportOpen(false)}
+            exportData={customizationPayload}
+          />
+        </Suspense>
+      )}
 
       {/* MODAL 4: QUICK PREVIEW MODAL */}
       {quickPreviewOpen && selectedTemplate && (
@@ -419,18 +450,20 @@ export default function App() {
             </div>
 
             <div className="py-2">
-              <EnvelopeExperience
-                invitationData={selectedTemplate.defaults}
-                themeId={selectedTemplate.themeId}
-                fontPairingId={selectedTemplate.fontPairingId}
-                sealId={selectedTemplate.sealId}
-                sealColor={selectedTemplate.sealColor}
-                ambientTrackId={selectedTemplate.ambientTrackId}
-                onProceedToRsvp={() => {
-                  setQuickPreviewOpen(false);
-                  handleOpenStudio(selectedTemplate);
-                }}
-              />
+              <Suspense fallback={<LoadingFallback />}>
+                <EnvelopeExperience
+                  invitationData={selectedTemplate.defaults}
+                  themeId={selectedTemplate.themeId}
+                  fontPairingId={selectedTemplate.fontPairingId}
+                  sealId={selectedTemplate.sealId}
+                  sealColor={selectedTemplate.sealColor}
+                  ambientTrackId={selectedTemplate.ambientTrackId}
+                  onProceedToRsvp={() => {
+                    setQuickPreviewOpen(false);
+                    handleOpenStudio(selectedTemplate);
+                  }}
+                />
+              </Suspense>
             </div>
 
             <div className="flex gap-3">
@@ -460,18 +493,20 @@ export default function App() {
               <X className="w-5 h-5" />
             </button>
 
-            <EnvelopeExperience
-              invitationData={INVITATION_TEMPLATES[0].defaults}
-              themeId="emeraldGold"
-              fontPairingId="classicSerif"
-              sealId="botanical"
-              sealColor="#B88B42"
-              ambientTrackId="romanticPiano"
-              onProceedToRsvp={() => {
-                setDemoEnvelopeOpen(false);
-                handleOpenStudio(INVITATION_TEMPLATES[0]);
-              }}
-            />
+            <Suspense fallback={<LoadingFallback />}>
+              <EnvelopeExperience
+                invitationData={INVITATION_TEMPLATES[0].defaults}
+                themeId="emeraldGold"
+                fontPairingId="classicSerif"
+                sealId="botanical"
+                sealColor="#B88B42"
+                ambientTrackId="romanticPiano"
+                onProceedToRsvp={() => {
+                  setDemoEnvelopeOpen(false);
+                  handleOpenStudio(INVITATION_TEMPLATES[0]);
+                }}
+              />
+            </Suspense>
           </div>
         </div>
       )}
@@ -480,26 +515,32 @@ export default function App() {
       {webpageDemoOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-[#05060F] animate-fadeIn">
           <div className="w-full min-h-screen">
-            <PremiumWebpageInvitation
-              invitationData={selectedTemplate?.defaults || selectedTemplate || INVITATION_TEMPLATES[0].defaults}
-              themeId={selectedTemplate?.themeId || 'royalRedNavyBlack'}
-              fontPairingId={selectedTemplate?.fontPairingId || 'classicSerif'}
-              ambientTrackId={selectedTemplate?.ambientTrackId || 'romanticPiano'}
-              onBack={() => setWebpageDemoOpen(false)}
-            />
+            <Suspense fallback={<LoadingFallback />}>
+              <PremiumWebpageInvitation
+                invitationData={selectedTemplate?.defaults || selectedTemplate || INVITATION_TEMPLATES[0].defaults}
+                themeId={selectedTemplate?.themeId || 'royalRedNavyBlack'}
+                fontPairingId={selectedTemplate?.fontPairingId || 'classicSerif'}
+                ambientTrackId={selectedTemplate?.ambientTrackId || 'romanticPiano'}
+                onBack={() => setWebpageDemoOpen(false)}
+              />
+            </Suspense>
           </div>
         </div>
       )}
 
       {/* GLOBAL MODAL: CLIENT AUTH (SIGN IN / SIGN UP / FORGOT PASSWORD) */}
-      <AuthModal
-        isOpen={authModalOpen}
-        initialMode={authModalMode}
-        onClose={() => setAuthModalOpen(false)}
-        onSuccess={(user) => {
-          setCurrentUser(user);
-        }}
-      />
+      {authModalOpen && (
+        <Suspense fallback={null}>
+          <AuthModal
+            isOpen={authModalOpen}
+            initialMode={authModalMode}
+            onClose={() => setAuthModalOpen(false)}
+            onSuccess={(user) => {
+              setCurrentUser(user);
+            }}
+          />
+        </Suspense>
+      )}
 
     </div>
   );

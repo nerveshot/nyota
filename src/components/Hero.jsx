@@ -109,6 +109,9 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
                   <img
                     src="/images/muslim-royal-couple.jpg"
                     alt="Arabic Style Royal Wedding Couple"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                   />
 
