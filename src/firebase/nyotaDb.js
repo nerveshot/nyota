@@ -21,6 +21,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  updateProfile,
   signOut, 
   onAuthStateChanged, 
   isFirebaseConfigured 
@@ -135,7 +136,7 @@ try {
 }
 
 /**
- * Official Firebase Email & Password Authentication for Admin
+ * Official Firebase Email & Password Authentication for Admin & Client Users
  */
 export async function loginWithFirebaseEmail(email, password) {
   const cleanEmail = (email || '').trim();
@@ -158,7 +159,8 @@ export async function loginWithFirebaseEmail(email, password) {
         email: user.email || cleanEmail,
         photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
         role: isAdmin ? 'admin' : 'member',
-        accessGranted: isAdmin ? true : undefined,
+        accessGranted: isAdmin ? true : false,
+        paymentStatus: isAdmin ? 'verified' : 'unpaid',
         lastLogin: new Date().toISOString(),
       };
 
@@ -194,11 +196,12 @@ export async function loginWithFirebaseEmail(email, password) {
 }
 
 /**
- * Register / Create New Admin with Firebase Email & Password
+ * Register / Create New User or Admin with Firebase Email & Password
  */
-export async function registerWithFirebaseEmail(email, password, displayName = 'Admin User') {
+export async function registerWithFirebaseEmail(email, password, displayName = 'Client User') {
   const cleanEmail = (email || '').trim();
   const cleanPassword = (password || '').trim();
+  const cleanName = (displayName || '').trim() || 'Client User';
 
   if (!cleanEmail || !cleanPassword) {
     return { success: false, error: 'Please provide both email and password.' };
@@ -210,18 +213,35 @@ export async function registerWithFirebaseEmail(email, password, displayName = '
       const user = userCredential.user;
       const isAdmin = user.email && (user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim() || user.email.toLowerCase().includes('admin'));
 
+      // Set display name on Firebase Auth user object
+      try {
+        if (typeof updateProfile === 'function') {
+          await updateProfile(user, { displayName: cleanName });
+        }
+      } catch (profileErr) {
+        console.warn('Firebase Auth updateProfile warning:', profileErr);
+      }
+
       const userProfile = {
         uid: user.uid,
-        displayName: displayName || 'Admin',
+        displayName: cleanName,
         email: user.email || cleanEmail,
         photoURL: `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
         role: isAdmin ? 'admin' : 'member',
-        accessGranted: isAdmin ? true : undefined,
+        accessGranted: isAdmin ? true : false,
+        paymentStatus: isAdmin ? 'verified' : 'unpaid',
         lastLogin: new Date().toISOString(),
       };
 
-      const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
-      await setDoc(userDocRef, { ...userProfile, updatedAt: serverTimestamp() }, { merge: true });
+      // Safely sync user profile document to Firestore
+      try {
+        const userDocRef = getNyotaDocRef(NYOTA_COLLECTIONS.USERS, user.uid);
+        if (userDocRef) {
+          await setDoc(userDocRef, { ...userProfile, updatedAt: serverTimestamp() }, { merge: true });
+        }
+      } catch (firestoreErr) {
+        console.warn('Firestore user profile sync warning during registration:', firestoreErr);
+      }
 
       currentActiveUser = userProfile;
       localStorage.setItem('nyota_current_user', JSON.stringify(userProfile));
@@ -230,13 +250,17 @@ export async function registerWithFirebaseEmail(email, password, displayName = '
       return { success: true, user: userProfile };
     } catch (err) {
       console.error('Firebase Auth Register error:', err);
-      let errorMsg = 'Failed to create account.';
+      let errorMsg = 'Failed to create account. Please try again.';
       if (err.code === 'auth/email-already-in-use') {
         errorMsg = 'This email is already registered. Please sign in instead.';
       } else if (err.code === 'auth/weak-password') {
         errorMsg = 'Password should be at least 6 characters.';
+      } else if (err.code === 'auth/invalid-email') {
+        errorMsg = 'Please enter a valid email address format.';
+      } else if (err.code === 'auth/network-request-failed') {
+        errorMsg = 'Network connection issue. Please check your internet connection.';
       }
-      return { success: false, error: errorMsg };
+      return { success: false, error: errorMsg, code: err.code };
     }
   }
 
