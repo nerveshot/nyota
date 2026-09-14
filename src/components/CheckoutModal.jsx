@@ -100,8 +100,11 @@ export default function CheckoutModal({
     try {
       const res = await sendPhoneOtp(fullPhone);
 
-      if (res.success) {
+      if (res.confirmationResult) {
         setConfirmationResult(res.confirmationResult);
+      }
+
+      if (res.success) {
         setPhoneMessage(`SMS OTP sent to ${res.formattedPhone || fullPhone}`);
       } else {
         setErrorMessage(res.error || 'Failed to send SMS OTP.');

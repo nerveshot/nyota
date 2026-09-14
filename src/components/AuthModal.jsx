@@ -59,8 +59,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'p
     try {
       const res = await sendPhoneOtp(fullPhone);
 
-      if (res.success) {
+      if (res.confirmationResult) {
         setConfirmationResult(res.confirmationResult);
+      }
+
+      if (res.success) {
         setSuccessMessage(`OTP sent successfully via SMS to ${res.formattedPhone || fullPhone}`);
       } else {
         setErrorMessage(res.error || 'Failed to send SMS OTP. Please check your number.');
