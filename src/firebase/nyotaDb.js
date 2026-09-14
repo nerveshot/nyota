@@ -233,7 +233,11 @@ export async function sendPhoneOtp(phoneNumber, appVerifier = null) {
       let errorMsg = firebaseErr?.message || 'Failed to send SMS OTP.';
       
       if (firebaseErr?.code === 'auth/operation-not-allowed') {
-        errorMsg = 'Phone Authentication is not enabled in Firebase Console. Go to Firebase Console > Authentication > Sign-in method > Enable "Phone".';
+        if (firebaseErr?.message?.includes('region enabled')) {
+          errorMsg = 'SMS Region not enabled in Firebase. Go to Firebase Console > Authentication > Settings (or Phone Auth) > "SMS region policy", and enable your region (e.g. India +91) or allow all regions.';
+        } else {
+          errorMsg = 'Phone Authentication or SMS Region is not enabled. Go to Firebase Console > Authentication > Settings > "SMS region policy" and enable Phone.';
+        }
       } else if (firebaseErr?.code === 'auth/unauthorized-domain') {
         errorMsg = 'Domain not authorized. Please add your current domain (e.g. localhost) to Firebase Console > Authentication > Settings > Authorized Domains.';
       } else if (firebaseErr?.code === 'auth/invalid-app-credential') {

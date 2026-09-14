@@ -1,0 +1,171 @@
+/* ==========================================================================
+   NYOTA LIVE CUSTOMIZER STUDIO STYLES (PURE VANILLA CSS)
+   ========================================================================== */
+
+.studio-container {
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  min-height: calc(100vh - 72px);
+  background: #08060F;
+}
+
+/* Studio Sidebar (Controls Pane) */
+.studio-sidebar {
+  background: #0E0B1A;
+  border-right: 1px solid rgba(212, 175, 55, 0.15);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 72px);
+  position: sticky;
+  top: 72px;
+}
+
+.studio-tabs-nav {
+  display: flex;
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.studio-tab-btn {
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.studio-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.studio-tab-btn.active {
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--gold-border);
+}
+
+.studio-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.studio-footer-actions {
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Palette Swatches */
+.theme-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.theme-card {
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.theme-card:hover {
+  border-color: var(--gold-hover);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.theme-card.active {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.theme-color-preview {
+  height: 28px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+}
+
+.theme-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Studio Preview Pane */
+.studio-preview-pane {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  background: radial-gradient(circle at center, #140E26 0%, #08060F 100%);
+}
+
+.preview-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(18, 15, 36, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-border);
+  padding: 0.4rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 2rem;
+}
+
+.preview-mode-btn {
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.preview-mode-btn.active {
+  background: var(--gold-primary);
+  color: #0B0914;
+}
+
+.preview-canvas-wrapper {
+  width: 100%;
+  max-width: 540px;
+  transition: max-width 0.3s ease;
+}
+
+.preview-canvas-wrapper.preview-full-webpage {
+  max-width: 900px;
+}
+
+@media (max-width: 960px) {
+  .studio-container {
+    grid-template-columns: 1fr;
+  }
+  .studio-sidebar {
+    height: auto;
+    position: static;
+  }
+}

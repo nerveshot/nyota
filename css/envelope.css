@@ -1,0 +1,210 @@
+/* ==========================================================================
+   NYOTA 3D DIGITAL ENVELOPE & UNBOXING STYLES (PURE VANILLA CSS)
+   ========================================================================== */
+
+.envelope-stage {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  min-height: 480px;
+  margin: 0 auto;
+  perspective: 1500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.envelope-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
+  border: 2px solid var(--gold-border);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  overflow: hidden;
+}
+
+.envelope-wrapper:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 45px rgba(212, 175, 55, 0.4);
+}
+
+.envelope-wrapper:active {
+  transform: scale(0.98);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.4) 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 20;
+}
+
+.envelope-wrapper.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 5;
+}
+
+.envelope-inner-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center top, rgba(212, 175, 55, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.envelope-border-line {
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.envelope-stamp-top {
+  text-align: center;
+  margin-top: 2.5rem;
+  z-index: 10;
+  position: relative;
+}
+
+.envelope-recipient-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-hover);
+  margin-bottom: 0.25rem;
+}
+
+.envelope-recipient-name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #FFF;
+}
+
+/* Wax Seal Button */
+.wax-seal-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.wax-seal-badge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(212, 175, 55, 0.2) 20%, transparent 60%),
+              linear-gradient(135deg, #c59b27 0%, #876510 50%, #4a3606 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wax-seal-btn:hover .wax-seal-badge {
+  transform: scale(1.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(212, 175, 55, 0.6);
+}
+
+.wax-seal-pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-hover);
+  animation: sealPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  opacity: 0.6;
+}
+
+@keyframes sealPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 0; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+.wax-seal-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Card Slide-Out Animation */
+.invitation-card-container {
+  width: 100%;
+  max-width: 480px;
+  animation: cardSlideUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes cardSlideUp {
+  0% {
+    transform: translateY(30px) scale(0.94);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mosque Curtains Entrance */
+.curtain-entrance-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: #050308;
+  display: flex;
+  overflow: hidden;
+  transition: opacity 1s ease;
+}
+
+.curtain-panel-left, .curtain-panel-right {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.curtain-panel-left {
+  background: linear-gradient(90deg, #1E0208 0%, #5E0A1A 25%, #2E040D 50%, #7A1024 75%, #150105 100%);
+  box-shadow: inset -25px 0 50px rgba(0, 0, 0, 0.9), 20px 0 45px rgba(0, 0, 0, 0.8);
+}
+
+.curtain-panel-right {
+  background: linear-gradient(270deg, #1E0208 0%, #5E0A1A 25%, #2E040D 50%, #7A1024 75%, #150105 100%);
+  box-shadow: inset 25px 0 50px rgba(0, 0, 0, 0.9), -20px 0 45px rgba(0, 0, 0, 0.8);
+}
+
+.curtain-entrance-overlay.opened .curtain-panel-left {
+  transform: translateX(-100%);
+}
+
+.curtain-entrance-overlay.opened .curtain-panel-right {
+  transform: translateX(100%);
+}

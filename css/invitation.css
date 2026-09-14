@@ -1,0 +1,306 @@
+/* ==========================================================================
+   NYOTA INVITATION CARD & WEBPAGE STYLES (PURE VANILLA CSS)
+   ========================================================================== */
+
+/* Luxury Invitation Card */
+.invitation-card {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--gold-border);
+  overflow: hidden;
+  text-align: center;
+}
+
+.invitation-arch-border {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 120px 120px var(--radius-md) var(--radius-md);
+  pointer-events: none;
+}
+
+.invitation-bismillah {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--gold-light);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.invitation-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-hover);
+  margin-bottom: 0.75rem;
+}
+
+.invitation-names {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #FFF;
+  line-height: 1.2;
+  margin: 1rem 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.invitation-date {
+  font-family: var(--font-cinzel);
+  font-size: 1.1rem;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+}
+
+.invitation-venue {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* Standalone Webpage Invitation */
+.webpage-hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.webpage-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(11, 9, 20, 0.7) 0%, rgba(11, 9, 20, 0.95) 100%);
+}
+
+.webpage-hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+}
+
+/* Floating Audio Player */
+.floating-audio-control {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 999;
+  background: rgba(18, 15, 36, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-border);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  color: var(--gold-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.floating-audio-control:hover {
+  transform: scale(1.05);
+  border-color: var(--gold-primary);
+}
+
+/* Live Countdown */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 500px;
+  margin: 2.5rem auto;
+}
+
+.countdown-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 0.5rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.countdown-number {
+  font-family: var(--font-cinzel);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* Itinerary Timeline */
+.itinerary-timeline {
+  position: relative;
+  max-width: 700px;
+  margin: 3rem auto 0;
+}
+
+.itinerary-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 24px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold-primary) 0%, rgba(212, 175, 55, 0.1) 100%);
+}
+
+.itinerary-item {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.itinerary-node {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  z-index: 5;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  flex-shrink: 0;
+}
+
+.itinerary-card {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+}
+
+.itinerary-time {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.itinerary-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: #FFF;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.itinerary-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Love Story Milestones */
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.story-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.story-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold-border);
+}
+
+.story-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.story-content {
+  padding: 1.5rem;
+}
+
+.story-year {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.story-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: #FFF;
+  margin: 0.25rem 0 0.5rem;
+}
+
+/* Scratch Card */
+.scratch-card-box {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 200px;
+  margin: 2rem auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--gold-border);
+}
+
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  cursor: grab;
+}
+
+.scratch-secret {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2D0B16 0%, #15060C 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+}
+
+@media (max-width: 640px) {
+  .countdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Special Wedding Celebration Invitation — Nyota</title>
+  <meta name="description" content="You are cordially invited to celebrate our wedding. Tap to open your interactive digital envelope and RSVP." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+
+  <!-- Luxury Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/envelope.css" />
+  <link rel="stylesheet" href="css/invitation.css" />
+</head>
+<body style="background-color: #050308;">
+
+  <!-- Invitation Stage -->
+  <div id="invite-root">
+    <div style="min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem;">
+      <div id="envelope-guest-slot" style="width: 100%; max-width: 580px;"></div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Guest Viewer Script -->
+  <script type="module">
+    import { getInvitationById } from './js/db.js';
+    import { INVITATION_TEMPLATES } from './js/templates.js';
+    import { renderEnvelopeComponent } from './js/components/envelope.js';
+    import { renderInvitationWebpage } from './js/components/invitation-view.js';
+
+    async function startInvite() {
+      const params = new URLSearchParams(window.location.search);
+      const inviteId = params.get('id') || params.get('slug') || params.get('invite');
+      
+      let invitationData = INVITATION_TEMPLATES[0].defaults;
+
+      if (inviteId) {
+        const fetched = await getInvitationById(inviteId);
+        if (fetched) {
+          invitationData = { ...invitationData, ...fetched };
+        }
+      }
+
+      const root = document.getElementById('invite-root');
+      
+      renderEnvelopeComponent('envelope-guest-slot', {
+        invitationData,
+        themeId: invitationData.themeId || 'royalRedNavyBlack',
+        sealId: invitationData.sealId || 'botanical',
+        sealColor: invitationData.sealColor || '#B88B42',
+        ambientTrackId: invitationData.ambientTrackId || 'romanticPiano',
+        onOpened: () => {
+          root.innerHTML = `<div id="webpage-mount"></div>`;
+          renderInvitationWebpage('webpage-mount', invitationData, {
+            themeId: invitationData.themeId || 'royalRedNavyBlack',
+            fontPairingId: invitationData.fontPairingId || 'classicSerif',
+            ambientTrackId: invitationData.ambientTrackId || 'romanticPiano'
+          });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startInvite);
+    } else {
+      startInvite();
+    }
+  </script>
+</body>
+</html>
