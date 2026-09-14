@@ -107,16 +107,16 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
               >
                 <div className="w-full aspect-[3/4] rounded-t-[170px] rounded-b-2xl overflow-hidden relative">
                   <img
-                    src="/images/muslim-royal-couple.jpg"
-                    alt="Arabic Style Royal Wedding Couple"
+                    src="/images/royal-invitation-scroll.jpg"
+                    alt="Royal Gold Invitation Scroll & Wax Seal"
                     loading="eager"
                     fetchPriority="high"
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                   />
 
-                  {/* Gradient Overlay with Bismillah & Couple Name */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-6 text-center space-y-2">
+                  {/* Gradient Overlay with Royal Calligraphy Label */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent flex flex-col justify-end p-6 text-center space-y-1.5">
                     <div 
                       className="text-2xl sm:text-3xl font-serif text-amber-300 font-bold gold-gradient-text drop-shadow-md"
                       style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
@@ -126,11 +126,11 @@ export default function Hero({ onOpenStudio, onExploreTemplates, onPreviewDemoEn
                     </div>
                     
                     <div className="font-cinzel text-lg sm:text-xl font-bold text-white gold-gradient-text">
-                      Zayd Al-Mansoor & Aaliyah Khan
+                      Royal Luxury Invitation Scroll
                     </div>
 
-                    <div className="text-[10px] sm:text-xs text-rose-300 font-mono tracking-widest uppercase">
-                      Dawat-e-Khas • Nikah Ceremony
+                    <div className="text-[10px] sm:text-xs text-amber-300/90 font-mono tracking-widest uppercase">
+                      24K Gold Foil • Wax Seal Unboxing
                     </div>
                   </div>
                 </div>
