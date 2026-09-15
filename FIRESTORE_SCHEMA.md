@@ -103,7 +103,7 @@ User profiles and access permissions synced via Firebase Phone (SMS OTP) and Goo
 | Field | Type | Description |
 | :--- | :--- | :--- |
 | `uid` | `string` | Firebase Auth UID |
-| `phoneNumber` | `string` | Verified phone number (e.g. `"+919876543210"`) |
+| `phoneNumber` | `string` | Verified phone number (e.g. `"+918302929248"`) |
 | `displayName` | `string` | User full name |
 | `email` | `string` | User email address (if provided) |
 | `photoURL` | `string` | User profile avatar photo URL |

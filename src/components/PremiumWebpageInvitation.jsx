@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   Sparkles, Heart, Calendar, Clock, MapPin, Navigation, 
@@ -28,7 +28,7 @@ const getCoupleInitials = (names) => {
 
 export default function PremiumWebpageInvitation({
   invitationData,
-  themeId = 'emeraldGold',
+  themeId = 'royalRedNavyBlack',
   fontPairingId = 'classicSerif',
   ambientTrackId = 'romanticPiano',
   onBack,
@@ -39,6 +39,8 @@ export default function PremiumWebpageInvitation({
   const [isBismillahRising, setIsBismillahRising] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);
+  const [activeTimelineIdx, setActiveTimelineIdx] = useState(0);
+  const timelineRailRef = useRef(null);
 
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({
@@ -157,6 +159,30 @@ export default function PremiumWebpageInvitation({
       musicEngine.stopTrack();
     };
   }, []);
+
+  // Track scroll position to glide the ring emoji smoothly down the itinerary nodes
+  useEffect(() => {
+    const handleScroll = () => {
+      const nodes = document.querySelectorAll('.itinerary-event-node');
+      if (!nodes || nodes.length === 0) return;
+
+      const triggerY = window.innerHeight * 0.55;
+      let currentIdx = 0;
+
+      nodes.forEach((node, idx) => {
+        const rect = node.getBoundingClientRect();
+        if (rect.top <= triggerY) {
+          currentIdx = idx;
+        }
+      });
+
+      setActiveTimelineIdx(currentIdx);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [itinerary]);
 
   // Story milestones
   const loveStories = customLoveStories && customLoveStories.length > 0 ? customLoveStories : [
@@ -512,16 +538,18 @@ export default function PremiumWebpageInvitation({
                 <div className="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent via-rose-500/80 to-amber-400/80" />
               </div>
 
-              {/* Bismillah Arabic Calligraphy Card */}
-              <div className="space-y-3 px-4">
-                <div 
-                  className="text-2xl sm:text-4xl md:text-5xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text drop-shadow-lg leading-relaxed select-none"
-                  style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
-                  dir="rtl"
-                >
-                  {bismillah}
+              {/* Bismillah Arabic Calligraphy Card (Conditional) */}
+              {bismillah && (
+                <div className="space-y-3 px-4">
+                  <div 
+                    className="text-2xl sm:text-4xl md:text-5xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text drop-shadow-lg leading-relaxed select-none"
+                    style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                    dir="rtl"
+                  >
+                    {bismillah}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Grand Moorish Royal Arch Preview Card (Black, Royal Red & Navy Blue) */}
               <div className="relative w-full max-w-[340px] sm:max-w-[390px] p-6 sm:p-8 rounded-t-[160px] rounded-b-3xl bg-gradient-to-b from-[#1C0612]/95 via-[#0D1024]/95 to-[#05030A]/95 border-2 border-amber-400/60 shadow-[0_0_50px_rgba(139,21,43,0.5)] space-y-4 text-center group hover:border-amber-400/90 transition-all backdrop-blur-md">
@@ -541,22 +569,26 @@ export default function PremiumWebpageInvitation({
 
                 <div className="space-y-2 relative z-10">
                   <div className="text-[10px] text-rose-300 font-mono tracking-widest uppercase">
-                    Dawat-e-Khas • Nikah Ceremony
+                    {invitationData?.templateName || 'Grand Celebration & Ceremony'}
                   </div>
                   <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-white gold-gradient-text leading-snug">
                     {primaryNames}
                   </h2>
                 </div>
 
-                {/* Quranic Verse Snippet */}
-                <div className="pt-2 border-t border-amber-400/25">
-                  <p className="text-[11px] text-amber-200/90 italic font-serif leading-relaxed line-clamp-2">
-                    {quranVerse}
-                  </p>
-                  <div className="text-[9px] text-amber-400/70 font-mono mt-1">
-                    {quranRef}
+                {/* Blessing / Quote Snippet */}
+                {quranVerse && (
+                  <div className="pt-2 border-t border-amber-400/25">
+                    <p className="text-[11px] text-amber-200/90 italic font-serif leading-relaxed line-clamp-2">
+                      {quranVerse}
+                    </p>
+                    {quranRef && (
+                      <div className="text-[9px] text-amber-400/70 font-mono mt-1">
+                        {quranRef}
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Grand Open Invitation Action Button */}
@@ -646,15 +678,17 @@ export default function PremiumWebpageInvitation({
         {/* ========================================================================= */}
         <section id="invitation-hero" className="scroll-mt-20 pt-16 sm:pt-24 pb-10 sm:pb-14 text-center space-y-6 sm:space-y-8 animate-fadeIn">
           
-          {/* Sacred Bismillah Calligraphy */}
+          {/* Sacred Bismillah Calligraphy (Conditional) */}
           <div className="space-y-3">
-            <div 
-              className="text-3xl sm:text-5xl md:text-6xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text leading-relaxed select-none"
-              style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
-              dir="rtl"
-            >
-              {bismillah}
-            </div>
+            {bismillah && (
+              <div 
+                className="text-3xl sm:text-5xl md:text-6xl font-serif text-amber-300 font-bold tracking-wide gold-gradient-text leading-relaxed select-none"
+                style={{ fontFamily: `'Scheherazade New', 'Amiri', serif` }}
+                dir="rtl"
+              >
+                {bismillah}
+              </div>
+            )}
 
             <div className="flex items-center justify-center gap-3 pt-1">
               <div className="h-[1px] w-10 sm:w-20 bg-gradient-to-r from-transparent via-rose-500/80 to-amber-400/60" />
@@ -843,46 +877,101 @@ export default function PremiumWebpageInvitation({
             </div>
 
             {/* Timeline Card Container */}
-            <div className="p-6 sm:p-9 rounded-3xl bg-gradient-to-b from-[#180614]/85 via-[#0D102A]/85 to-[#06030F]/90 border border-amber-400/40 shadow-2xl space-y-8">
+            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#180614]/85 via-[#0D102A]/85 to-[#06030F]/90 border border-amber-400/40 shadow-2xl space-y-6">
               
-              {/* Vertical Continuous Timeline with Solid Crimson Dots */}
-              <div className="relative pl-6 sm:pl-8 space-y-8 border-l-2 border-rose-500/40 ml-2 sm:ml-4">
-                {itinerary.map((item, idx) => (
-                  <div key={idx} className="relative group">
-                    
-                    {/* Solid Crimson Red Dot on the line */}
-                    <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 sm:w-4 h-3.5 sm:h-4 rounded-full bg-gradient-to-br from-rose-500 to-rose-700 border-2 border-[#0B030A] shadow-[0_0_10px_rgba(225,29,72,0.6)] group-hover:scale-125 transition-transform" />
+              {/* Vertical Continuous Timeline Rail */}
+              <div ref={timelineRailRef} className="relative pl-8 sm:pl-10 space-y-6 ml-3 sm:ml-4">
+                
+                {/* Background Rail Track Line */}
+                <div className="absolute left-[11px] sm:left-[13px] top-4 bottom-4 w-[2px] bg-rose-500/20 rounded-full pointer-events-none" />
 
-                    <div className="space-y-1">
-                      {/* Event Title */}
-                      <h3 className="font-serif text-lg sm:text-xl font-bold text-rose-200 group-hover:text-amber-200 transition-colors">
-                        {item.event}
-                      </h3>
+                {/* Dynamic Active Golden Progress Line */}
+                <div 
+                  className="absolute left-[11px] sm:left-[13px] top-4 w-[2px] bg-gradient-to-b from-amber-300 via-rose-500 to-amber-400 shadow-[0_0_10px_rgba(212,175,55,0.8)] rounded-full pointer-events-none transition-all duration-500 ease-out"
+                  style={{
+                    height: itinerary.length > 1 
+                      ? `${(activeTimelineIdx / (itinerary.length - 1)) * 100}%` 
+                      : '0%',
+                  }}
+                />
 
-                      {/* Date & Time */}
-                      <div className="text-xs sm:text-sm font-serif font-medium text-amber-300/90 flex items-center gap-2">
-                        <span>{item.date ? `${item.date}, ${item.time}` : item.time}</span>
+                {/* Timeline Items */}
+                {itinerary.map((item, idx) => {
+                  const isActive = idx === activeTimelineIdx;
+                  const isPassed = idx <= activeTimelineIdx;
+
+                  return (
+                    <div 
+                      key={idx} 
+                      className="itinerary-event-node relative flex items-start group transition-all duration-300"
+                    >
+                      {/* Base Emoji Milestone Node on the Line */}
+                      <div className={`absolute -left-[27px] sm:-left-[31px] top-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm border transition-all duration-300 z-10 ${
+                        isActive
+                          ? 'opacity-0 scale-75' // Hidden when the traveling ring badge is over it
+                          : isPassed
+                            ? 'bg-[#1F0614] border-amber-400 text-white shadow-[0_0_12px_rgba(212,175,55,0.5)]'
+                            : 'bg-[#0E040B] border-rose-500/40 text-slate-400 opacity-80'
+                      }`}>
+                        <span>{item.icon || (idx === 0 ? '💍' : '✨')}</span>
                       </div>
 
-                      {/* Warm Welcome / Subtitle Note */}
-                      <p className="text-xs sm:text-sm text-slate-300/90 italic font-serif leading-relaxed pt-0.5">
-                        {item.desc || 'We Warmly welcome you..!'}
-                      </p>
-
-                      {/* Venue Tag */}
-                      {item.venue && (
-                        <div className="text-[11px] text-slate-400 font-mono pt-1 flex items-center gap-1.5">
-                          <MapPin className="w-3 h-3 text-amber-400" />
-                          <span>{item.venue}</span>
+                      {/* Traveling Golden Ring Emoji (Shows dynamically at the active node) */}
+                      {isActive && (
+                        <div 
+                          className="absolute -left-[33px] sm:-left-[38px] top-1.5 w-10 h-10 sm:w-11 sm:h-11 rounded-full p-[1.5px] bg-gradient-to-br from-[#FFF3D0] via-[#D4AF37] to-[#8C6214] shadow-[0_0_22px_rgba(212,175,55,0.95)] flex items-center justify-center z-20 animate-pulse"
+                        >
+                          <div className="w-full h-full bg-gradient-to-br from-[#2D0B1E] to-[#0A0412] rounded-full flex items-center justify-center text-base sm:text-lg">
+                            💍
+                          </div>
                         </div>
                       )}
+
+                      {/* Uniform Event Content Card (Consistent size across all items) */}
+                      <div className={`w-full p-4 sm:p-5 rounded-2xl transition-all duration-300 ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#24081B]/95 via-[#111736]/95 to-[#090414]/95 border border-amber-400/70 shadow-[0_0_20px_rgba(212,175,55,0.25)] translate-x-1'
+                          : 'bg-gradient-to-r from-[#160512]/80 via-[#0A0E24]/80 to-[#05020D]/80 border border-white/10 hover:border-white/20'
+                      }`}>
+                        
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pb-1">
+                          {/* Event Title */}
+                          <h3 className={`font-serif text-base sm:text-lg font-bold transition-colors ${
+                            isActive ? 'gold-gradient-text' : 'text-slate-100'
+                          }`}>
+                            {item.event}
+                          </h3>
+
+                          {/* Time Badge */}
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-[11px] sm:text-xs font-mono font-semibold text-amber-300 w-fit">
+                            <Clock className="w-3 h-3 text-amber-400" />
+                            <span>{item.date ? `${item.date} • ${item.time}` : item.time}</span>
+                          </div>
+                        </div>
+
+                        {/* Description */}
+                        {item.desc && (
+                          <p className="text-xs sm:text-sm text-slate-300/90 italic font-serif leading-relaxed pt-1">
+                            {item.desc}
+                          </p>
+                        )}
+
+                        {/* Venue Tag */}
+                        {item.venue && (
+                          <div className="text-[11px] text-slate-400 font-mono pt-2 flex items-center gap-1.5">
+                            <MapPin className="w-3 h-3 text-rose-400 flex-shrink-0" />
+                            <span className="truncate">{item.venue}</span>
+                            {item.dressCodeHint && (
+                              <span className="text-amber-400/80 ml-2 hidden sm:inline">• {item.dressCodeHint}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
                     </div>
-
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-
-
 
             </div>
           </section>

@@ -60,9 +60,68 @@ export default function Navbar({
           onClick={() => onNavigate('hero')}
           className="flex items-center gap-2.5 group text-left cursor-pointer"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-champagne-400 via-champagne-600 to-amber-700 p-[1px] shadow-glow-gold transition-transform group-hover:scale-105">
-            <div className="w-full h-full bg-[#0E0C1C] rounded-[11px] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-champagne-400 group-hover:rotate-12 transition-transform duration-300" />
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#FFF3D0] via-[#D4AF37] to-[#8C6214] p-[1.5px] shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(212,175,55,0.6)]">
+            <div className="w-full h-full bg-gradient-to-b from-[#180F2A] to-[#0A0714] rounded-[14px] flex items-center justify-center relative overflow-hidden p-1.5">
+              <div className="absolute inset-0 bg-radial-gold opacity-30 group-hover:opacity-60 transition-opacity" />
+              <svg 
+                viewBox="0 0 48 48" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-7 h-7 text-amber-300 transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_12px_rgba(212,175,55,0.75)]"
+              >
+                <defs>
+                  <linearGradient id="envGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FFFDF0" />
+                    <stop offset="25%" stopColor="#FDE68A" />
+                    <stop offset="60%" stopColor="#D4AF37" />
+                    <stop offset="100%" stopColor="#8C6214" />
+                  </linearGradient>
+                  <linearGradient id="envBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#221438" />
+                    <stop offset="100%" stopColor="#0D0717" />
+                  </linearGradient>
+                  <linearGradient id="envFlap" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#2A1945" />
+                    <stop offset="100%" stopColor="#150B28" />
+                  </linearGradient>
+                  <radialGradient id="sealGold" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stopColor="#FFF2B2" />
+                    <stop offset="50%" stopColor="#E5C058" />
+                    <stop offset="100%" stopColor="#996515" />
+                  </radialGradient>
+                </defs>
+
+                {/* Envelope Body */}
+                <rect 
+                  x="6" y="11" width="36" height="26" rx="3.5" 
+                  fill="url(#envBody)" 
+                  stroke="url(#envGold)" 
+                  strokeWidth="1.4" 
+                />
+
+                {/* Bottom Crease Lines */}
+                <path d="M6 37L19 25" stroke="url(#envGold)" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
+                <path d="M42 37L29 25" stroke="url(#envGold)" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
+
+                {/* Top Triangular Flap */}
+                <path 
+                  d="M6 12L24 26L42 12" 
+                  fill="url(#envFlap)"
+                  stroke="url(#envGold)" 
+                  strokeWidth="1.4" 
+                  strokeLinejoin="round"
+                />
+
+                {/* Centered Royal Wax Seal Emblem (at flap apex) */}
+                <circle cx="24" cy="26" r="6" fill="url(#sealGold)" stroke="#3D2604" strokeWidth="0.6" />
+                <circle cx="24" cy="26" r="4.5" fill="none" stroke="#FFFFFF" strokeWidth="0.5" opacity="0.6" />
+                
+                {/* Star / Gemstone inside Seal */}
+                <path 
+                  d="M24 22.5L25 25L27.5 26L25 27L24 29.5L23 27L20.5 26L23 25Z" 
+                  fill="#FFFFFF" 
+                />
+              </svg>
             </div>
           </div>
           <div>

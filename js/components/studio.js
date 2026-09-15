@@ -88,6 +88,18 @@ export function renderStudio(containerId, initialData = null) {
           <input type="text" id="input-primaryNames" class="form-input" value="${s.data.primaryNames || ''}" />
         </div>
         <div class="form-group">
+          <label class="form-label">Groom's Parents *</label>
+          <input type="text" id="input-groomParents" class="form-input" value="${s.data.groomParents || ''}" placeholder="Mr. & Mrs. Mohammed Salam" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bride's Parents *</label>
+          <input type="text" id="input-brideParents" class="form-input" value="${s.data.brideParents || ''}" placeholder="Mr. & Mrs. Tariq Shaikh" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Family Blessing Invitation Line</label>
+          <input type="text" id="input-familyBlessingText" class="form-input" value="${s.data.familyBlessingText || ''}" />
+        </div>
+        <div class="form-group">
           <label class="form-label">Header Tagline</label>
           <input type="text" id="input-tag" class="form-input" value="${s.data.tag || ''}" />
         </div>
@@ -192,7 +204,7 @@ export function renderStudio(containerId, initialData = null) {
 
     if (state.previewMode === 'card') {
       previewCanvas.innerHTML = `
-        <div class="invitation-card" style="background-color: ${currentTheme.cardBg}; border-color: ${currentTheme.border};">
+        <div class="invitation-card ${currentTheme.isLight ? 'theme-light' : ''}" style="background-color: ${currentTheme.cardBg}; border-color: ${currentTheme.border};">
           <div class="invitation-arch-border"></div>
           ${state.data.bismillah ? `<div class="invitation-bismillah">${state.data.bismillah}</div>` : ''}
           <div class="invitation-tag">${state.data.tag}</div>

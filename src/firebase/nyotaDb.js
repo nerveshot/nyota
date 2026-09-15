@@ -112,13 +112,13 @@ const notifyLocalSubscribers = (moduleName) => {
  */
 
 export const ADMIN_EMAIL = 'faizansalam@icloud.com';
-export const ADMIN_PHONE = '+919876543210';
+export const ADMIN_PHONE = '+918302929248';
 
 export const isUserAdmin = (user) => {
   if (!user) return false;
   if (user.role === 'admin') return true;
   if (user.email && user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) return true;
-  if (user.phoneNumber && (user.phoneNumber.includes('9876543210') || user.phoneNumber === ADMIN_PHONE)) return true;
+  if (user.phoneNumber && (user.phoneNumber.includes('8302929248') || user.phoneNumber === ADMIN_PHONE)) return true;
   return false;
 };
 
@@ -195,7 +195,7 @@ export async function sendPhoneOtp(phoneNumber, appVerifier = null) {
   if (!cleanPhone || cleanPhone.length < 8) {
     return { 
       success: false, 
-      error: 'Please enter a valid mobile number with country code (e.g. +91 9876543210).' 
+      error: 'Please enter a valid mobile number with country code (e.g. +91 8302929248).' 
     };
   }
 
@@ -243,7 +243,7 @@ export async function sendPhoneOtp(phoneNumber, appVerifier = null) {
       } else if (firebaseErr?.code === 'auth/invalid-app-credential') {
         errorMsg = 'reCAPTCHA verification failed or App Credential invalid. Ensure Phone Auth is enabled and localhost is authorized in Firebase Console.';
       } else if (firebaseErr?.code === 'auth/invalid-phone-number') {
-        errorMsg = 'Invalid phone number format. Ensure country code is included (e.g. +91 9876543210).';
+        errorMsg = 'Invalid phone number format. Ensure country code is included (e.g. +91 8302929248).';
       } else if (firebaseErr?.code === 'auth/too-many-requests') {
         errorMsg = 'Too many requests. Please wait a few minutes before trying again.';
       } else if (firebaseErr?.code === 'auth/quota-exceeded') {
@@ -319,11 +319,11 @@ export async function verifyPhoneOtp(confirmationResult, otpCode, displayName = 
     return { success: false, error: 'Please enter the 6-digit OTP code sent to your phone.' };
   }
 
-  const effectivePhone = phoneNumber || window.lastPhoneNumber || '+919876543210';
+  const effectivePhone = phoneNumber || window.lastPhoneNumber || '+918302929248';
   const activeConfirmation = confirmationResult || window.confirmationResult;
   if (!activeConfirmation || typeof activeConfirmation.confirm !== 'function') {
     if (cleanOtp === '123456' || cleanOtp.length === 6) {
-      const isAdmin = effectivePhone.includes('9876543210') || effectivePhone === ADMIN_PHONE;
+      const isAdmin = effectivePhone.includes('8302929248') || effectivePhone === ADMIN_PHONE;
       const userProfile = {
         uid: 'user_' + effectivePhone.replace(/\D/g, '') + '_' + Date.now().toString().slice(-4),
         displayName: displayName || (isAdmin ? 'Super Admin' : `Client (${effectivePhone.slice(-4)})`),
@@ -347,7 +347,7 @@ export async function verifyPhoneOtp(confirmationResult, otpCode, displayName = 
     const userCredential = await activeConfirmation.confirm(cleanOtp);
     const user = userCredential.user;
     const cleanName = (displayName || '').trim() || user.displayName || `User (${user.phoneNumber ? user.phoneNumber.slice(-4) : 'Client'})`;
-    const isAdmin = (user.phoneNumber && (user.phoneNumber === ADMIN_PHONE || user.phoneNumber.includes('9876543210'))) || 
+    const isAdmin = (user.phoneNumber && (user.phoneNumber === ADMIN_PHONE || user.phoneNumber.includes('8302929248'))) || 
                     (user.email && user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim());
 
     // Update display name if provided and available
@@ -1476,9 +1476,118 @@ export function subscribeToUserInvitations(userId, callback) {
 }
 
 /**
- * Publish User Invitation (Enforces Per-Invitation Admin Payment Verification Gate)
+ * Normalize and sanitize custom URL slugs
  */
-export async function publishUserInvitation(invitationId, user, currentInviteData = null) {
+export function normalizeSlug(rawSlug = '') {
+  return String(rawSlug || '')
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
+}
+
+/**
+ * Check if a custom URL slug is available or already taken by another invitation
+ */
+export async function checkSlugAvailability(rawSlug, currentInvitationId = null) {
+  const slug = normalizeSlug(rawSlug);
+  
+  if (!slug || slug.length < 3) {
+    return {
+      available: false,
+      slug,
+      reason: 'Custom link must be at least 3 characters long.'
+    };
+  }
+
+  const reservedSlugs = [
+    'admin', 'dashboard', 'studio', 'templates', 'index', 'login', 
+    'signup', 'checkout', 'pricing', 'api', 'help', 'contact', 'rsvp', 'invite'
+  ];
+
+  if (reservedSlugs.includes(slug)) {
+    return {
+      available: false,
+      slug,
+      reason: `"${slug}" is a reserved system keyword. Please choose another link.`
+    };
+  }
+
+  if (isFirebaseConfigured() && db) {
+    try {
+      const colRef = getNyotaCollectionRef(NYOTA_COLLECTIONS.INVITATIONS);
+      const q = query(colRef, where('slug', '==', slug), limit(5));
+      const snap = await getDocs(q);
+
+      let conflict = false;
+      snap.forEach(docSnap => {
+        if (docSnap.id !== currentInvitationId) {
+          conflict = true;
+        }
+      });
+
+      if (conflict) {
+        return {
+          available: false,
+          slug,
+          reason: `The custom link "${slug}" is already taken. Please choose a different unique link.`
+        };
+      }
+
+      return { available: true, slug };
+    } catch (err) {
+      console.warn('Firestore slug availability check error:', err);
+    }
+  }
+
+  // Local fallback check
+  const items = getLocalCollection(NYOTA_COLLECTIONS.INVITATIONS);
+  const conflict = items.find(i => i.slug === slug && i.id !== currentInvitationId);
+  if (conflict) {
+    return {
+      available: false,
+      slug,
+      reason: `The custom link "${slug}" is already taken. Please choose a different unique link.`
+    };
+  }
+
+  return { available: true, slug };
+}
+
+/**
+ * Generate official WhatsApp Support URL for minor updates to published invitations
+ */
+export const WHATSAPP_SUPPORT_PHONE = '918302929248';
+
+export function getWhatsAppSupportUrl(invitation, customNotes = '') {
+  if (!invitation) return `https://wa.me/${WHATSAPP_SUPPORT_PHONE}`;
+
+  const invId = invitation.id || 'N/A';
+  const slug = invitation.slug || 'N/A';
+  const names = invitation.primaryNames || 'My Invitation';
+  const date = invitation.dateText || 'Event Date';
+
+  const message = `Salam / Hello Nyota Support Team,
+I would like to request minor updates for my published & verified wedding invitation.
+
+📋 *Invitation Details:*
+• *ID:* ${invId}
+• *Link:* https://nyota.pages.dev/${slug}
+• *Host Names:* ${names}
+• *Date:* ${date}
+${customNotes ? `\n📝 *Requested Changes:*\n${customNotes}` : '\n📝 *Requested Changes:* (Please describe the minor typo or timing adjustment here)'}
+
+Thank you!`;
+
+  return `https://wa.me/${WHATSAPP_SUPPORT_PHONE}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Publish User Invitation (Enforces Per-Invitation Admin Payment Verification Gate, Slug Uniqueness, and Locks Content)
+ */
+export async function publishUserInvitation(invitationId, user, currentInviteData = null, customSlug = null) {
   if (!user || !user.uid) {
     return { success: false, error: 'User must be signed in to publish.' };
   }
@@ -1517,25 +1626,44 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
     }
   }
 
-  const slug = currentInviteData?.slug || generateInvitationSlug(currentInviteData?.primaryNames, currentInviteData?.dateText || currentInviteData?.date);
+  // Determine and validate slug
+  const targetSlugRaw = customSlug || currentInviteData?.slug || generateInvitationSlug(currentInviteData?.primaryNames, currentInviteData?.dateText || currentInviteData?.date);
+  const slugCheck = await checkSlugAvailability(targetSlugRaw, invitationId);
+
+  if (!slugCheck.available) {
+    return {
+      success: false,
+      error: slugCheck.reason || 'This custom link is unavailable. Please pick a unique link.'
+    };
+  }
+
+  const finalSlug = slugCheck.slug;
+
+  const updateData = {
+    ...(currentInviteData || {}),
+    id: invitationId,
+    status: 'published',
+    paymentStatus: 'verified',
+    isLocked: true, // Permanent lock once published
+    slug: finalSlug,
+    publishedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
   if (isFirebaseConfigured() && db) {
     try {
       const docRef = getNyotaDocRef(NYOTA_COLLECTIONS.INVITATIONS, invitationId);
       await setDoc(docRef, {
-        ...(currentInviteData || {}),
-        id: invitationId,
-        status: 'published',
-        paymentStatus: 'verified',
-        slug,
+        ...updateData,
         publishedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       }, { merge: true });
       return { 
         success: true, 
-        message: 'Invitation published successfully!', 
-        slug,
-        shareUrl: formatShareableInviteUrl(slug)
+        message: 'Invitation published and custom link locked successfully!', 
+        slug: finalSlug,
+        isLocked: true,
+        shareUrl: formatShareableInviteUrl(finalSlug)
       };
     } catch (err) {
       console.warn('Firestore publish sync warning:', err?.message || err);
@@ -1547,10 +1675,7 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
   if (idx >= 0) {
     items[idx] = {
       ...items[idx],
-      status: 'published',
-      paymentStatus: 'verified',
-      slug,
-      publishedAt: new Date().toISOString(),
+      ...updateData
     };
     saveLocalCollection(NYOTA_COLLECTIONS.INVITATIONS, items);
     notifyLocalSubscribers(NYOTA_COLLECTIONS.INVITATIONS);
@@ -1558,9 +1683,10 @@ export async function publishUserInvitation(invitationId, user, currentInviteDat
 
   return { 
     success: true, 
-    message: 'Invitation published successfully!', 
-    slug,
-    shareUrl: formatShareableInviteUrl(slug)
+    message: 'Invitation published and custom link locked successfully!', 
+    slug: finalSlug,
+    isLocked: true,
+    shareUrl: formatShareableInviteUrl(finalSlug)
   };
 }
 

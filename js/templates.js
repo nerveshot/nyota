@@ -23,6 +23,33 @@ export const COLOR_THEMES = {
     border: 'rgba(212, 175, 55, 0.4)',
     envelopeBg: '#1C0612',
     foilType: 'gold',
+    isLight: false,
+  },
+  pearlWhiteGold: {
+    id: 'pearlWhiteGold',
+    name: 'Royal Pearl & White Gold (Light)',
+    bgClass: 'background: linear-gradient(180deg, #FAF8F5 0%, #F5EFE6 50%, #ECE4D8 100%);',
+    cardBg: '#FFFFFF',
+    accent: '#B8860B',
+    accentText: '#8F662C',
+    secondaryText: '#475569',
+    border: 'rgba(184, 134, 11, 0.35)',
+    envelopeBg: '#FAF7F2',
+    foilType: 'gold',
+    isLight: true,
+  },
+  ivoryMarbleGold: {
+    id: 'ivoryMarbleGold',
+    name: 'Ivory Marble & Imperial Gold (Light)',
+    bgClass: 'background: linear-gradient(135deg, #FFFFFF 0%, #F8F5EE 40%, #EFE9DC 100%);',
+    cardBg: '#FCFBF9',
+    accent: '#C59B27',
+    accentText: '#785210',
+    secondaryText: '#334155',
+    border: 'rgba(197, 155, 39, 0.4)',
+    envelopeBg: '#F7F3EB',
+    foilType: 'gold',
+    isLight: true,
   },
   emeraldGold: {
     id: 'emeraldGold',
@@ -35,6 +62,7 @@ export const COLOR_THEMES = {
     border: 'rgba(212, 170, 100, 0.3)',
     envelopeBg: '#072017',
     foilType: 'gold',
+    isLight: false,
   },
   midnightGold: {
     id: 'midnightGold',
@@ -47,6 +75,7 @@ export const COLOR_THEMES = {
     border: 'rgba(229, 192, 123, 0.3)',
     envelopeBg: '#0B0E28',
     foilType: 'gold',
+    isLight: false,
   },
   roseQuartz: {
     id: 'roseQuartz',
@@ -59,6 +88,7 @@ export const COLOR_THEMES = {
     border: 'rgba(248, 182, 195, 0.3)',
     envelopeBg: '#2A101A',
     foilType: 'roseGold',
+    isLight: false,
   },
   noirLuxe: {
     id: 'noirLuxe',
@@ -71,6 +101,7 @@ export const COLOR_THEMES = {
     border: 'rgba(148, 163, 184, 0.3)',
     envelopeBg: '#121217',
     foilType: 'silver',
+    isLight: false,
   }
 };
 
@@ -140,14 +171,18 @@ export const INVITATION_TEMPLATES = [
       primaryNames: 'Faizan Salam & Mushira Shaikh',
       dateText: 'Saturday, October 24, 2026',
       timeText: 'Five O\'Clock In The Evening',
+      isoDate: '2026-10-24T17:00:00',
       venueName: 'The Royal Emirates Palace & Grand Ballroom',
       venueAddress: 'West Corniche Road, Grand Palace Avenue, NY 10022',
       heroPhoto: '/images/muslim-royal-couple.jpg',
       receptionInfo: 'Grand Royal Walima Banquet & Celebrations to Follow',
       dressCode: 'Royal Arabian / Traditional Formal / Black Tie',
-      dressCodeNote: 'We warmly encourage our cherished guests to embrace royal jewel tones, traditional formal attire or evening tuxedos & gowns.',
+      dressCodeNote: 'We warmly encourage our cherished guests to embrace royal jewel tones, traditional formal attire (Sherwanis, Anarkalis, Abayas, Lehengas) or evening tuxedos & gowns.',
       rsvpDeadline: 'Kindly RSVP by September 15, 2026',
       hostMessage: 'With the grace and blessings of Allah (SWT), we invite you to celebrate our sacred union and share in our joy, prayers, and lifelong memories.',
+      groomParents: 'Mr. & Mrs. Mohammed Salam',
+      brideParents: 'Mr. & Mrs. Tariq Shaikh',
+      familyBlessingText: 'Request the honor of your presence and heartfelt blessings on the auspicious occasion of the Nikah & Walima of their cherished children.',
       itinerary: [
         { time: '4:00 PM', event: 'Holy Nikah Ceremony & Sacred Vows', icon: '💍', desc: 'The sacred religious marriage contract in the presence of beloved family.' },
         { time: '5:30 PM', event: 'Dawat-e-Khas & Welcome Refreshments', icon: '🥂', desc: 'Gourmet Medjool dates, Arabian Kahwa, and handcrafted royal appetizers.' },
@@ -159,6 +194,20 @@ export const INVITATION_TEMPLATES = [
         { year: '2022', title: 'Written in Destiny (Qadr)', desc: 'An arranged family introduction that blossomed into deep mutual respect and shared faith.', image: '/images/muslim-destiny.jpg' },
         { year: '2024', title: 'The Blessed Engagement', desc: 'Surrounded by our families and sincere prayers, our rings were exchanged under golden lights.', image: '/images/muslim-engagement.jpg' },
         { year: '2026', title: 'Nikah & Two Souls United', desc: 'Committing to a lifetime of love and companionship as husband and wife.', image: '/images/muslim-nikah.jpg' }
+      ],
+      galleryPhotos: [
+        { image: '/images/muslim-royal-couple.jpg', caption: 'Royal Couple Portrait' },
+        { image: '/images/muslim-nikah.jpg', caption: 'The Sacred Nikah Ceremony' },
+        { image: '/images/muslim-engagement.jpg', caption: 'Golden Ring Exchange' },
+        { image: '/images/muslim-destiny.jpg', caption: 'Written in Destiny' },
+        { image: '/images/royal-chandelier-hallway.jpg', caption: 'Crystal Palace Promenade' },
+        { image: '/images/royal-main-wedding-arena.jpg', caption: 'Grand Reception Stage' }
+      ],
+      faqs: [
+        { q: 'Is valet parking available?', a: 'Yes, complimentary VIP valet parking is available at the Main Grand Ballroom Entrance Portico.' },
+        { q: 'What is the dress code recommendation?', a: 'Guests are warmly encouraged to wear royal jewel tones, traditional South Asian / Arabian formal attire, or black-tie evening wear.' },
+        { q: 'Are children & families welcome?', a: 'We cherish family togetherness! Children and family members of all ages are joyfully invited.' },
+        { q: 'Can we take photographs & share on social media?', a: 'Yes! Please share your cherished moments and tag the couple with #FaizanMushira2026.' }
       ],
       wishingWellTitle: 'Digital Shagun / Wedding Gift Fund',
       wishingWellAccount: 'shagun.faizan-mushira@upi',

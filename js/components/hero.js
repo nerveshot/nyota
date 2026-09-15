@@ -66,7 +66,7 @@ export function renderHero(containerId, options = {}) {
 
         <!-- Hero Interactive Invitation Card Preview -->
         <div style="perspective: 1000px; display: flex; justify-content: center;">
-          <div class="invitation-card" style="background-color: ${theme.cardBg}; border-color: ${theme.border}; max-width: 440px; transform: rotate(1deg) translateY(-8px); box-shadow: var(--shadow-gold-lg); transition: transform 0.4s ease;" onmouseenter="this.style.transform='rotate(0deg) scale(1.02)'" onmouseleave="this.style.transform='rotate(1deg) translateY(-8px)'">
+          <div class="invitation-card ${theme.isLight ? 'theme-light' : ''}" style="background-color: ${theme.cardBg}; border-color: ${theme.border}; max-width: 440px; transform: rotate(1deg) translateY(-8px); box-shadow: var(--shadow-gold-lg); transition: transform 0.4s ease;" onmouseenter="this.style.transform='rotate(0deg) scale(1.02)'" onmouseleave="this.style.transform='rotate(1deg) translateY(-8px)'">
             <div class="invitation-arch-border"></div>
             
             <div class="invitation-bismillah font-serif">${sample.defaults.bismillah}</div>

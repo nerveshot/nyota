@@ -151,6 +151,8 @@ body {
   transition: var(--transition);
   text-decoration: none;
   white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .btn-primary-gold {
@@ -511,4 +513,22 @@ body {
   .nav-links {
     display: none;
   }
+  .btn-lg {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.925rem;
+  }
 }
+
+@media (max-width: 640px) {
+  .btn {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+  }
+  .badge {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+  }
+}
+

@@ -11,7 +11,8 @@ import {
   logoutUser,
   isUserAdmin,
   formatShareableInviteUrl,
-  generateInvitationSlug
+  generateInvitationSlug,
+  getWhatsAppSupportUrl
 } from '../firebase/nyotaDb';
 
 export default function UserDashboard({ 
@@ -325,16 +326,16 @@ export default function UserDashboard({
                       )}
                     </div>
 
-                    {/* Action Buttons Toolbar */}
+                      {/* Action Buttons Toolbar */}
                     <div className="space-y-2 pt-3 border-t border-white/10">
                       <div className="grid grid-cols-2 gap-2">
-                        {/* Edit Button */}
+                        {/* Edit / View in Studio Button */}
                         <button
                           onClick={() => onOpenStudio(inv)}
                           className="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                         >
                           <Edit3 className="w-3.5 h-3.5 text-champagne-400" />
-                          <span>Edit Invite</span>
+                          <span>{isPublished ? 'View in Studio' : 'Edit Invite'}</span>
                         </button>
 
                         {/* Live Preview Button */}
@@ -347,15 +348,32 @@ export default function UserDashboard({
                         </button>
                       </div>
 
-                      {/* Publish / Pay CTA */}
-                      {invVerified ? (
+                      {/* Publish / Pay / WhatsApp CTA */}
+                      {isPublished ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <button
+                            onClick={() => window.open(shareUrl, '_blank')}
+                            className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            <span>Open Live Webpage</span>
+                          </button>
+                          <a
+                            href={getWhatsAppSupportUrl(inv)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-2.5 px-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                          >
+                            <span>WhatsApp Updates</span>
+                          </a>
+                        </div>
+                      ) : invVerified ? (
                         <button
-                          onClick={() => handlePublish(inv)}
-                          disabled={publishLoadingId === inv.id}
-                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          onClick={() => onOpenStudio(inv)}
+                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                         >
                           <Share2 className="w-3.5 h-3.5" />
-                          <span>{publishLoadingId === inv.id ? 'Publishing...' : isPublished ? 'Re-Publish Live Link' : 'Publish Live Webpage'}</span>
+                          <span>Choose Link & Publish Live</span>
                         </button>
                       ) : isPending ? (
                         <button

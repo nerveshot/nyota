@@ -3,7 +3,8 @@ import {
   Sparkles, Sliders, Type, Palette, Music, Users, Download, 
   Share2, ShoppingBag, Eye, Smartphone, Monitor, Plus, Trash2, 
   Check, ArrowLeft, Volume2, VolumeX, Heart, Crown, Shield, Lock, CheckCircle2, Clock,
-  Layers, Gift, Shirt, MapPin, Calendar, Send, Image, EyeOff, CheckSquare, Copy
+  Layers, Gift, Shirt, MapPin, Calendar, Send, Image, EyeOff, CheckSquare, Copy,
+  MessageSquare, ExternalLink, AlertCircle, RefreshCw, Sparkle
 } from 'lucide-react';
 import InvitationCard from './InvitationCard';
 import EnvelopeExperience from './EnvelopeExperience';
@@ -19,7 +20,11 @@ import {
   subscribeToUserAccess, 
   isUserAdmin,
   generateInvitationSlug,
-  formatShareableInviteUrl
+  formatShareableInviteUrl,
+  checkSlugAvailability,
+  normalizeSlug,
+  getWhatsAppSupportUrl,
+  WHATSAPP_SUPPORT_PHONE
 } from '../firebase/nyotaDb';
 
 export default function CustomizerStudio({
@@ -45,6 +50,12 @@ export default function CustomizerStudio({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isCloudSaving, setIsCloudSaving] = useState(false);
   const [cloudSaveMessage, setCloudSaveMessage] = useState('');
+  
+  // Publishing & Custom Link States
+  const [customSlugModalOpen, setCustomSlugModalOpen] = useState(false);
+  const [customSlugInput, setCustomSlugInput] = useState('');
+  const [slugChecking, setSlugChecking] = useState(false);
+  const [slugStatus, setSlugStatus] = useState({ available: null, message: '' });
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [pendingNoticeOpen, setPendingNoticeOpen] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState('');
@@ -162,6 +173,7 @@ export default function CustomizerStudio({
 
   // Section Toggle Handler
   const handleToggleSection = (sectionKey) => {
+    if (isLocked) return;
     setInvitationData(prev => {
       const currentVal = prev.sections ? prev.sections[sectionKey] : true;
       const newVal = currentVal === false ? true : false;
@@ -177,6 +189,7 @@ export default function CustomizerStudio({
 
   // Love Story Handler
   const handleUpdateLoveStory = (index, field, value) => {
+    if (isLocked) return;
     setInvitationData(prev => {
       const stories = [...(prev.loveStories || [])];
       stories[index] = { ...stories[index], [field]: value };
@@ -186,6 +199,7 @@ export default function CustomizerStudio({
 
   // Field change handler
   const handleFieldChange = (key, value) => {
+    if (isLocked) return;
     setInvitationData(prev => ({
       ...prev,
       [key]: value
@@ -194,6 +208,7 @@ export default function CustomizerStudio({
 
   // Itinerary handlers
   const handleAddItineraryItem = () => {
+    if (isLocked) return;
     setInvitationData(prev => ({
       ...prev,
       itinerary: [...prev.itinerary, { time: '8:00 PM', event: 'Celebration Toast & Dance' }]
@@ -201,6 +216,7 @@ export default function CustomizerStudio({
   };
 
   const handleUpdateItinerary = (index, field, value) => {
+    if (isLocked) return;
     setInvitationData(prev => {
       const updated = [...prev.itinerary];
       updated[index] = { ...updated[index], [field]: value };
@@ -209,6 +225,7 @@ export default function CustomizerStudio({
   };
 
   const handleRemoveItinerary = (index) => {
+    if (isLocked) return;
     setInvitationData(prev => ({
       ...prev,
       itinerary: prev.itinerary.filter((_, i) => i !== index)
@@ -265,11 +282,50 @@ export default function CustomizerStudio({
     }
   };
 
-  // Per-Invitation Payment Verification Check: Only verified if THIS invitation document's paymentStatus is 'verified'
-  const isThisInviteVerified = invitationData?.paymentStatus === 'verified';
+  // Per-Invitation Payment Verification & Locked State Check
+  const isThisInviteVerified = invitationData?.paymentStatus === 'verified' || invitationData?.status === 'published';
   const isThisInvitePending = invitationData?.paymentStatus === 'pending_verification';
+  const isLocked = invitationData?.isLocked === true || invitationData?.status === 'published';
+
+  // Real-time debounced slug uniqueness validation
+  const handleSlugInputChange = (val) => {
+    const raw = normalizeSlug(val);
+    setCustomSlugInput(raw);
+    setSlugChecking(true);
+    setSlugStatus({ available: null, message: 'Validating custom link...' });
+  };
+
+  useEffect(() => {
+    if (!customSlugModalOpen || !customSlugInput) return;
+
+    const timer = setTimeout(async () => {
+      setSlugChecking(true);
+      try {
+        const res = await checkSlugAvailability(customSlugInput, invitationData?.id);
+        setSlugStatus({
+          available: res.available,
+          message: res.available 
+            ? `✓ Link available: https://nyota.pages.dev/${res.slug}` 
+            : (res.reason || 'This custom link is already taken. Please choose another link.')
+        });
+      } catch (err) {
+        setSlugStatus({ available: false, message: 'Unable to verify link availability.' });
+      } finally {
+        setSlugChecking(false);
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [customSlugInput, customSlugModalOpen, invitationData?.id]);
 
   const handlePublishClick = async () => {
+    if (isLocked) {
+      const slug = invitationData.slug || generateInvitationSlug(invitationData.primaryNames, invitationData.dateText);
+      setPublishedUrl(formatShareableInviteUrl(slug));
+      setPublishModalOpen(true);
+      return;
+    }
+
     if (!currentUser) {
       onOpenCheckout({
         invitationData,
@@ -284,37 +340,13 @@ export default function CustomizerStudio({
       return;
     }
 
-    // 1. If verified for this specific invitation, save and publish to Firestore
+    // 1. If verified for this specific invitation, open Custom Slug Allotment dialog
     if (isThisInviteVerified) {
-      setIsCloudSaving(true);
-      try {
-        const payload = {
-          ...invitationData,
-          themeId,
-          fontPairingId,
-          sealId,
-          sealColor,
-          ambientTrackId,
-          templateId: currentTemplate.id,
-          templateName: currentTemplate.name,
-        };
-        const saveRes = await saveUserInvitation(payload, currentUser);
-        if (saveRes.success) {
-          const pubRes = await publishUserInvitation(saveRes.id, currentUser, payload);
-          if (pubRes.success) {
-            const slug = pubRes.slug || saveRes.slug || generateInvitationSlug(payload.primaryNames, payload.dateText);
-            const liveUrl = formatShareableInviteUrl(slug);
-            setPublishedUrl(liveUrl);
-            setPublishModalOpen(true);
-          } else {
-            setPendingNoticeOpen(true);
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsCloudSaving(false);
-      }
+      const initialSlug = invitationData.slug || generateInvitationSlug(invitationData.primaryNames, invitationData.dateText);
+      setCustomSlugInput(initialSlug);
+      setSlugChecking(true);
+      setSlugStatus({ available: null, message: 'Checking link availability...' });
+      setCustomSlugModalOpen(true);
     } else if (isThisInvitePending) {
       // 2. If payment is already submitted and pending admin verification
       setPendingNoticeOpen(true);
@@ -355,11 +387,56 @@ export default function CustomizerStudio({
     }
   };
 
+  const handleConfirmPublishWithSlug = async () => {
+    if (!slugStatus.available || slugChecking) return;
+
+    setIsCloudSaving(true);
+    try {
+      const payload = {
+        ...invitationData,
+        themeId,
+        fontPairingId,
+        sealId,
+        sealColor,
+        ambientTrackId,
+        templateId: currentTemplate.id,
+        templateName: currentTemplate.name,
+        slug: customSlugInput,
+      };
+      const saveRes = await saveUserInvitation(payload, currentUser);
+      const targetId = saveRes.id || invitationData?.id;
+      
+      const pubRes = await publishUserInvitation(targetId, currentUser, payload, customSlugInput);
+      if (pubRes.success) {
+        const finalSlug = pubRes.slug || customSlugInput;
+        const liveUrl = formatShareableInviteUrl(finalSlug);
+        setPublishedUrl(liveUrl);
+        setInvitationData(prev => ({
+          ...prev,
+          id: targetId,
+          slug: finalSlug,
+          status: 'published',
+          isLocked: true,
+          paymentStatus: 'verified'
+        }));
+        setCustomSlugModalOpen(false);
+        setPublishModalOpen(true);
+      } else {
+        setSlugStatus({ available: false, message: pubRes.error || 'Failed to publish invitation.' });
+      }
+    } catch (err) {
+      console.error('Publish error:', err);
+      setSlugStatus({ available: false, message: 'An unexpected error occurred during publishing.' });
+    } finally {
+      setIsCloudSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto">
       
       {/* Studio Top Control Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
         
         <div className="flex items-center gap-3">
           <button
@@ -376,7 +453,12 @@ export default function CustomizerStudio({
                 Invitation Customizer Studio
               </h1>
               
-              {isThisInviteVerified ? (
+              {isLocked ? (
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/40 flex items-center gap-1">
+                  <Lock className="w-3 h-3 text-emerald-400" />
+                  <span>Published & Locked</span>
+                </span>
+              ) : isThisInviteVerified ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/40 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                   <span>Verified Invitation</span>
@@ -393,47 +475,208 @@ export default function CustomizerStudio({
               )}
             </div>
             <p className="text-xs text-slate-400">
-              Customize text, colors, fonts, wax seals, itinerary & ambient music in real time.
+              Selected Template: <span className="text-amber-300 font-semibold">{currentTemplate.name}</span>
             </p>
           </div>
         </div>
 
         {/* Top Action Buttons (Save Draft & Publish) */}
         <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
-          <button
-            onClick={handleSaveToCloud}
-            disabled={isCloudSaving}
-            className="px-4 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-          >
-            <Sparkles className={`w-3.5 h-3.5 ${isCloudSaving ? 'animate-spin' : ''}`} />
-            <span>{cloudSaveMessage || (isCloudSaving ? 'Saving...' : 'Save Draft')}</span>
-          </button>
+          {!isLocked && (
+            <button
+              onClick={handleSaveToCloud}
+              disabled={isCloudSaving}
+              className="px-4 py-2.5 rounded-xl bg-champagne-500/15 hover:bg-champagne-500/25 text-champagne-300 font-semibold text-xs border border-champagne-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Sparkles className={`w-3.5 h-3.5 ${isCloudSaving ? 'animate-spin' : ''}`} />
+              <span>{cloudSaveMessage || (isCloudSaving ? 'Saving...' : 'Save Draft')}</span>
+            </button>
+          )}
 
-          <button
-            onClick={handlePublishClick}
-            disabled={isCloudSaving}
-            className="flex-1 md:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            {isThisInviteVerified ? (
-              <>
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>Publish Live Webpage</span>
-              </>
-            ) : isThisInvitePending ? (
-              <>
-                <Clock className="w-4 h-4 text-slate-950 animate-pulse" />
-                <span>Verification Pending</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-4 h-4 text-slate-950" />
-                <span>Pay ₹1001 Shagun & Publish</span>
-              </>
-            )}
-          </button>
+          {isLocked ? (
+            <a
+              href={getWhatsAppSupportUrl(invitationData)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Request Minor Changes on WhatsApp</span>
+            </a>
+          ) : (
+            <button
+              onClick={handlePublishClick}
+              disabled={isCloudSaving}
+              className="flex-1 md:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-champagne-400 via-amber-500 to-champagne-600 text-slate-950 font-bold text-xs shadow-glow-gold hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {isThisInviteVerified ? (
+                <>
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                  <span>Choose Link & Publish</span>
+                </>
+              ) : isThisInvitePending ? (
+                <>
+                  <Clock className="w-4 h-4 text-slate-950 animate-pulse" />
+                  <span>Verification Pending</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingBag className="w-4 h-4 text-slate-950" />
+                  <span>Pay ₹1001 Shagun & Publish</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
 
       </div>
+
+      {/* Sticky Locked Banner if Published */}
+      {isLocked && (
+        <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-amber-500/10 border-2 border-amber-400/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 backdrop-blur-xl shadow-lg">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300 flex-shrink-0">
+              <Lock className="w-5 h-5 text-amber-400" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-sm font-bold text-white flex items-center gap-2 flex-wrap">
+                <span>Invitation Published & Custom Link Locked</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 font-mono font-semibold">Live Webpage</span>
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Your custom link <a href={formatShareableInviteUrl(invitationData?.slug)} target="_blank" rel="noopener noreferrer" className="text-amber-300 font-mono font-semibold underline">{formatShareableInviteUrl(invitationData?.slug)}</a> is active. 
+                Direct editing is locked to preserve guest link integrity. Need a minor typo fixed or timing change? Message us on WhatsApp.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+            <button
+              onClick={() => {
+                const url = formatShareableInviteUrl(invitationData?.slug);
+                navigator.clipboard.writeText(url);
+                setCopiedLink(true);
+                setTimeout(() => setCopiedLink(false), 2000);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-semibold border border-white/10 flex items-center gap-1.5 cursor-pointer"
+            >
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-champagne-400" />}
+              <span>{copiedLink ? 'Copied' : 'Copy Link'}</span>
+            </button>
+            <a
+              href={getWhatsAppSupportUrl(invitationData)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>WhatsApp Support</span>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Step 1: Custom Slug Allotment & Uniqueness Check Modal */}
+      {customSlugModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-lg glass-panel p-6 sm:p-8 rounded-3xl border border-amber-400/70 shadow-[0_0_60px_rgba(212,175,55,0.25)] space-y-6 text-left bg-[#0E0C1C]">
+            
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center flex-shrink-0">
+                <Sparkle className="w-6 h-6 text-amber-400" />
+              </div>
+              <div>
+                <h3 className="text-xl font-cinzel font-bold text-white">
+                  Choose Your Custom Live Link
+                </h3>
+                <p className="text-xs text-slate-300">
+                  Pick your personalized wedding web link. We'll verify its uniqueness in Firestore.
+                </p>
+              </div>
+            </div>
+
+            {/* Custom Link Input Field */}
+            <div className="space-y-2">
+              <label className="text-xs font-mono uppercase tracking-wider text-slate-300">
+                Custom Web URL Slug
+              </label>
+              
+              <div className="flex items-center rounded-2xl bg-black/70 border border-amber-400/40 p-1.5 focus-within:border-amber-400 shadow-inner">
+                <span className="px-3 text-xs font-mono text-slate-400 select-none flex-shrink-0">
+                  https://nyota.pages.dev/
+                </span>
+                <input
+                  type="text"
+                  value={customSlugInput}
+                  onChange={(e) => handleSlugInputChange(e.target.value)}
+                  placeholder="faizan-and-mushira-2026"
+                  className="flex-1 bg-transparent px-2 py-2 text-sm font-mono text-amber-300 outline-none placeholder:text-slate-600"
+                />
+              </div>
+
+              {/* Real-time Uniqueness Feedback */}
+              <div className="min-h-[22px] flex items-center gap-2 pt-1 text-xs">
+                {slugChecking ? (
+                  <span className="text-amber-400 flex items-center gap-1.5 font-mono">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Checking link availability in Firestore...</span>
+                  </span>
+                ) : slugStatus.available === true ? (
+                  <span className="text-emerald-400 flex items-center gap-1.5 font-mono font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{slugStatus.message}</span>
+                  </span>
+                ) : slugStatus.available === false ? (
+                  <span className="text-rose-400 flex items-center gap-1.5 font-mono">
+                    <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                    <span>{slugStatus.message}</span>
+                  </span>
+                ) : null}
+              </div>
+            </div>
+
+            {/* Critical Permanent Lock Policy Notice */}
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2">
+              <div className="flex items-center gap-2 text-amber-300 text-xs font-bold">
+                <Lock className="w-4 h-4" />
+                <span>Permanent Allotment & Lock Policy</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                Once published, this custom link will be permanently reserved and <strong>cannot be changed</strong>. 
+                Your wedding invitation details will also be locked to ensure guest link reliability. 
+                Any minor changes afterwards (such as a typo or time update) can be requested directly via WhatsApp support.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setCustomSlugModalOpen(false)}
+                className="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 font-semibold text-xs border border-white/10 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              
+              <button
+                onClick={handleConfirmPublishWithSlug}
+                disabled={!slugStatus.available || slugChecking || isCloudSaving}
+                className={`flex-1 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  slugStatus.available && !slugChecking && !isCloudSaving
+                    ? 'bg-gradient-to-r from-amber-400 via-rose-500 to-amber-500 text-slate-950 shadow-glow-gold hover:opacity-95'
+                    : 'bg-white/10 text-slate-500 border border-white/5 cursor-not-allowed'
+                }`}
+              >
+                {isCloudSaving ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Lock className="w-4 h-4" />
+                )}
+                <span>Confirm & Lock Custom Link</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* Publish Live Link Success Modal */}
       {publishModalOpen && (
@@ -450,7 +693,7 @@ export default function CustomizerStudio({
                 Invitation Published Live!
               </h3>
               <p className="text-xs text-slate-300 max-w-sm mx-auto">
-                Your wedding invitation webpage is now live and stored on Cloud Firestore. Guests can open this link to view the invitation and submit RSVPs.
+                Your invitation is now live on Firestore with its permanent custom link. Guests can open this link on mobile and desktop.
               </p>
             </div>
 
@@ -477,7 +720,7 @@ export default function CustomizerStudio({
                 className="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/15 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Eye className="w-4 h-4 text-champagne-400" />
-                <span>Open in New Tab</span>
+                <span>Open Live Link</span>
               </button>
               <button
                 onClick={() => setPublishModalOpen(false)}
@@ -599,6 +842,22 @@ export default function CustomizerStudio({
               <span className="text-[11px]">Audio</span>
             </button>
           </div>
+
+          {/* Locked Notice inside Panel */}
+          {isLocked && (
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs space-y-1.5 animate-fadeIn">
+              <div className="flex items-center gap-2 font-bold text-white">
+                <Lock className="w-3.5 h-3.5 text-amber-400" />
+                <span>Editing is Locked (Published Invitation)</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                This invitation is already live with your custom link. To make minor changes (e.g. typos, schedule changes), 
+                <a href={getWhatsAppSupportUrl(invitationData)} target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-semibold underline ml-1">
+                  message us on WhatsApp
+                </a>.
+              </p>
+            </div>
+          )}
 
           {/* TAB 1: CONTENT & EVENT DETAILS */}
           {activeTab === 'content' && (

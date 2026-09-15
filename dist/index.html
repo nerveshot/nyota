@@ -1,37 +1,151 @@
-<!doctype html>
-<html lang="en" class="dark scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AA64'><path d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nyota Invites — Luxury Custom Digital & Print Invitations</title>
-    <meta name="description" content="Create exquisite, interactive, and custom digital & print invitations for Weddings, Birthdays, Galas, and Baby Showers with live RSVP tracking." />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nyota — Luxury Digital Invitations & 3D Envelope Experience</title>
+  <meta name="description" content="Opulent digital wedding & gala invitations with 3D wax-seal envelope unboxing, ambient celebration music, and real-time Firestore guest RSVPs." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+
+  <!-- Luxury Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Pure Vanilla CSS Stylesheets -->
+  <script type="module" crossorigin src="./assets/index-D4tdQFGo.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-clmNkASM.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <div id="app-navbar-slot">
+    <nav class="navbar">
+      <div class="container nav-container">
+        <a href="#" class="nav-brand" data-view="landing">
+          <div class="nav-logo-icon" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #180F2A, #0A0714); border: 1px solid #D4AF37; box-shadow: 0 0 15px rgba(212,175,55,0.4);">
+            <svg viewBox="0 0 48 48" fill="none" style="width: 22px; height: 22px;">
+              <rect x="6" y="11" width="36" height="26" rx="3.5" fill="#170D28" stroke="#D4AF37" stroke-width="1.4" />
+              <path d="M6 37L19 25" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.65" />
+              <path d="M42 37L29 25" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.65" />
+              <path d="M6 12L24 26L42 12" fill="#24143D" stroke="#D4AF37" stroke-width="1.4" stroke-linejoin="round" />
+              <circle cx="24" cy="26" r="5.5" fill="#F5D061" stroke="#3D2604" stroke-width="0.6" />
+              <circle cx="24" cy="26" r="1.8" fill="#FFFFFF" />
+            </svg>
+          </div>
+          <span class="nav-title gold-gradient-text">NYOTA</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-view="landing">Home</a></li>
+          <li><a href="#gallery-section" class="nav-link" data-view="landing">Templates</a></li>
+          <li><a href="#contact-section" class="nav-link" data-view="landing">Contact & Help</a></li>
+          <li><a href="#" class="nav-link" data-view="studio">Customizer Studio</a></li>
+          <li><a href="#" class="nav-link" data-view="dashboard">My Invitations</a></li>
+          <li><a href="#" class="nav-link" data-view="admin">Admin Portal</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button id="nav-pricing-btn" class="btn btn-sm btn-gold-outline">
+            <span>₹1001 Suite</span>
+          </button>
+          <div id="nav-auth-slot">
+            <button id="nav-login-btn" class="btn btn-sm btn-primary-gold">
+              <span>Sign In</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Dynamic Main Content -->
+  <main id="app-main-content">
     
-    <!-- DNS Prefetch & Preconnect for Fast Asset Delivery -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <!-- Hero Section -->
+    <div id="landing-hero-slot">
+      <section style="position: relative; padding: 6rem 0 4rem; overflow: hidden; background: radial-gradient(circle at 50% 20%, #16102C 0%, #0B0914 80%);">
+        <div style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 600px; height: 350px; background: radial-gradient(ellipse, rgba(212, 175, 55, 0.12) 0%, transparent 70%); pointer-events: none;"></div>
 
-    <!-- Preload Above-the-Fold Hero Image -->
-    <link rel="preload" as="image" href="./images/royal-invitation-scroll.jpg" fetchpriority="high">
+        <div class="container" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center;">
+          <div>
+            <div class="badge badge-gold" style="margin-bottom: 1.25rem;">
+              <span>✨</span>
+              <span>Digital Luxury Wedding & Gala Invitations</span>
+            </div>
 
-    <!-- Non-render-blocking Google Fonts -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript>
-      <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    </noscript>
-    <script type="module" crossorigin src="./assets/index-DzI9Sbey.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/vendor-libs-BDRZaZVY.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-react-CI5h3PA9.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-firebase-DLx-irTC.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-icons-DVvwmmW-.js">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-confetti-B5JVzsfH.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-DFKWK1Lu.css">
-  </head>
-  <body class="bg-[#0B0914] text-slate-100 min-h-screen selection:bg-champagne-500/30 selection:text-champagne-300 font-sans antialiased overflow-x-hidden">
-    <div id="root"></div>
-  </body>
+            <h1 class="font-serif" style="font-size: 3.25rem; line-height: 1.15; color: #FFF; margin-bottom: 1.25rem;">
+              Unforgettable <span class="gold-gradient-text">Celebrations</span> Begin With Royalty.
+            </h1>
+
+            <p class="text-secondary" style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">
+              Experience 3D wax-seal unboxing, cinematic webpage invitations, ambient background music, and real-time Firestore guest RSVPs — all for one simple ₹1001 Shagun price.
+            </p>
+
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+              <button id="hero-create-btn" class="btn btn-primary-gold btn-lg">
+                <span>Start Customizing</span>
+                <span>✨</span>
+              </button>
+              <button id="hero-unboxing-demo-btn" class="btn btn-secondary btn-lg">
+                <span>Try 3D Unboxing Demo</span>
+                <span>✉️</span>
+              </button>
+            </div>
+
+            <div class="flex gap-6" style="margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem;">
+              <div>
+                <div style="font-family: var(--font-cinzel); font-size: 1.4rem; color: var(--gold-light); font-weight: 700;">100%</div>
+                <div class="text-muted" style="font-size: 0.75rem; text-transform: uppercase;">Zero Lag Speed</div>
+              </div>
+              <div>
+                <div style="font-family: var(--font-cinzel); font-size: 1.4rem; color: var(--gold-light); font-weight: 700;">3D Box</div>
+                <div class="text-muted" style="font-size: 0.75rem; text-transform: uppercase;">Wax Seal Reveal</div>
+              </div>
+              <div>
+                <div style="font-family: var(--font-cinzel); font-size: 1.4rem; color: var(--gold-light); font-weight: 700;">Realtime</div>
+                <div class="text-muted" style="font-size: 0.75rem; text-transform: uppercase;">Firestore RSVPs</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="perspective: 1000px; display: flex; justify-content: center;">
+            <div class="invitation-card" style="background-color: #12050E; border-color: rgba(212, 175, 55, 0.4); max-width: 440px; transform: rotate(1deg) translateY(-8px); box-shadow: var(--shadow-gold-lg); transition: transform 0.4s ease;">
+              <div class="invitation-arch-border"></div>
+              <div class="invitation-bismillah font-serif">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+              <div class="invitation-tag font-mono">TOGETHER WITH THEIR FAMILIES</div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                Cordially invite you to grace the blessed wedding celebration & Nikah of
+              </p>
+              <div class="names-stacked-wrapper font-cinzel" style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; margin: 0.5rem 0;">
+                <span class="gold-gradient-text" style="font-size: 1.6rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">FAIZAN SALAM</span>
+                <span class="font-script gold-gradient-text" style="font-size: 1.4rem; margin: 0.1rem 0; opacity: 0.95; line-height: 1;">&</span>
+                <span class="gold-gradient-text" style="font-size: 1.6rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">MUSHIRA SHAIKH</span>
+              </div>
+              <div class="invitation-date">Saturday, October 24, 2026</div>
+              <div style="font-size: 0.85rem; color: var(--gold-hover); margin-top: 0.25rem;">Five O'Clock In The Evening</div>
+              <div class="invitation-venue" style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(212,175,55,0.2);">
+                📍 The Royal Emirates Palace & Grand Ballroom
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="landing-gallery-slot"></div>
+    <div id="landing-faq-slot"></div>
+    <div id="landing-footer-slot"></div>
+  </main>
+
+  <!-- Modals -->
+  <div id="modal-auth-slot"></div>
+  <div id="modal-checkout-slot"></div>
+  <div id="modal-export-slot"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Main ES Module Script -->
+</body>
 </html>

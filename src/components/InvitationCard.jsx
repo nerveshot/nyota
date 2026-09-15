@@ -4,14 +4,14 @@ import { COLOR_THEMES, FONT_PAIRINGS, WAX_SEALS } from '../data/templates';
 
 export default function InvitationCard({
   invitationData,
-  themeId = 'emeraldGold',
+  themeId = 'royalRedNavyBlack',
   fontPairingId = 'classicSerif',
   sealId = 'botanical',
   sealColor = '#B88B42',
   isPrintMode = false,
   customScale = 1,
 }) {
-  const theme = COLOR_THEMES[themeId] || COLOR_THEMES.emeraldGold;
+  const theme = COLOR_THEMES[themeId] || COLOR_THEMES.royalRedNavyBlack;
   const fonts = FONT_PAIRINGS[fontPairingId] || FONT_PAIRINGS.classicSerif;
   const seal = WAX_SEALS.find(s => s.id === sealId) || WAX_SEALS[0];
 

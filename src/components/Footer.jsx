@@ -28,9 +28,21 @@ export default function Footer({ onNavigate, onOpenStudio, onOpenPricing, onOpen
           {/* Brand Info (4 cols) */}
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-champagne-400 to-amber-700 p-[1px] shadow-glow-gold">
-                <div className="w-full h-full bg-[#0E0C1C] rounded-[7px] flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-champagne-400" />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FFF3D0] via-[#D4AF37] to-[#8C6214] p-[1px] shadow-glow-gold">
+                <div className="w-full h-full bg-gradient-to-b from-[#180F2A] to-[#0A0714] rounded-[11px] flex items-center justify-center p-1">
+                  <svg 
+                    viewBox="0 0 48 48" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-amber-300 drop-shadow-md"
+                  >
+                    <rect x="6" y="11" width="36" height="26" rx="3.5" fill="#170D28" stroke="#D4AF37" strokeWidth="1.4" />
+                    <path d="M6 37L19 25" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
+                    <path d="M42 37L29 25" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
+                    <path d="M6 12L24 26L42 12" fill="#24143D" stroke="#D4AF37" strokeWidth="1.4" strokeLinejoin="round" />
+                    <circle cx="24" cy="26" r="5.5" fill="#F5D061" stroke="#3D2604" strokeWidth="0.6" />
+                    <circle cx="24" cy="26" r="1.8" fill="#FFFFFF" />
+                  </svg>
                 </div>
               </div>
               <span className="font-cinzel text-lg font-bold gold-gradient-text tracking-wider">

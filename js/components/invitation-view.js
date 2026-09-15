@@ -16,14 +16,14 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  let currentThemeId = options.themeId || invitationData.themeId || 'royalRedNavyBlack';
   const {
-    themeId = invitationData.themeId || 'royalRedNavyBlack',
     fontPairingId = invitationData.fontPairingId || 'classicSerif',
     ambientTrackId = invitationData.ambientTrackId || 'romanticPiano',
     startWithCurtains = true,
   } = options;
 
-  const theme = COLOR_THEMES[themeId] || COLOR_THEMES.royalRedNavyBlack;
+  let theme = COLOR_THEMES[currentThemeId] || COLOR_THEMES.royalRedNavyBlack;
   const fonts = FONT_PAIRINGS[fontPairingId] || FONT_PAIRINGS.classicSerif;
 
   const {
@@ -43,8 +43,25 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
     receptionInfo = 'Grand Royal Walima Banquet & Celebrations to Follow',
     dressCode = 'Royal Crimson, Midnight Sapphire & Obsidian Black Formal',
     dressCodeNote = 'We warmly encourage our cherished guests to embrace royal jewel tones, traditional formal attire (Sherwanis, Anarkalis, Abayas, Lehengas) or classic evening gowns & tuxedos.',
+    groomParents = 'Mr. & Mrs. Mohammed Salam',
+    brideParents = 'Mr. & Mrs. Tariq Shaikh',
+    familyBlessingText = 'With the grace and blessings of Allah (SWT), we invite you to share our immense happiness and grace the holy union of our beloved children.',
     itinerary = [],
     loveStories = [],
+    galleryPhotos = [
+      { image: '/images/muslim-royal-couple.jpg', caption: 'Royal Couple Portrait' },
+      { image: '/images/muslim-nikah.jpg', caption: 'The Sacred Nikah Ceremony' },
+      { image: '/images/muslim-engagement.jpg', caption: 'Golden Ring Exchange' },
+      { image: '/images/muslim-destiny.jpg', caption: 'Written in Destiny' },
+      { image: '/images/royal-chandelier-hallway.jpg', caption: 'Crystal Palace Promenade' },
+      { image: '/images/royal-main-wedding-arena.jpg', caption: 'Grand Reception Stage' }
+    ],
+    faqs = [
+      { q: 'Is valet parking available?', a: 'Yes, complimentary VIP valet parking is available at the Main Grand Ballroom Entrance Portico.' },
+      { q: 'What is the dress code recommendation?', a: 'Guests are warmly encouraged to wear royal jewel tones, traditional South Asian / Arabian formal attire, or black-tie evening wear.' },
+      { q: 'Are children & families welcome?', a: 'We cherish family togetherness! Children and family members of all ages are joyfully invited.' },
+      { q: 'Can we take photographs & share on social media?', a: 'Yes! Please share your cherished moments and tag the couple with #FaizanMushira2026.' }
+    ],
     wishingWellTitle = 'Digital Shagun / Wedding Gift Fund',
     wishingWellAccount = 'shagun.faizan-mushira@upi',
     wishingWellNote = 'Your prayers, love, and presence on our special day are the greatest blessings of all.'
@@ -52,8 +69,15 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
 
   const coupleInitials = getCoupleInitials(primaryNames);
 
+  // Calendar Link Generator
+  const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Royal Wedding & Nikah: ${primaryNames}`)}&dates=20261024T170000/20261024T233000&details=${encodeURIComponent(`You are cordially invited to celebrate the Nikah and Walima banquet of ${primaryNames}. Venue: ${venueName}`)}&location=${encodeURIComponent(`${venueName}, ${venueAddress}`)}`;
+
+  // WhatsApp Share URL
+  const shareText = `✨ You are cordially invited to the Royal Wedding & Nikah of *${primaryNames}* on ${dateText}! View our interactive royal invitation suite: ${window.location.href}`;
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+
   container.innerHTML = `
-    <div style="${theme.bgClass}; min-height: 100vh; color: var(--text-primary); position: relative; overflow-x: hidden;">
+    <div id="invitation-suite-root" class="${theme.isLight ? 'theme-light' : ''}" style="${theme.bgClass}; min-height: 100vh; color: var(--text-primary); position: relative; overflow-x: hidden; transition: background 0.5s ease;">
       
       <!-- Background Ambient Starlight & Golden Dust Particle Canvas -->
       <canvas id="starlight-canvas" class="starlight-particle-canvas"></canvas>
@@ -209,6 +233,13 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
         <span id="music-text-state">Play Music</span>
       </div>
 
+      <!-- Floating Quick Dock (WhatsApp Share) -->
+      <div class="floating-quick-dock">
+        <a href="${whatsappUrl}" target="_blank" rel="noopener" class="floating-pill-control" style="background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" title="Share Invitation on WhatsApp">
+          <span>💬 Share on WhatsApp</span>
+        </a>
+      </div>
+
       <!-- ========================================================================= -->
       <!-- 2. ROYAL WEBPAGE HERO BANNER WITH STACKED COUPLE NAMES -->
       <!-- ========================================================================= -->
@@ -230,8 +261,20 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
             ${dateText} • ${timeText}
           </div>
 
-          <div style="font-size: 1.05rem; color: #FFFFFF; margin-top: 0.6rem; font-weight: 500;">
+          <div style="font-size: 1.05rem; margin-top: 0.6rem; font-weight: 500;">
             📍 ${venueName}
+          </div>
+
+          <!-- 1-Click Add to Calendar & Maps Actions -->
+          <div class="calendar-actions-bar">
+            <a href="${gcalUrl}" target="_blank" rel="noopener" class="calendar-pill-btn" title="Add event to Google Calendar">
+              <span>📅</span>
+              <span>Add to Google Calendar</span>
+            </a>
+            <a href="https://maps.google.com/?q=${encodeURIComponent(venueName + ' ' + venueAddress)}" target="_blank" rel="noopener" class="calendar-pill-btn" title="Get Driving Directions">
+              <span>📍</span>
+              <span>Directions</span>
+            </a>
           </div>
 
           <!-- Live Countdown Clock -->
@@ -268,14 +311,43 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       </header>
 
       <!-- ========================================================================= -->
-      <!-- 3. SACRED QURANIC VERSE & WEDDING DUA -->
+      <!-- 3. WELCOMING HOSTS & PARENTAL BLESSINGS (DESIGNER SECTION) -->
+      <!-- ========================================================================= -->
+      <section style="padding: 5rem 1.5rem 2rem; position: relative; z-index: 5;">
+        <div class="container-narrow glass-panel text-center royal-glow-box" style="padding: 3.5rem 2.5rem; border-radius: var(--radius-xl);">
+          <span class="badge badge-gold">With Parental Blessings</span>
+          <h2 class="font-serif" style="font-size: 2.25rem; margin-top: 0.75rem;">The Blessed Families</h2>
+          <p class="text-muted" style="font-size: 0.95rem; max-width: 620px; margin: 0.6rem auto 0; line-height: 1.7;">
+            ${familyBlessingText}
+          </p>
+
+          <div class="family-hosts-grid">
+            <!-- Groom's Parents -->
+            <div class="family-host-card">
+              <span class="family-host-badge">Groom's Side</span>
+              <div class="family-host-parents">${groomParents}</div>
+              <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.35rem;">Cordially welcome all guests to share in the joy of the groom & family.</p>
+            </div>
+
+            <!-- Bride's Parents -->
+            <div class="family-host-card">
+              <span class="family-host-badge">Bride's Side</span>
+              <div class="family-host-parents">${brideParents}</div>
+              <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.35rem;">Warmly invite your gracious presence to bestow prayers upon the bride & family.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- 4. SACRED QURANIC VERSE & WEDDING DUA -->
       <!-- ========================================================================= -->
       ${quranVerse ? `
-      <section style="padding: 5rem 1.5rem; text-align: center; position: relative; z-index: 5;">
-        <div class="container-narrow glass-panel royal-glow-box" style="padding: 3.5rem 2.5rem; border-radius: var(--radius-xl);">
+      <section style="padding: 4rem 1.5rem; text-align: center; position: relative; z-index: 5;">
+        <div class="container-narrow glass-panel" style="padding: 3.5rem 2.5rem; border-radius: var(--radius-xl);">
           <div style="font-size: 2.25rem; margin-bottom: 1.25rem;" class="animate-float-card">✨ 🕊️ ✨</div>
           
-          <blockquote class="${fonts.heading}" style="font-size: 1.45rem; color: #FFFFFF; line-height: 1.8; font-style: italic; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">
+          <blockquote class="${fonts.heading}" style="font-size: 1.45rem; line-height: 1.8; font-style: italic;">
             ${quranVerse}
           </blockquote>
           
@@ -286,7 +358,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
           ${duaBlessing ? `
             <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgba(212,175,55,0.25);">
               <div class="font-serif animate-bismillah-radiance" style="font-size: 1.45rem; color: var(--gold-light);">${duaBlessing}</div>
-              <p style="font-size: 0.92rem; color: #E2E8F0; margin-top: 0.75rem; font-style: italic;">${duaTranslation}</p>
+              <p style="font-size: 0.92rem; margin-top: 0.75rem; font-style: italic;" class="text-muted">${duaTranslation}</p>
             </div>
           ` : ''}
         </div>
@@ -294,14 +366,14 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       ` : ''}
 
       <!-- ========================================================================= -->
-      <!-- 4. CELEBRATION ITINERARY TIMELINE -->
+      <!-- 5. CELEBRATION ITINERARY TIMELINE -->
       <!-- ========================================================================= -->
       ${itinerary && itinerary.length > 0 ? `
       <section id="itinerary-section" style="padding: 5rem 1.5rem; position: relative; z-index: 5;">
         <div class="container">
           <div class="text-center">
             <span class="badge badge-gold">Order of Events</span>
-            <h2 class="font-serif" style="font-size: 2.5rem; color: #FFF; margin-top: 0.75rem; text-shadow: 0 0 20px rgba(212,175,55,0.5);">Celebration Itinerary</h2>
+            <h2 class="font-serif" style="font-size: 2.5rem; margin-top: 0.75rem;">Celebration Itinerary</h2>
             <p style="color: var(--gold-light); font-size: 0.95rem; margin-top: 0.4rem;">Join us for an unforgettable evening of sacred vows and grand festivities</p>
           </div>
 
@@ -322,15 +394,15 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       ` : ''}
 
       <!-- ========================================================================= -->
-      <!-- 5. LOVE STORY MILESTONES & IMAGE SHOWCASE -->
+      <!-- 6. LOVE STORY MILESTONES -->
       <!-- ========================================================================= -->
       ${loveStories && loveStories.length > 0 ? `
-      <section style="padding: 5rem 1.5rem; background: linear-gradient(180deg, rgba(8,20,48,0.4) 0%, rgba(32,6,20,0.5) 100%); position: relative; z-index: 5;">
+      <section style="padding: 5rem 1.5rem; position: relative; z-index: 5;">
         <div class="container">
           <div class="text-center">
             <span class="badge badge-rose">Our Journey</span>
-            <h2 class="font-serif" style="font-size: 2.5rem; color: #FFF; margin-top: 0.75rem; text-shadow: 0 0 20px rgba(244,63,94,0.4);">Our Love Story</h2>
-            <p style="color: #FECDD3; font-size: 0.95rem; margin-top: 0.4rem;">Every chapter beautifully guided by faith, family, and destiny</p>
+            <h2 class="font-serif" style="font-size: 2.5rem; margin-top: 0.75rem;">Our Love Story</h2>
+            <p style="font-size: 0.95rem; margin-top: 0.4rem;" class="text-muted">Every chapter beautifully guided by faith, family, and destiny</p>
           </div>
 
           <div class="story-grid">
@@ -355,14 +427,40 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       ` : ''}
 
       <!-- ========================================================================= -->
-      <!-- 6. INTERACTIVE SECRET ROYAL BLESSING SCRATCH CARD -->
+      <!-- 7. ROYAL PHOTO GALLERY SHOWCASE (DESIGNER SECTION) -->
+      <!-- ========================================================================= -->
+      ${galleryPhotos && galleryPhotos.length > 0 ? `
+      <section style="padding: 5rem 1.5rem; position: relative; z-index: 5;">
+        <div class="container">
+          <div class="text-center">
+            <span class="badge badge-gold">Memories & Portraits</span>
+            <h2 class="font-serif" style="font-size: 2.5rem; margin-top: 0.75rem;">Photo Gallery</h2>
+            <p class="text-muted" style="font-size: 0.95rem; margin-top: 0.4rem;">Glimpses of sacred celebrations, royal elegance, and timeless moments</p>
+          </div>
+
+          <div class="royal-gallery-grid">
+            ${galleryPhotos.map(item => `
+              <div class="royal-gallery-item">
+                <img src="${item.image}" alt="${item.caption}" class="royal-gallery-img" loading="lazy" />
+                <div class="royal-gallery-overlay">
+                  <div class="royal-gallery-caption">${item.caption}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+      ` : ''}
+
+      <!-- ========================================================================= -->
+      <!-- 8. INTERACTIVE SECRET ROYAL BLESSING SCRATCH CARD -->
       <!-- ========================================================================= -->
       <section style="padding: 4rem 1.5rem; position: relative; z-index: 5;">
         <div class="container">
           <div class="royal-scratch-card">
             <span class="badge badge-gold">Special Couple Reveal</span>
-            <h3 class="font-serif" style="font-size: 1.75rem; color: #FFF; margin: 0.6rem 0;">Secret Blessing From The Couple</h3>
-            <p style="color: #CBD5E1; font-size: 0.9rem;">Tap or scratch the golden royal seal below to reveal a heartfelt private message!</p>
+            <h3 class="font-serif" style="font-size: 1.75rem; margin: 0.6rem 0;">Secret Blessing From The Couple</h3>
+            <p class="text-muted" style="font-size: 0.9rem;">Tap or scratch the golden royal seal below to reveal a heartfelt private message!</p>
             
             <div id="secret-scratch-box" class="secret-reveal-box">
               <div id="secret-cover-layer" class="secret-reveal-cover">
@@ -379,7 +477,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
                 <div class="font-serif" style="font-size: 1.25rem; color: var(--gold-light); font-style: italic; line-height: 1.6;">
                   “May unending peace, heartfelt laughter, and infinite barakah bless all who pray for us. Thank you for gracing the most sacred milestone of our lives!”
                 </div>
-                <div class="font-cinzel" style="font-size: 0.95rem; color: #FFFFFF; margin-top: 1rem; font-weight: bold; letter-spacing: 0.1em;">
+                <div class="font-cinzel" style="font-size: 0.95rem; margin-top: 1rem; font-weight: bold; letter-spacing: 0.1em;">
                   — WITH ENDLESS LOVE, FAIZAN & MUSHIRA —
                 </div>
               </div>
@@ -389,23 +487,56 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       </section>
 
       <!-- ========================================================================= -->
-      <!-- 7. VENUE & GOOGLE MAPS NAVIGATION -->
+      <!-- 9. VENUE & GOOGLE MAPS NAVIGATION -->
       <!-- ========================================================================= -->
       <section style="padding: 4rem 1.5rem; position: relative; z-index: 5;">
         <div class="container-narrow glass-panel text-center royal-glow-box" style="padding: 3.5rem 2rem; border-radius: var(--radius-xl);">
           <span class="badge badge-gold">Ceremony Location</span>
-          <h2 class="font-serif" style="font-size: 2.25rem; color: #FFF; margin-top: 0.75rem;">${venueName}</h2>
+          <h2 class="font-serif" style="font-size: 2.25rem; margin-top: 0.75rem;">${venueName}</h2>
           <p class="text-muted" style="font-size: 1rem; margin: 0.75rem 0 2rem;">${venueAddress}</p>
           
-          <a href="https://maps.google.com/?q=${encodeURIComponent(venueName + ' ' + venueAddress)}" target="_blank" rel="noopener" class="btn btn-primary-gold btn-lg" style="box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);">
-            <span>Open in Google Maps</span>
-            <span>📍</span>
-          </a>
+          <div class="flex justify-center gap-4 flex-wrap">
+            <a href="https://maps.google.com/?q=${encodeURIComponent(venueName + ' ' + venueAddress)}" target="_blank" rel="noopener" class="btn btn-primary-gold btn-lg" style="box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);">
+              <span>Open in Google Maps</span>
+              <span>📍</span>
+            </a>
+            <a href="${gcalUrl}" target="_blank" rel="noopener" class="btn btn-secondary btn-lg">
+              <span>Add to Calendar</span>
+              <span>📅</span>
+            </a>
+          </div>
         </div>
       </section>
 
       <!-- ========================================================================= -->
-      <!-- 8. ROYAL DRESS CODE & WISHING WELL / SHAGUN -->
+      <!-- 10. GUEST HOSPITALITY & FAQ (DESIGNER SECTION) -->
+      <!-- ========================================================================= -->
+      ${faqs && faqs.length > 0 ? `
+      <section style="padding: 4rem 1.5rem; position: relative; z-index: 5;">
+        <div class="container">
+          <div class="text-center">
+            <span class="badge badge-gold">Guest Concierge</span>
+            <h2 class="font-serif" style="font-size: 2.25rem; margin-top: 0.75rem;">Hospitality & Guest Information</h2>
+            <p class="text-muted" style="font-size: 0.95rem; margin-top: 0.4rem;">Everything you need to know for a seamless and delightful celebration</p>
+          </div>
+
+          <div class="hospitality-faq-grid">
+            ${faqs.map(faq => `
+              <div class="hospitality-faq-card">
+                <div class="faq-q-title">
+                  <span>✨</span>
+                  <span>${faq.q}</span>
+                </div>
+                <div class="faq-a-text">${faq.a}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+      ` : ''}
+
+      <!-- ========================================================================= -->
+      <!-- 11. ROYAL DRESS CODE & WISHING WELL / SHAGUN -->
       <!-- ========================================================================= -->
       <section style="padding: 2rem 1.5rem 5rem; position: relative; z-index: 5;">
         <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2.5rem;">
@@ -413,7 +544,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
           <!-- Dress Code Moodboard -->
           <div class="glass-panel" style="padding: 3rem 2rem; text-align: center; border-radius: var(--radius-xl); border: 1px solid rgba(212,175,55,0.35);">
             <div style="font-size: 2.5rem; margin-bottom: 0.75rem;" class="animate-float-card">👔 👗</div>
-            <h3 class="font-serif" style="font-size: 1.65rem; color: #FFF; margin-bottom: 0.5rem;">Royal Dress Code</h3>
+            <h3 class="font-serif" style="font-size: 1.65rem; margin-bottom: 0.5rem;">Royal Dress Code</h3>
             <p style="color: var(--gold-light); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.5rem;">${dressCode}</p>
             <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6;">${dressCodeNote}</p>
             
@@ -445,10 +576,10 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
           <!-- Wishing Well / Digital Shagun -->
           <div class="glass-panel" style="padding: 3rem 2rem; text-align: center; border-radius: var(--radius-xl); border: 1px solid rgba(212,175,55,0.35);">
             <div style="font-size: 2.5rem; margin-bottom: 0.75rem;" class="animate-float-card">🎁 💌</div>
-            <h3 class="font-serif" style="font-size: 1.65rem; color: #FFF; margin-bottom: 0.5rem;">${wishingWellTitle}</h3>
+            <h3 class="font-serif" style="font-size: 1.65rem; margin-bottom: 0.5rem;">${wishingWellTitle}</h3>
             <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">${wishingWellNote}</p>
             
-            <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--gold-border); padding: 1rem 1.25rem; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 20px rgba(0,0,0,0.6);">
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--gold-border); padding: 1rem 1.25rem; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 20px rgba(0,0,0,0.4);">
               <span style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--gold-light); font-weight: 600;">${wishingWellAccount}</span>
               <button id="copy-bank-btn" class="btn btn-sm btn-gold-outline" style="cursor: pointer;">Copy UPI</button>
             </div>
@@ -462,7 +593,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
       </section>
 
       <!-- ========================================================================= -->
-      <!-- 9. RSVP SECTION ANCHOR -->
+      <!-- 12. RSVP SECTION ANCHOR -->
       <!-- ========================================================================= -->
       <section id="rsvp-section-anchor" style="padding: 4rem 1.5rem 7rem; position: relative; z-index: 5;">
         <div id="rsvp-mount-point"></div>
@@ -474,8 +605,8 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
   // Mount RSVP form
   renderRsvpSection('rsvp-mount-point', invitationData);
 
-  // Initialize Canvas Particles
-  initStarlightParticles();
+  // Initialize Canvas Particles (Golden Dust & Starlight on Pearl White Background)
+  initStarlightParticles(true);
 
   // Multi-Stage Royal Walkthrough Execution Sequence
   const openCurtainsBtn = document.getElementById('open-royal-curtains-btn');
@@ -622,7 +753,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
 }
 
 // Lightweight Ambient Starlight & Golden Dust Canvas Particle System
-function initStarlightParticles() {
+function initStarlightParticles(isLight = false) {
   const canvas = document.getElementById('starlight-canvas');
   if (!canvas) return;
 
@@ -641,7 +772,12 @@ function initStarlightParticles() {
   window.addEventListener('resize', resize);
   resize();
 
-  const colors = [
+  const colors = isLight ? [
+    'rgba(184, 134, 11, ',    // Warm Antique Gold
+    'rgba(212, 175, 55, ',    // Bright Gold
+    'rgba(100, 116, 139, ',   // Slate Dust
+    'rgba(244, 114, 182, ',   // Rose Hint
+  ] : [
     'rgba(212, 175, 55, ',    // Gold
     'rgba(255, 255, 255, ',   // White
     'rgba(253, 164, 175, ',   // Rose / Blood Red Tint
@@ -684,12 +820,12 @@ function initStarlightParticles() {
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.fillStyle = p.color + currentAlpha + ')';
       ctx.shadowBlur = 10;
-      ctx.shadowColor = '#D4AF37';
+      ctx.shadowColor = isLight ? '#B8860B' : '#D4AF37';
       ctx.fill();
     }
 
     animationFrameId = requestAnimationFrame(render);
   }
 
-  render();
 }
+

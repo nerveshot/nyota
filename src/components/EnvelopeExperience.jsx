@@ -7,7 +7,7 @@ import { musicEngine } from '../utils/audioPlayer';
 
 export default function EnvelopeExperience({
   invitationData,
-  themeId = 'emeraldGold',
+  themeId = 'royalRedNavyBlack',
   fontPairingId = 'classicSerif',
   sealId = 'botanical',
   sealColor = '#B88B42',
@@ -18,7 +18,7 @@ export default function EnvelopeExperience({
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  const theme = COLOR_THEMES[themeId] || COLOR_THEMES.emeraldGold;
+  const theme = COLOR_THEMES[themeId] || COLOR_THEMES.royalRedNavyBlack;
   const seal = WAX_SEALS.find(s => s.id === sealId) || WAX_SEALS[0];
 
   const handleOpenEnvelope = () => {

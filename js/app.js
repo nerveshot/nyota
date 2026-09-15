@@ -6,6 +6,7 @@
 import { renderNavbar } from './components/navbar.js';
 import { renderHero } from './components/hero.js';
 import { renderTemplateGallery } from './components/gallery.js';
+import { renderContactSection } from './components/contact.js';
 import { renderStudio } from './components/studio.js';
 import { renderUserDashboard } from './components/dashboard.js';
 import { renderAdminPortal } from './components/admin.js';
@@ -119,6 +120,7 @@ class NyotaApp {
       mainContainer.innerHTML = `
         <div id="landing-hero-slot"></div>
         <div id="landing-gallery-slot"></div>
+        <div id="landing-contact-slot"></div>
         <div id="landing-faq-slot"></div>
         <div id="landing-footer-slot"></div>
       `;
@@ -131,6 +133,8 @@ class NyotaApp {
       renderTemplateGallery('landing-gallery-slot', (template) => {
         this.navigate('studio', template);
       });
+
+      renderContactSection('landing-contact-slot');
 
       this.renderFAQAndFooter();
 

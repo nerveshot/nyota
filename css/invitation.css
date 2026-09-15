@@ -582,7 +582,403 @@
 }
 
 /* --------------------------------------------------------------------------
-   11. RESPONSIVE BREAKPOINTS
+   11. LIGHT THEME & WHITE / IVORY BACKGROUND SUPPORT
+   -------------------------------------------------------------------------- */
+.theme-light {
+  --text-primary: #1A120B;
+  --text-secondary: #4A3E31;
+  --text-muted: #64748B;
+  --text-gold: #9B7029;
+  --gold-border: rgba(184, 134, 11, 0.35);
+  --gold-glow: rgba(184, 134, 11, 0.2);
+  color: #1A120B !important;
+}
+
+.theme-light .mashrabiya-backdrop {
+  background-image: 
+    radial-gradient(rgba(184, 134, 11, 0.22) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  opacity: 0.6;
+}
+
+.theme-light .invitation-card {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAF7F2 45%, #F4ECE1 100%);
+  border: 2px solid rgba(184, 134, 11, 0.55);
+  box-shadow: 0 25px 70px rgba(184, 134, 11, 0.18), 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.theme-light .invitation-card:hover {
+  box-shadow: 0 35px 90px rgba(184, 134, 11, 0.28), 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.theme-light .invitation-arch-border {
+  border-color: rgba(184, 134, 11, 0.4);
+}
+
+.theme-light .invitation-names {
+  color: #1A120B;
+  text-shadow: 0 1px 10px rgba(184, 134, 11, 0.25);
+}
+
+.theme-light .invitation-bismillah {
+  color: #9B7029;
+}
+
+.theme-light .invitation-venue {
+  color: #4A3E31;
+}
+
+.theme-light .glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  box-shadow: 0 18px 40px rgba(184, 134, 11, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+  color: #1A120B;
+}
+
+.theme-light .webpage-hero::before {
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.55) 0%, 
+    rgba(247, 243, 235, 0.85) 50%, 
+    rgba(238, 230, 218, 0.98) 100%
+  );
+}
+
+.theme-light .countdown-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 240, 230, 0.9) 100%);
+  border: 1px solid rgba(184, 134, 11, 0.35);
+  box-shadow: 0 10px 25px rgba(184, 134, 11, 0.12);
+}
+
+.theme-light .countdown-number {
+  color: #1A120B;
+  text-shadow: 0 0 15px rgba(184, 134, 11, 0.35);
+}
+
+.theme-light .countdown-label {
+  color: #8F662C;
+}
+
+.theme-light .itinerary-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.1);
+  color: #1A120B;
+}
+
+.theme-light .itinerary-title {
+  color: #1A120B;
+}
+
+.theme-light .itinerary-desc {
+  color: #4A3E31;
+}
+
+.theme-light .itinerary-node {
+  background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #FAF0E1 60%, #E8D5BA 100%);
+  border-color: #B8860B;
+  box-shadow: 0 0 20px rgba(184, 134, 11, 0.3);
+}
+
+.theme-light .story-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  box-shadow: 0 15px 40px rgba(184, 134, 11, 0.12);
+}
+
+.theme-light .story-title {
+  color: #1A120B;
+}
+
+.theme-light .story-year {
+  background: rgba(184, 134, 11, 0.12);
+  border-color: rgba(184, 134, 11, 0.3);
+  color: #8F662C;
+}
+
+.theme-light .royal-scratch-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF5EE 100%);
+  border: 2px solid rgba(184, 134, 11, 0.45);
+  box-shadow: 0 18px 45px rgba(184, 134, 11, 0.16);
+}
+
+.theme-light .color-swatch-pill {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(184, 134, 11, 0.25);
+  color: #1A120B;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.theme-light .floating-audio-control {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(184, 134, 11, 0.4);
+  color: #8F662C;
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   12. DESIGNER SECTION: FAMILY HOSTS & PARENTAL BLESSINGS
+   -------------------------------------------------------------------------- */
+.family-hosts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.family-host-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 1.75rem;
+  text-align: center;
+  position: relative;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.theme-light .family-host-card {
+  background: #FFFFFF;
+  border-color: rgba(184, 134, 11, 0.3);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.1);
+}
+
+.family-host-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-gold);
+}
+
+.family-host-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 0.75rem;
+}
+
+.theme-light .family-host-badge {
+  color: #8F662C;
+}
+
+.family-host-parents {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  color: #FFFFFF;
+}
+
+.theme-light .family-host-parents {
+  color: #1A120B;
+}
+
+/* --------------------------------------------------------------------------
+   13. DESIGNER SECTION: ADD TO CALENDAR & ACTION PILLS
+   -------------------------------------------------------------------------- */
+.calendar-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin: 2rem auto 0;
+  flex-wrap: wrap;
+}
+
+.calendar-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.theme-light .calendar-pill-btn {
+  background: #FFFFFF;
+  border-color: rgba(184, 134, 11, 0.4);
+  color: #8F662C;
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.12);
+}
+
+.calendar-pill-btn:hover {
+  background: var(--gold-primary);
+  color: #0B0914;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* --------------------------------------------------------------------------
+   14. DESIGNER SECTION: ROYAL PHOTO GALLERY SHOWCASE
+   -------------------------------------------------------------------------- */
+.royal-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-top: 3rem;
+}
+
+.royal-gallery-item {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  height: 280px;
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.4s ease;
+}
+
+.theme-light .royal-gallery-item {
+  border-color: rgba(184, 134, 11, 0.3);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.12);
+}
+
+.royal-gallery-item:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--gold-primary);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), var(--shadow-gold);
+}
+
+.royal-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.royal-gallery-item:hover .royal-gallery-img {
+  transform: scale(1.08);
+}
+
+.royal-gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.88) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.royal-gallery-caption {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: #FFFFFF;
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   15. DESIGNER SECTION: HOSPITALITY & GUEST FAQ ACCORDION
+   -------------------------------------------------------------------------- */
+.hospitality-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+  text-align: left;
+}
+
+.hospitality-faq-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: var(--transition);
+}
+
+.theme-light .hospitality-faq-card {
+  background: #FFFFFF;
+  border-color: rgba(184, 134, 11, 0.3);
+  box-shadow: 0 8px 25px rgba(184, 134, 11, 0.08);
+}
+
+.hospitality-faq-card:hover {
+  border-color: var(--gold-primary);
+  transform: translateY(-3px);
+}
+
+.faq-q-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--gold-light);
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-light .faq-q-title {
+  color: #8F662C;
+}
+
+.faq-a-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.theme-light .faq-a-text {
+  color: #4A3E31;
+}
+
+/* --------------------------------------------------------------------------
+   16. FLOATING QUICK CONTROLS (THEME SWITCHER & WHATSAPP SHARE)
+   -------------------------------------------------------------------------- */
+.floating-quick-dock {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.floating-pill-control {
+  background: linear-gradient(135deg, rgba(28, 6, 18, 0.94) 0%, rgba(11, 27, 61, 0.94) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--gold-border);
+  padding: 0.6rem 1.15rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.25);
+  cursor: pointer;
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.theme-light .floating-pill-control {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(184, 134, 11, 0.4);
+  color: #8F662C;
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.2);
+}
+
+.floating-pill-control:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-gold-lg);
+}
+
+/* --------------------------------------------------------------------------
+   17. RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .countdown-grid {
@@ -615,4 +1011,10 @@
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
   }
+
+  .floating-quick-dock {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
 }
+
