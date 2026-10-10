@@ -1,0 +1,652 @@
+/* ==========================================================================
+   ROYAL MUSLIM WEDDING INVITATION — CUSTOM STYLES
+   Dr. Faizan Salam & Dr. Mushira Shaikh
+   Typography: Cormorant Garamond (Headings) + DM Sans (Body)
+   Theme: Muslim Royal (Emerald Green, Imperial Gold, Velvet Obsidian & Ivory)
+   ========================================================================== */
+
+:root {
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --royal-emerald-deep: #03140D;
+  --royal-emerald-mid: #082A1C;
+  --royal-emerald-bright: #0D4730;
+  --royal-velvet: #19040C;
+  --royal-obsidian: #050308;
+  
+  --gold-primary: #D4AF37;
+  --gold-light: #F5E5C9;
+  --gold-shimmer: #FFF2D1;
+  --gold-dark: #8F662C;
+  --gold-border: rgba(212, 175, 55, 0.38);
+  --gold-glow: rgba(212, 175, 55, 0.3);
+  
+  --glass-bg: rgba(6, 26, 18, 0.72);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(212, 175, 55, 0.32);
+}
+
+/* Force User Font Pairing */
+h1, h2, h3, h4, h5, h6,
+.font-heading,
+.font-cormorant,
+.wedding-title,
+.couple-names,
+.event-title,
+.quote-text {
+  font-family: var(--font-heading) !important;
+}
+
+body, p, span, div, input, button, label,
+.font-sans,
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* --------------------------------------------------------------------------
+   1. SCROLL PROGRESS BAR
+   -------------------------------------------------------------------------- */
+#scroll-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(5, 3, 8, 0.6);
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+}
+
+#scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #D4AF37 0%, #FFF2D1 45%, #F5D38B 70%, #D4AF37 100%);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.95);
+  transition: width 0.08s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   2. FLOATING CULTURAL ELEMENTS (MOON, STARS, PETALS, LANTERNS)
+   -------------------------------------------------------------------------- */
+.floating-elements-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+}
+
+/* Golden Crescent Moon in Top Corner */
+.royal-crescent-moon {
+  position: fixed;
+  top: 1.75rem;
+  right: 2rem;
+  width: 58px;
+  height: 58px;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.75));
+  animation: moonGlow 4s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.75)) drop-shadow(0 0 35px rgba(255, 230, 160, 0.4));
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(255, 225, 120, 1)) drop-shadow(0 0 50px rgba(255, 240, 180, 0.7));
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
+/* Floating Rose Petals */
+.rose-petal {
+  position: absolute;
+  top: -40px;
+  background: radial-gradient(circle at 35% 35%, #F43F5E 0%, #BE123C 60%, #881337 100%);
+  border-radius: 60% 40% 70% 30% / 40% 60% 40% 60%;
+  opacity: 0.75;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+  animation: petalFall linear infinite;
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translateY(-40px) translateX(0) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(105vh) translateX(100px) rotate(360deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. ISLAMIC ARABESQUE & GEOMETRIC ACCENTS
+   -------------------------------------------------------------------------- */
+.islamic-arch-frame {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid var(--gold-border);
+  border-radius: 120px 120px 24px 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(212, 175, 55, 0.2);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.islamic-arch-frame:hover {
+  border-color: rgba(255, 215, 0, 0.75);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85), 0 0 45px rgba(212, 175, 55, 0.45);
+}
+
+.islamic-inner-arch {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 110px 110px 18px 18px;
+  pointer-events: none;
+}
+
+/* Gold Damask & Star Pattern Overlay */
+.royal-mashrabiya-bg {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(rgba(212, 175, 55, 0.16) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(245, 211, 139, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. SECTION ENTRANCE & CARD ANIMATIONS
+   -------------------------------------------------------------------------- */
+.royal-section {
+  position: relative;
+  padding: 6rem 1.5rem;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.2, 0.8, 0.25, 1), transform 1s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.royal-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.royal-glass-card {
+  background: linear-gradient(135deg, rgba(8, 38, 26, 0.82) 0%, rgba(4, 18, 12, 0.88) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid var(--gold-border);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(212, 175, 55, 0.08);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.royal-glass-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212, 175, 55, 0.7);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(212, 175, 55, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   5. INTERACTIVE SCRATCH TO REVEAL RECEPTION DATE
+   -------------------------------------------------------------------------- */
+.scratch-card-wrapper {
+  position: relative;
+  max-width: 620px;
+  margin: 2.5rem auto 0;
+  border-radius: 24px;
+  border: 2px solid var(--gold-primary);
+  background: linear-gradient(145deg, #072216 0%, #03120C 100%);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(212, 175, 55, 0.35);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Romantic Heart Shape Scratch Card (100% Pure Heart Geometry - Zero Square Glow) */
+.heart-scratch-container {
+  position: relative;
+  width: min(440px, 92vw);
+  height: min(410px, 86vw);
+  margin: 2.5rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  filter: none !important; /* Eliminates rectangular container drop-shadow */
+}
+
+.scratch-card-wrapper.heart-shape {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 0 !important;
+  border: none !important;
+  background: radial-gradient(circle at 50% 45%, #0B3624 0%, #04180F 70%, #020C07 100%) !important;
+  overflow: hidden;
+  user-select: none;
+  clip-path: url(#heart-clip) !important;
+  -webkit-clip-path: url(#heart-clip) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+}
+
+.scratch-card-wrapper.heart-shape .scratch-canvas {
+  clip-path: url(#heart-clip) !important;
+  -webkit-clip-path: url(#heart-clip) !important;
+}
+
+.scratch-card-wrapper.heart-shape .scratch-card-reveal-layer {
+  padding: 2.5rem 1.5rem 2rem;
+  max-width: 320px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Event Venue Media & Images */
+.event-venue-media {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1.5px solid var(--gold-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  margin-bottom: 1.5rem;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.event-venue-media:hover {
+  transform: scale(1.02);
+  border-color: var(--gold-primary);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(212, 175, 55, 0.4);
+}
+
+.event-venue-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.event-venue-media:hover .event-venue-img {
+  transform: scale(1.08);
+}
+
+.scratch-card-reveal-layer {
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  cursor: grab;
+  touch-action: none;
+  transition: opacity 0.8s ease;
+}
+
+.scratch-canvas:active {
+  cursor: grabbing;
+}
+
+.scratch-instruction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  animation: pulseGentle 2s infinite ease-in-out;
+}
+
+@keyframes pulseGentle {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 18px rgba(212, 175, 55, 0.5); }
+}
+
+/* --------------------------------------------------------------------------
+   6. SECRET KEYS GAME STYLES
+   -------------------------------------------------------------------------- */
+.secret-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.secret-key-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(8, 38, 26, 0.88) 0%, rgba(3, 16, 11, 0.94) 100%);
+  border: 1.5px solid var(--gold-border);
+  border-radius: 20px;
+  padding: 2.25rem 1.75rem;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.secret-key-card.unlocked {
+  border-color: #10B981;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.15);
+  background: linear-gradient(135deg, rgba(6, 42, 28, 0.95) 0%, rgba(3, 20, 13, 0.98) 100%);
+}
+
+.key-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 1.25rem;
+  background: radial-gradient(circle, #103322 0%, #04140D 100%);
+  border: 1.5px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  transition: all 0.4s ease;
+}
+
+.secret-key-card.unlocked .key-icon-wrapper {
+  background: radial-gradient(circle, #0F5132 0%, #062817 100%);
+  border-color: #34D399;
+  box-shadow: 0 0 25px rgba(52, 211, 153, 0.6);
+  transform: rotate(360deg);
+}
+
+.key-input-group {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.key-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: #FFF;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.key-input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.45);
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.key-submit-btn {
+  background: linear-gradient(135deg, #D4AF37 0%, #B88B42 100%);
+  color: #061810;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 0.9rem;
+}
+
+.key-submit-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+.unlocked-quote-box {
+  display: none;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  animation: fadeInDown 0.6s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.secret-key-card.unlocked .unlocked-quote-box {
+  display: block;
+}
+
+.secret-key-card.unlocked .key-input-group,
+.secret-key-card.unlocked .key-clue-label {
+  display: none;
+}
+
+/* Master All Keys Unlocked Celebration Banner */
+#grand-keymaster-card {
+  display: none;
+  margin-top: 3rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(212, 175, 55, 0.25) 50%, rgba(6, 30, 20, 0.95) 100%);
+  border: 2px solid var(--gold-primary);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.5);
+  animation: glowPulse 3s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(212, 175, 55, 0.4); }
+  to { box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 0 0 50px rgba(255, 215, 0, 0.8); }
+}
+
+/* --------------------------------------------------------------------------
+   7. PROGRAM TIMELINE STYLES
+   -------------------------------------------------------------------------- */
+.program-timeline {
+  position: relative;
+  max-width: 780px;
+  margin: 3.5rem auto 0;
+}
+
+.program-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  width: 3px;
+  background: linear-gradient(180deg, #D4AF37 0%, #10B981 50%, #D4AF37 100%);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.7);
+}
+
+.program-item {
+  position: relative;
+  display: flex;
+  gap: 1.75rem;
+  margin-bottom: 2.75rem;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.program-item:hover {
+  transform: translateX(8px);
+}
+
+.program-node {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #0B442C 0%, #041B12 100%);
+  border: 2px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  z-index: 5;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.program-card {
+  flex: 1;
+  background: linear-gradient(135deg, rgba(8, 38, 26, 0.88) 0%, rgba(4, 18, 12, 0.92) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 18px;
+  padding: 1.6rem 1.85rem;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.program-card:hover {
+  border-color: rgba(212, 175, 55, 0.75);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.35);
+}
+
+.program-time-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.45rem;
+}
+
+/* --------------------------------------------------------------------------
+   8. EVENTS SECTION CARDS
+   -------------------------------------------------------------------------- */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3.5rem;
+}
+
+.event-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(8, 38, 26, 0.9) 0%, rgba(3, 16, 11, 0.95) 100%);
+  border: 2px solid var(--gold-border);
+  border-radius: 24px;
+  padding: 2.75rem 2.25rem;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+  overflow: hidden;
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold-primary);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.4);
+}
+
+.event-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. MOBILE RESPONSIVENESS
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .program-timeline::before {
+    left: 20px;
+  }
+  
+  .program-node {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+  
+  .program-card {
+    padding: 1.25rem 1.25rem;
+  }
+  
+  .royal-section {
+    padding: 4.5rem 1.2rem;
+  }
+  
+  .event-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .scratch-card-reveal-layer {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .royal-crescent-moon {
+    width: 44px;
+    height: 44px;
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+/* Flex and Gap Utility Classes */
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 0.75rem;
+}
+
+.gap-3 {
+  gap: 1.25rem;
+}
+
+.gap-4 {
+  gap: 1.75rem;
+}
