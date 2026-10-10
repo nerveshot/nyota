@@ -675,12 +675,56 @@ body, p, span, div, input, button, label,
   gap: 1.75rem;
 }
 
-/* Mobile Responsiveness for Curtain Opening Card */
+/* Strict Zero Horizontal Overflow & Mobile Viewport Locking */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  position: relative !important;
+}
+
+.starlight-particle-canvas {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.royal-section,
+.webpage-hero,
+.container,
+.islamic-arch-frame,
+footer {
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Curtain Opening Screen Fit */
+.royal-entrance-stage {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100% !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+}
+
 #curtain-center-card {
-  width: min(440px, 92vw) !important;
-  max-width: 92vw !important;
+  width: calc(100vw - 28px) !important;
+  max-width: 400px !important;
   box-sizing: border-box !important;
   margin: 0 auto !important;
+  padding: 0 !important;
+  position: relative;
+  z-index: 45;
 }
 
 #curtain-center-card .invitation-card {
@@ -688,39 +732,92 @@ body, p, span, div, input, button, label,
   max-width: 100% !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+  padding: clamp(1.6rem, 4vh, 2.5rem) clamp(0.75rem, 3vw, 1.4rem) !important;
 }
 
-@media (max-width: 480px) {
-  .royal-entrance-stage {
-    padding: 0.5rem !important;
+#curtain-center-card .invitation-arch-border {
+  position: absolute;
+  inset: 6px !important;
+}
+
+#curtain-center-card .names-stacked-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#curtain-center-card .names-stacked-wrapper span.gold-gradient-text {
+  font-size: clamp(1.1rem, 4.2vw, 1.65rem) !important;
+  max-width: 100% !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  text-align: center !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+#curtain-center-card #open-royal-curtains-btn {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  padding: 0.75rem 1rem !important;
+  font-size: clamp(0.9rem, 2.7vw, 1.05rem) !important;
+}
+
+/* Heart Scratch Card Fit */
+.heart-scratch-container {
+  width: min(340px, 86vw) !important;
+  height: min(315px, 80vw) !important;
+  max-width: 86vw !important;
+  margin: 2rem auto 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.heart-ambient-light {
+  width: min(360px, 86vw) !important;
+  height: min(340px, 80vw) !important;
+}
+
+@media (max-width: 640px) {
+  /* Hide overlapping pullers on mobile so curtain view is 100% clean and unobstructed */
+  .curtain-fabric-left div[style*="top: 40%"],
+  .curtain-fabric-right div[style*="top: 40%"] {
+    display: none !important;
   }
 
-  #curtain-center-card {
-    padding: 0.25rem !important;
-    width: 94vw !important;
-    max-width: 94vw !important;
+  .curtain-jabot-left,
+  .curtain-jabot-right {
+    width: 36px !important;
   }
 
-  #curtain-center-card .invitation-card {
-    padding: 1.65rem 0.85rem !important;
-    border-radius: 75px 75px var(--radius-lg) var(--radius-lg) !important;
+  .curtain-swag {
+    width: 200px !important;
   }
 
-  #curtain-center-card .invitation-arch-border {
-    border-radius: 68px 68px calc(var(--radius-lg) - 6px) calc(var(--radius-lg) - 6px) !important;
+  .calendar-actions-bar {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
   }
 
-  #curtain-center-card .names-stacked-wrapper span.gold-gradient-text {
-    font-size: 1.25rem !important;
-    letter-spacing: 0.02em !important;
+  .calendar-actions-bar a {
+    width: 100% !important;
+    max-width: 320px !important;
+    white-space: normal !important;
+    text-align: center !important;
   }
 
-  #curtain-center-card .invitation-bismillah {
-    font-size: 1.55rem !important;
+  .islamic-arch-frame {
+    padding: 1.75rem 1rem !important;
+    border-radius: 60px 60px 18px 18px !important;
   }
 
-  .heart-scratch-container {
-    width: min(340px, 88vw) !important;
-    height: min(315px, 82vw) !important;
+  .islamic-inner-arch {
+    border-radius: 54px 54px 14px 14px !important;
+    inset: 8px !important;
   }
 }
