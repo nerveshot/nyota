@@ -3,574 +3,770 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dr. Mushira Shaikh & Dr. Faizan Salam — Royal Wedding Invitation</title>
-  <meta name="description" content="You are cordially invited to celebrate the Royal Wedding of Dr. Mushira Shaikh and Dr. Faizan Salam. Nikah at Masjid al-Haram, Mecca and Grand Reception at THE FLORENCE RESORT, Pune." />
+  <title>Nyota — Bespoke Luxury Digital Invitations & Interactive Experiences</title>
+  <meta name="description" content="Experience bespoke royal digital invitations with interactive scratch cards, 3D animated walkthroughs, ambient celebration music, and instant WhatsApp delivery for just 1001 Shagun." />
   
-  <!-- Open Graph / WhatsApp Preview -->
-  <meta property="og:title" content="Dr. Mushira Shaikh & Dr. Faizan Salam — Royal Wedding Invitation" />
-  <meta property="og:description" content="We cordially invite you to celebrate our Nikah in the Holy City of Mecca & Grand Reception at The Florence Resort. Tap to open your royal interactive invitation." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nyota — Bespoke Luxury Digital Invitations" />
+  <meta property="og:description" content="Custom handcrafted digital wedding & event invitations with royal animations, interactive reveal cards, and venue maps for 1001 Shagun." />
   <meta property="og:image" content="/images/muslim-royal-couple.jpg" />
   <meta property="og:type" content="website" />
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 
-  <!-- Royal Muslim Google Fonts: Cormorant Garamond (Headings), DM Sans (Body), Cinzel & Alex Brush -->
+  <!-- Royal Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&display=swap" rel="stylesheet" />
 
-  <!-- Luxury Stylesheets -->
-  <link rel="stylesheet" href="./css/main.css" />
-  <link rel="stylesheet" href="./css/envelope.css" />
-  <link rel="stylesheet" href="./css/invitation.css" />
-  <link rel="stylesheet" href="./css/wedding-royal.css" />
+  <!-- Pure Vanilla CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/envelope.css" />
+  <link rel="stylesheet" href="/css/invitation.css" />
+  <link rel="stylesheet" href="/css/wedding-royal.css" />
+
+  <style>
+    /* Custom Luxury Styles for Nyota Homepage */
+    :root {
+      --home-gold-gradient: linear-gradient(135deg, #FFF0C8 0%, #D4AF37 45%, #F5D38B 70%, #9B7029 100%);
+      --whatsapp-green: #25D366;
+      --whatsapp-green-hover: #20BA56;
+    }
+
+    body {
+      background-color: #06040A;
+      color: #F8FAFC;
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .home-starlight-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .home-mesh-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+                  radial-gradient(circle at 15% 85%, rgba(244, 114, 182, 0.04) 0%, transparent 50%);
+      z-index: 0;
+    }
+
+    /* Fixed Navigation */
+    .home-navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(6, 4, 10, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .home-nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .home-brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .home-logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2A1F0D, #140E05);
+      border: 1.5px solid #D4AF37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .home-brand-text {
+      font-family: var(--font-cinzel);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .home-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .home-nav-link {
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .home-nav-link:hover {
+      color: #F5D38B;
+    }
+
+    /* WhatsApp Action Button */
+    .btn-whatsapp-message {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 18px rgba(37, 211, 102, 0.35);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-whatsapp-message:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.55);
+      color: #FFFFFF;
+    }
+
+    .btn-whatsapp-message-lg {
+      padding: 0.9rem 2.2rem;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 26px rgba(37, 211, 102, 0.45);
+    }
+
+    /* Hero */
+    .hero-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .hero-headline {
+      font-family: var(--font-cormorant);
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      line-height: 1.1;
+      font-weight: 700;
+      margin: 1.25rem 0 1.5rem;
+      color: #FFFFFF;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+      color: #CBD5E1;
+      line-height: 1.7;
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* Showcase Section */
+    .showcase-section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 2.25rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 640px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+      .home-nav-links {
+        display: none;
+      }
+    }
+
+    .nyota-card {
+      background: linear-gradient(145deg, rgba(22, 17, 36, 0.85) 0%, rgba(10, 7, 18, 0.95) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nyota-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(212, 175, 55, 0.7);
+      box-shadow: 0 22px 45px -10px rgba(212, 175, 55, 0.25);
+    }
+
+    .nyota-card-media {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+      background: #0D0917;
+    }
+
+    .nyota-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .nyota-card:hover .nyota-card-media img {
+      transform: scale(1.06);
+    }
+
+    .nyota-card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(6, 4, 10, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #F5D38B;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .nyota-card-body {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .nyota-tag-pill {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: #F5E5C9;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Pricing Card */
+    .pricing-hero-card {
+      background: linear-gradient(145deg, rgba(28, 20, 10, 0.9) 0%, rgba(14, 10, 5, 0.95) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 28px;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .pricing-shagun-tag {
+      font-family: var(--font-cormorant);
+      font-size: clamp(3.2rem, 8vw, 5rem);
+      font-weight: 700;
+      line-height: 1;
+      margin: 1rem 0;
+    }
+
+    /* Floating WhatsApp Pill (Sticky) */
+    .floating-home-whatsapp {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 999;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFF;
+      padding: 0.85rem 1.4rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.45);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .floating-home-whatsapp:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 35px rgba(37, 211, 102, 0.65);
+      color: #FFF;
+    }
+  </style>
 </head>
-<body style="background-color: #03120C; color: #F8FAFC; overflow-x: hidden; position: relative;">
+<body>
 
-  <!-- Scroll Reading Progress Bar -->
-  <div id="scroll-progress-container">
-    <div id="scroll-progress-bar"></div>
-  </div>
+  <!-- Ambient Background Mesh & Starlight Canvas -->
+  <div class="home-mesh-bg"></div>
+  <canvas id="home-starlight-canvas" class="home-starlight-canvas"></canvas>
 
-  <!-- Background Ambient Starlight Canvas & Islamic Geometric Backdrop -->
-  <canvas id="starlight-canvas" class="starlight-particle-canvas"></canvas>
-  <div class="royal-mashrabiya-bg"></div>
+  <!-- Sticky Navbar -->
+  <header class="home-navbar">
+    <div class="home-nav-container">
+      <a href="/" class="home-brand-logo">
+        <div class="home-logo-badge">👑</div>
+        <span class="home-brand-text gold-gradient-text">NYOTA</span>
+      </a>
 
-  <!-- Floating Cultural Decorative Elements -->
-  <div id="floating-petals-container" class="floating-elements-container"></div>
-  
-  <!-- Floating Golden Crescent Moon & Star -->
-  <div class="royal-crescent-moon" title="Blessed Union">
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FFF2D1" />
-          <stop offset="50%" stop-color="#D4AF37" />
-          <stop offset="100%" stop-color="#8F662C" />
-        </linearGradient>
-      </defs>
-      <path d="M50 10C27.9 10 10 27.9 10 50C10 72.1 27.9 90 50 90C59.5 90 68.3 86.7 75.2 81.1C55.4 79.4 39.8 62.9 39.8 42.7C39.8 29.8 46.2 18.4 56.1 11.5C54.1 10.5 52.1 10 50 10Z" fill="url(#moonGrad)" />
-      <polygon points="76,22 79,30 87,30 81,35 83,43 76,38 69,43 71,35 65,30 73,30" fill="url(#moonGrad)" />
-    </svg>
-  </div>
+      <nav>
+        <ul class="home-nav-links">
+          <li><a href="#showcase" class="home-nav-link">Created Nyotas</a></li>
+          <li><a href="#pricing" class="home-nav-link">Pricing (1001 Shagun)</a></li>
+          <li><a href="#features" class="home-nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="home-nav-link">How It Works</a></li>
+        </ul>
+      </nav>
 
-  <!-- ========================================================================= -->
-  <!-- 1. MULTI-STAGE ROYAL CURTAIN & PALETTE WALKTHROUGH GATEWAY (ARABIC TEMPLATE OPENING) -->
-  <!-- ========================================================================= -->
-  <div id="royal-curtain-gateway" class="royal-entrance-stage">
-    
-    <!-- Walkthrough Backdrops Container -->
-    <div class="walkthrough-backdrops-container">
-      
-      <!-- Scene 1: Grand Crystal Chandelier Palace Hallway -->
-      <div class="chandelier-hallway-wrapper">
-        <img src="/images/royal-chandelier-hallway.jpg" alt="Grand Chandelier Hallway" class="chandelier-hallway-img" />
-        <div class="chandelier-lighting-glow"></div>
-      </div>
-
-      <!-- Scene 2: Main Grand Wedding Arena Stage -->
-      <div class="wedding-arena-wrapper">
-        <img src="/images/royal-main-wedding-arena.jpg" alt="Royal Wedding Arena Stage" class="wedding-arena-img" />
-      </div>
-
-      <!-- Rising Golden Arabic Bismillah Calligraphy & High-Contrast Welcome Plaque -->
-      <div id="rising-bismillah-slot" class="bismillah-rising-hero hidden">
-        <div class="royal-welcome-plaque">
-          <div class="invitation-bismillah font-cormorant gold-gradient-text" style="font-size: 3.2rem; text-shadow: 0 0 35px rgba(212,175,55,1); margin-bottom: 0.35rem;">
-            بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-          </div>
-          <div class="royal-welcome-badge">
-            <span>✨</span>
-            <span>Welcome to the Blessed Royal Celebration</span>
-            <span>✨</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Layer 2 (Inner): Sapphire Blue Silk Curtains in Chandelier Hallway (Opens in Tieback Style) -->
-    <div class="hallway-curtains-stage2">
-      <div class="stage2-curtain-left">
-        <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
-        <div style="position: absolute; top: 0; bottom: 0; right: 0; width: 4px; background: linear-gradient(180deg, #F5D38B, #D4AF37); box-shadow: 0 0 12px rgba(212,175,55,0.8);"></div>
-      </div>
-      <div class="stage2-curtain-right">
-        <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
-        <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 4px; background: linear-gradient(180deg, #F5D38B, #D4AF37); box-shadow: 0 0 12px rgba(212,175,55,0.8);"></div>
-      </div>
-    </div>
-
-    <!-- Layer 1 (Outer): Royal Crimson Heavy Velvet Curtains with Bride & Groom Pullers -->
-    <div class="curtain-fabric-left">
-      <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
-      <div class="gold-fringe-pattern" style="position: absolute; top: 0; bottom: 0; right: 0; width: 8px; box-shadow: 0 0 15px rgba(212,175,55,0.8);"></div>
-
-      <!-- Cartoon Bride Pulling Golden Braided Rope -->
-      <div style="position: absolute; top: 40%; right: 12px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 35; pointer-events: none;">
-        <div style="width: 5px; height: 80px; background: linear-gradient(180deg, #F5D38B, #B88B42); box-shadow: var(--shadow-gold); border-radius: 999px;"></div>
-        <div id="bride-puller" style="width: 140px; height: 140px; transition: transform 0.4s ease;">
-          <img src="/images/cartoon-bride-pulling.png" alt="Bride Pulling Curtain" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));" />
-        </div>
-        <div style="width: 16px; height: 36px; border-radius: 0 0 8px 8px; background: linear-gradient(180deg, #D4AF37, #8F662C); box-shadow: var(--shadow-gold);"></div>
-      </div>
-    </div>
-
-    <div class="curtain-fabric-right">
-      <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
-      <div class="gold-fringe-pattern" style="position: absolute; top: 0; bottom: 0; left: 0; width: 8px; box-shadow: 0 0 15px rgba(212,175,55,0.8);"></div>
-
-      <!-- Cartoon Groom Pulling Golden Braided Rope -->
-      <div style="position: absolute; top: 40%; left: 12px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 35; pointer-events: none;">
-        <div style="width: 5px; height: 80px; background: linear-gradient(180deg, #F5D38B, #B88B42); box-shadow: var(--shadow-gold); border-radius: 999px;"></div>
-        <div id="groom-puller" style="width: 140px; height: 140px; transition: transform 0.4s ease;">
-          <img src="/images/cartoon-groom-pulling.png" alt="Groom Pulling Curtain" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));" />
-        </div>
-        <div style="width: 16px; height: 36px; border-radius: 0 0 8px 8px; background: linear-gradient(180deg, #D4AF37, #8F662C); box-shadow: var(--shadow-gold);"></div>
-      </div>
-    </div>
-
-    <!-- Top Austrian Pelmet Valance -->
-    <div class="curtain-valance-box">
-      <div class="curtain-valance"></div>
-      <div class="curtain-swag-row">
-        <div class="curtain-swag" style="width: 260px; height: 50px; border-radius: 0 0 100px 100px; border-bottom: 2px solid #D4AF37; display: flex; align-items: center; justify-content: center;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: #1A030A; border: 1.5px solid #D4AF37; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #F5D38B; box-shadow: var(--shadow-gold);">
-            👑
-          </div>
-        </div>
-      </div>
-      <div class="curtain-jabot-left"></div>
-      <div class="curtain-jabot-right"></div>
-    </div>
-
-    <!-- Center Gateway Preview Card -->
-    <div id="curtain-center-card" style="position: relative; z-index: 45; width: 100%; max-width: 460px; padding: 1.5rem; text-align: center; transition: all 1s ease;">
-      
-      <!-- Arabic Calligraphy -->
-      <div class="invitation-bismillah font-cormorant animate-bismillah-radiance" style="font-size: 2.1rem; margin-bottom: 1rem; color: #F5D38B;">
-        بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-      </div>
-
-      <!-- Moorish Arch Preview Card -->
-      <div class="invitation-card royal-glow-box" style="padding: 2.75rem 1.75rem; background: #0A1C14; border-color: rgba(212, 175, 55, 0.5);">
-        <div class="invitation-arch-border"></div>
-
-        <!-- Royal Monogram Crest -->
-        <div style="width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1.25rem; background: linear-gradient(135deg, #D4AF37, #0B442C, #05140D); padding: 2px; box-shadow: 0 0 25px rgba(212,175,55,0.7); display: flex; align-items: center; justify-content: center;">
-          <div style="width: 100%; height: 100%; border-radius: 50%; background: #04120C; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <span style="font-size: 0.8rem;" class="animate-crown-pulse">👑</span>
-            <span class="font-cinzel" style="font-size: 0.85rem; font-weight: bold; color: #F5E5C9;">FS • MS</span>
-          </div>
-        </div>
-
-        <div style="font-family: var(--font-body); font-size: 0.72rem; color: #F5D38B; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600;">
-          DAWAT-E-KHAS • ROYAL NIKAH
-        </div>
-
-        <div class="names-stacked-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; margin: 0.75rem 0;">
-          <span class="gold-gradient-text font-cormorant" style="font-size: 1.9rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">DR. FAIZAN SALAM</span>
-          <span class="font-script gold-gradient-text" style="font-size: 1.75rem; margin: 0.1rem 0; opacity: 0.95; line-height: 1;">&</span>
-          <span class="gold-gradient-text font-cormorant" style="font-size: 1.9rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">DR. MUSHIRA SHAIKH</span>
-        </div>
-
-        <p class="font-cormorant text-muted" style="font-size: 1.05rem; font-style: italic; line-height: 1.6; margin: 1.15rem 0 1.75rem; border-top: 1px solid rgba(212,175,55,0.3); padding-top: 1rem; color: #E2E8F0;">
-          “And among His signs is that He created for you mates from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.”
-          <br><span style="font-size: 0.85rem; color: #F5D38B; font-style: normal; letter-spacing: 0.1em;">— Surah Ar-Rum (30:21)</span>
-        </p>
-
-        <!-- Grand Open Button -->
-        <button id="open-royal-curtains-btn" class="btn btn-primary-gold btn-block btn-lg" style="font-size: 1.1rem; box-shadow: 0 0 35px rgba(212, 175, 55, 0.8); cursor: pointer; padding: 0.85rem 1.5rem;">
-          <span>Open Royal Invitation</span>
-          <span>✨</span>
-        </button>
-
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.45rem; font-size: 0.8rem; color: var(--gold-light); margin-top: 0.95rem;">
-          <span>🎵</span>
-          <span>Curtains unfold & walk through the royal palace</span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- Floating Audio Controller with Animated Vinyl & Equalizer -->
-  <div id="floating-music-btn" class="floating-audio-control" style="background: linear-gradient(135deg, rgba(7, 34, 22, 0.92) 0%, rgba(3, 14, 9, 0.92) 100%);">
-    <div id="music-vinyl-disc" class="vinyl-disc-mini"></div>
-    <div id="music-sound-bars" class="sound-bars-container">
-      <div class="sound-bar"></div>
-      <div class="sound-bar"></div>
-      <div class="sound-bar"></div>
-      <div class="sound-bar"></div>
-    </div>
-    <span id="music-text-state">Alfaaz (Vocals Only) 🎵</span>
-  </div>
-
-  <!-- Floating WhatsApp Share Pill Dock -->
-  <div class="floating-quick-dock">
-    <a href="#" id="whatsapp-share-btn" class="floating-pill-control" style="background: linear-gradient(135deg, #10B981, #059669); color: #FFF; border: none; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" title="Share Invitation on WhatsApp">
-      <span>💬 Share on WhatsApp</span>
-    </a>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- 2. HERO SECTION (NAMES + DATE) -->
-  <!-- ========================================================================= -->
-  <header id="invitation-hero" class="webpage-hero" style="background-image: url('/images/grand-mosque-entrance.jpg'); min-height: 100vh; position: relative;">
-    <div class="webpage-hero-content" style="max-width: 920px; padding: 2rem 1rem;">
-      
-      <!-- Bismillah Radiance -->
-      <div class="invitation-bismillah font-cormorant animate-bismillah-radiance gold-gradient-text" style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 0.5rem; text-shadow: 0 0 35px rgba(212,175,55,0.9);">
-        بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-      </div>
-
-      <div style="font-family: var(--font-body); font-size: 0.8rem; color: #F5D38B; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 600;">
-        IN THE NAME OF ALLAH, THE MOST GRACIOUS, THE MOST MERCIFUL
-      </div>
-
-      <div class="badge badge-gold animate-float-card" style="margin-bottom: 1.5rem; font-size: 0.82rem; letter-spacing: 0.25em; background: rgba(212,175,55,0.18);">
-        ✨ TOGETHER WITH THEIR BELOVED FAMILIES ✨
-      </div>
-      
-      <p style="font-size: 1.2rem; color: var(--gold-light); margin-bottom: 1rem; font-family: var(--font-cormorant); font-style: italic;">
-        Request the honor of your presence and blessings at the sacred wedding celebration of
-      </p>
-      
-      <!-- Royal Couple Names Stacked with Parents Names -->
-      <div class="names-stacked-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin: 1.5rem 0;">
-        <h1 class="gold-gradient-text font-cormorant" style="font-size: clamp(2.3rem, 6.5vw, 3.8rem); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 0 30px rgba(212, 175, 55, 0.65); line-height: 1.15; margin: 0;">
-          DR. FAIZAN SALAM
-        </h1>
-        <div style="font-family: var(--font-cormorant); font-size: clamp(1.1rem, 3.2vw, 1.4rem); color: #F5D38B; letter-spacing: 0.04em; font-style: italic; margin-top: 0.35rem; margin-bottom: 0.85rem;">
-          Son of Abdul Salam &amp; Shamim Bano
-        </div>
-
-        <span class="font-script gold-gradient-text" style="font-size: clamp(1.8rem, 4.5vw, 2.8rem); margin: 0.1rem 0; opacity: 0.95; line-height: 1;">&amp;</span>
-
-        <h1 class="gold-gradient-text font-cormorant" style="font-size: clamp(2.3rem, 6.5vw, 3.8rem); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 0 30px rgba(212, 175, 55, 0.65); line-height: 1.15; margin: 0.6rem 0 0;">
-          DR. MUSHIRA SHAIKH
-        </h1>
-        <div style="font-family: var(--font-cormorant); font-size: clamp(1.1rem, 3.2vw, 1.4rem); color: #F5D38B; letter-spacing: 0.04em; font-style: italic; margin-top: 0.35rem;">
-          Daughter of Mohd. Munaf Shaikh &amp; Shabana Begum
-        </div>
-      </div>
-
-      <!-- Venue Highlight -->
-      <div style="font-size: clamp(1.05rem, 3vw, 1.3rem); font-family: var(--font-body); margin-top: 1.5rem; font-weight: 500; color: #FFF; display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
-        <span>📍 Masjid al-Haram (Great Mosque of Mecca)</span>
-        <span style="color: var(--gold-primary);">•</span>
-        <span>Mecca, Saudi Arabia</span>
-      </div>
-
-      <!-- Quick Action Buttons -->
-      <div class="calendar-actions-bar" style="margin-top: 2.25rem;">
-        <a href="#events-section" class="btn btn-primary-gold btn-lg" style="box-shadow: 0 0 30px rgba(212, 175, 55, 0.7);">
-          <span>View Events</span>
-          <span>📜</span>
-        </a>
-        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reception:+Dr+Faizan+Salam+%26+Dr+Mushira+Shaikh&dates=20261225T133000Z/20261225T183000Z&location=THE+FLORENCE+RESORT&details=Grand+Wedding+Reception+at+THE+FLORENCE+RESORT" target="_blank" rel="noopener" class="calendar-pill-btn" title="Add event to Google Calendar">
-          <span>📅 Add to Google Calendar</span>
+      <div>
+        <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message">
+          <span>💬</span>
+          <span>Message</span>
         </a>
       </div>
-
     </div>
   </header>
 
-  <!-- ========================================================================= -->
-  <!-- 3. SCRATCH TO REVEAL SECTION (PLACED JUST BELOW THE FIRST SECTION) -->
-  <!-- ========================================================================= -->
-  <section id="scratch-section" class="royal-section" style="padding-top: 4.5rem; padding-bottom: 4rem;">
-    <div class="container text-center">
-      <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.2rem, 5.5vw, 3.2rem); margin-top: 0.75rem; font-weight: 700;">
-        Scratch to reveal
-      </h2>
-      <p style="color: var(--gold-light); font-size: clamp(0.95rem, 2.5vw, 1.1rem); max-width: 620px; margin: 0.5rem auto 0; font-family: var(--font-cormorant); font-style: italic;">
-        Rub away the shimmering imperial gold foil with your finger or mouse to reveal the evening celebration details
+  <main>
+    <!-- ========================================================================= -->
+    <!-- HERO SECTION -->
+    <!-- ========================================================================= -->
+    <section class="hero-wrapper">
+      <div class="badge badge-gold" style="margin-bottom: 1.25rem; font-size: 0.85rem; letter-spacing: 0.2em; padding: 0.4rem 1.25rem;">
+        <span>✨</span>
+        <span>Bespoke Luxury Digital Invitations</span>
+        <span>✨</span>
+      </div>
+
+      <h1 class="hero-headline">
+        Turn Your Celebrations Into A <br />
+        <span class="gold-gradient-text">Royal Digital Memory</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Say goodbye to ordinary PDFs and generic photo invites. Nyota crafts bespoke, animated, interactive luxury single-page invitation suites for weddings, receptions, and milestones — personalized with royal walkthroughs, custom music, interactive scratch cards, and venue directions.
       </p>
 
-      <!-- SVG clipPath definition for Heart Shape -->
-      <svg width="0" height="0" style="position: absolute; pointer-events: none;">
-        <defs>
-          <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
-            <path d="M 0.5, 0.96 C 0.48, 0.94 0.05, 0.65 0.02, 0.35 C -0.01, 0.15 0.14, 0.02 0.32, 0.02 C 0.41, 0.02 0.47, 0.08 0.5, 0.16 C 0.53, 0.08 0.59, 0.02 0.68, 0.02 C 0.86, 0.02 1.01, 0.15 0.98, 0.35 C 0.95, 0.65 0.52, 0.94 0.5, 0.96 Z" />
-          </clipPath>
-        </defs>
-      </svg>
-
-      <!-- Heart Scratch Container (100% Pure Heart Geometry - Zero Square Glow) -->
-      <div class="heart-scratch-container">
-        <!-- Pure Heart Golden Aura SVG (Emits pure heart-shaped light) -->
-        <svg class="heart-border-svg" viewBox="0 0 100 100" style="position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); pointer-events: none; z-index: 5;">
-          <defs>
-            <filter id="heart-glow-pure" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3.5" result="glow" />
-              <feMerge>
-                <feMergeNode in="glow" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <linearGradient id="gold-heart-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#F5D38B" />
-              <stop offset="50%" stop-color="#D4AF37" />
-              <stop offset="100%" stop-color="#8F662C" />
-            </linearGradient>
-          </defs>
-          <path d="M 50, 96 C 48, 94 5, 65 2, 35 C -1, 15 14, 2 32, 2 C 41, 2 47, 8 50, 16 C 53, 8 59, 2 68, 2 C 86, 2 101, 15 98, 35 C 95, 65 52, 94 50, 96 Z"
-                fill="rgba(16, 185, 129, 0.05)"
-                stroke="url(#gold-heart-stroke)"
-                stroke-width="2.5"
-                filter="url(#heart-glow-pure)" />
-        </svg>
-
-        <!-- Scratch Card Component (Heart Shape) -->
-        <div id="scratch-card-wrapper" class="scratch-card-wrapper heart-shape">
-          
-          <!-- Underlying Revealed Card (Leaving only the Date 25th Dec 2026) -->
-          <div class="scratch-card-reveal-layer" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 2rem 1.5rem;">
-            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">💖 👑 ✨</div>
-            
-            <div style="font-family: var(--font-body); font-size: clamp(0.75rem, 2vw, 0.85rem); letter-spacing: 0.22em; color: #F5D38B; text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem;">
-              SAVE THE DATE
-            </div>
-
-            <h3 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 2.9rem); font-weight: 700; margin: 0.2rem 0; line-height: 1.15;">
-              25th Dec 2026
-            </h3>
-          </div>
-
-          <!-- Canvas Scratch Foil Layer -->
-          <canvas id="reception-scratch-canvas" class="scratch-canvas"></canvas>
-
-        </div>
-      </div>
-
-      <div class="text-center" style="margin-top: 1.5rem;">
-        <div id="scratch-instruction-pill" class="scratch-instruction-pill">
-          <span>💖 Scratch to reveal</span>
-        </div>
-        <div style="margin-top: 0.85rem;">
-          <button id="instant-reveal-btn" class="btn btn-sm btn-gold-outline" style="font-size: 0.78rem;">
-            <span>Tap To Reveal Instantly ✨</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 4. LIVE COUNTDOWN TIMER SECTION -->
-  <!-- ========================================================================= -->
-  <section id="countdown-section" class="royal-section" style="padding-top: 4rem; padding-bottom: 4rem;">
-    <div class="container text-center">
-      <span class="badge badge-gold">The Auspicious Moment</span>
-      <h2 class="font-cormorant gold-gradient-text" style="font-size: 3rem; margin-top: 0.75rem; font-weight: 700;">
-        Counting Down To Forever
-      </h2>
-      <p style="font-size: 1.1rem; color: var(--gold-light); font-style: italic; max-width: 640px; margin: 0.5rem auto 0; font-family: var(--font-cormorant);">
-        “Until we say Qubool Hai and begin our sacred journey under the blessed skies of Mecca 🕊️”
-      </p>
-
-      <!-- Live Countdown Grid -->
-      <div class="countdown-grid" style="margin-top: 2.5rem;">
-        <div class="countdown-box" style="background: linear-gradient(135deg, rgba(13, 56, 38, 0.6) 0%, rgba(4, 18, 12, 0.8) 100%);">
-          <div class="countdown-number" id="cd-days">--</div>
-          <div class="countdown-label">Days</div>
-        </div>
-        <div class="countdown-box" style="background: linear-gradient(135deg, rgba(13, 56, 38, 0.6) 0%, rgba(4, 18, 12, 0.8) 100%);">
-          <div class="countdown-number" id="cd-hours">--</div>
-          <div class="countdown-label">Hours</div>
-        </div>
-        <div class="countdown-box" style="background: linear-gradient(135deg, rgba(13, 56, 38, 0.6) 0%, rgba(4, 18, 12, 0.8) 100%);">
-          <div class="countdown-number" id="cd-minutes">--</div>
-          <div class="countdown-label">Minutes</div>
-        </div>
-        <div class="countdown-box" style="background: linear-gradient(135deg, rgba(13, 56, 38, 0.6) 0%, rgba(4, 18, 12, 0.8) 100%);">
-          <div class="countdown-number" id="cd-seconds">--</div>
-          <div class="countdown-label">Seconds</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 4. EVENTS SECTION (EVENT 1: NIKAH & EVENT 2: RECEPTION) -->
-  <!-- ========================================================================= -->
-  <section id="events-section" class="royal-section">
-    <div class="container">
-      <div class="text-center">
-        <span class="badge badge-gold">Sacred Occasions</span>
-        <h2 class="font-cormorant gold-gradient-text" style="font-size: 3.2rem; margin-top: 0.75rem; font-weight: 700;">
-          The Wedding Celebrations
-        </h2>
-        <p style="color: var(--gold-light); font-size: 1.1rem; max-width: 600px; margin: 0.5rem auto 0; font-family: var(--font-cormorant); font-style: italic;">
-          Join us in person and in prayers as we celebrate our holy union across two cherished gatherings
+      <!-- Primary Intent Callout Box -->
+      <div class="glass-panel" style="max-width: 680px; margin: 0 auto 2.5rem; padding: 1.75rem 2rem; border-color: rgba(212, 175, 55, 0.45); background: rgba(24, 18, 36, 0.7);">
+        <p style="font-family: var(--font-cormorant); font-size: clamp(1.2rem, 3.2vw, 1.55rem); color: #F5E5C9; margin-bottom: 1.25rem; line-height: 1.4; font-style: italic;">
+          “If you want a Nyota customised for your event, contact us directly and let's bring your dream invitation to life.”
         </p>
-      </div>
-
-      <div class="events-grid">
         
-        <!-- EVENT 1: WEDDING CEREMONY / HOLY NIKAH -->
-        <div class="event-card islamic-arch-frame">
-          <div class="islamic-inner-arch"></div>
-          <div class="event-badge-pill">
-            <span>🕋</span>
-            <span>Event 1: Holy Nikah Ceremony</span>
-          </div>
-
-          <h3 class="font-cormorant" style="font-size: 2.2rem; color: #FFF; margin-bottom: 1.25rem; font-weight: 700;">
-            Wedding Ceremony
-          </h3>
-
-          <!-- Masjid al-Haram Image -->
-          <div class="event-venue-media">
-            <img src="/images/masjid-al-haram.jpg" alt="Masjid al-Haram, Mecca" class="event-venue-img" />
-          </div>
-
-          <div style="padding: 1.5rem 1.25rem; background: rgba(0,0,0,0.35); border-radius: 16px; border: 1px solid rgba(212,175,55,0.25);">
-            <div style="font-size: 1.2rem; font-weight: 600; color: #FFF;">
-              📍 Masjid al-Haram (Great Mosque of Mecca)
-            </div>
-            <div style="font-size: 0.95rem; color: var(--gold-light); margin-top: 0.35rem;">
-              Mecca, Saudi Arabia
-            </div>
-          </div>
-        </div>
-
-        <!-- EVENT 2: GRAND RECEPTION -->
-        <div class="event-card islamic-arch-frame">
-          <div class="islamic-inner-arch"></div>
-          <div class="event-badge-pill" style="border-color: #34D399; background: rgba(16, 185, 129, 0.2);">
-            <span>👑</span>
-            <span>Event 2: Grand Royal Reception</span>
-          </div>
-
-          <h3 class="font-cormorant" style="font-size: 2.2rem; color: #FFF; margin-bottom: 0.75rem; font-weight: 700;">
-            Grand Reception
-          </h3>
-
-          <div style="font-family: var(--font-cormorant); font-size: 1.45rem; color: #F5D38B; font-weight: 600; margin-bottom: 0.5rem;">
-            📅 Friday, 25th December 2026
-          </div>
-
-          <div style="font-size: 0.95rem; color: #34D399; font-weight: 600; margin-bottom: 1.25rem;">
-            ⏰ Time: 7:00 PM Onwards
-          </div>
-
-          <!-- The Florence Resort Image -->
-          <div class="event-venue-media">
-            <img src="/images/florence-resort.jpg" alt="The Florence Resort" class="event-venue-img" />
-          </div>
-
-          <div style="padding: 1.5rem 1.25rem; background: rgba(0,0,0,0.35); border-radius: 16px; border: 1px solid rgba(212,175,55,0.25); margin-bottom: 1.75rem;">
-            <div style="font-size: 1.2rem; font-weight: 700; color: #FFF;">
-              📍 THE FLORENCE RESORT
-            </div>
-            <div style="font-size: 0.95rem; color: var(--gold-light); margin-top: 0.35rem;">
-              Niwaru Rd, Jhotwara, Jaipur, Rajasthan
-            </div>
-          </div>
-
-          <div class="flex justify-center" style="display: flex; justify-content: center; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-top: 1.5rem;">
-            <!-- DIRECT VENUE GOOGLE MAPS LINK AS SPECIFIED -->
-            <a href="https://www.google.com/maps/dir//THE+FLORENCE+RESORT,+Near+31+no+bus+stand,+Niwaru+Rd,+Jhotwara,+Jaipur,+Rajasthan+302012/@26.8828672,75.792384,11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x396db3b8c3d64687:0x40707ccf38fe79d4!2m2!1d75.7331386!2d26.9532944?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" class="btn btn-primary-gold btn-sm" style="box-shadow: 0 0 20px rgba(212,175,55,0.6); margin: 0.35rem;">
-              <span>Open in Google Maps 📍</span>
-            </a>
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Reception:+Dr+Faizan+Salam+%26+Dr+Mushira+Shaikh&dates=20261225T133000Z/20261225T183000Z&location=THE+FLORENCE+RESORT&details=Grand+Wedding+Reception+at+THE+FLORENCE+RESORT" target="_blank" rel="noopener" class="btn btn-gold-outline btn-sm" style="margin: 0.35rem;">
-              <span>Add to Calendar 📅</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 5. FOOTER & COUPLE'S MESSAGE SECTION -->
-  <!-- ========================================================================= -->
-  <footer id="footer-section" class="royal-section" style="padding-top: 5rem; padding-bottom: 6rem; background: linear-gradient(180deg, transparent 0%, #020B07 100%);">
-    <div class="container text-center">
-      
-      <!-- Monogram -->
-      <div style="width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #D4AF37, #10B981, #04160E); padding: 2px; box-shadow: 0 0 35px rgba(212,175,55,0.7); display: flex; align-items: center; justify-content: center;">
-        <div style="width: 100%; height: 100%; border-radius: 50%; background: #03120C; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <span style="font-size: 1.1rem;">👑</span>
-          <span class="font-cinzel" style="font-size: 0.95rem; font-weight: 700; color: #F5E5C9;">FS & MS</span>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+          <a href="#showcase" class="btn btn-secondary btn-lg" style="border-radius: 9999px;">
+            <span>Explore Created Nyotas ↓</span>
+          </a>
         </div>
       </div>
 
-      <span class="badge badge-gold">Heartfelt Note</span>
-      <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.2rem, 5.5vw, 3.2rem); margin-top: 0.75rem; font-weight: 700;">
-        Couple's Message To Guests
-      </h2>
+      <!-- Quick Trust Indicators -->
+      <div style="display: flex; justify-content: center; gap: clamp(1.5rem, 5vw, 4rem); flex-wrap: wrap; margin-top: 2rem; color: #94A3B8; font-size: 0.9rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">👑</span> Royal Custom Themes
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">🎵</span> Curated Background Music
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">💖</span> Interactive Scratch Reveal
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #25D366;">⚡</span> WhatsApp Ready Delivery
+        </div>
+      </div>
+    </section>
 
-      <!-- Exact User Quote with Stacked Names & Parents -->
-      <div class="islamic-arch-frame" style="max-width: 760px; margin: 2rem auto; padding: 3rem 2.25rem;">
-        <div class="islamic-inner-arch"></div>
-        <p class="font-cormorant" style="font-size: clamp(1.2rem, 3.5vw, 1.65rem); font-style: italic; line-height: 1.8; color: #FFF; text-shadow: 0 2px 15px rgba(0,0,0,0.8);">
-          “We are beyond grateful to have you as part of our special day. Your presence turns this celebration into a lifelong memory. Come, eat, dance, and bless us as we begin our forever together!”
+    <!-- ========================================================================= -->
+    <!-- PRICING SECTION: 1001 SHAGUN -->
+    <!-- ========================================================================= -->
+    <section id="pricing" style="position: relative; z-index: 1; padding: 4.5rem 1.5rem; background: linear-gradient(180deg, transparent 0%, rgba(20, 14, 30, 0.7) 50%, transparent 100%);">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <span class="badge badge-gold">Transparent & Auspicious</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          Simple, Auspicious Pricing
+        </h2>
+        <p class="text-secondary" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem;">
+          No confusing tiers, no hidden subscriptions. One fixed auspicious shagun amount for your entire handcrafted invitation suite.
         </p>
 
-        <!-- Stacked Names with Parents: Line 1 Bride, Line 2 &, Line 3 Groom -->
-        <div style="margin-top: 2rem; border-top: 1px solid rgba(212,175,55,0.3); padding-top: 1.75rem; text-align: center;">
-          <div class="font-cormorant gold-gradient-text" style="font-size: clamp(1.8rem, 5vw, 2.3rem); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.2;">
-            Dr. Mushira Shaikh
-          </div>
-          <div style="font-family: var(--font-cormorant); font-size: clamp(1.05rem, 2.8vw, 1.25rem); color: #F5D38B; font-style: italic; margin-top: 0.25rem;">
-            Daughter of Mohd. Munaf Shaikh &amp; Shabana Begum
+        <!-- Pricing Highlight Card -->
+        <div class="pricing-hero-card">
+          <div style="display: inline-block; padding: 0.4rem 1.25rem; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 9999px; color: #F5D38B; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+            👑 Complete Luxury Suite
           </div>
 
-          <div class="font-script gold-gradient-text" style="font-size: clamp(1.5rem, 4vw, 2rem); margin: 0.4rem 0; opacity: 0.95; line-height: 1;">
-            &amp;
+          <!-- Exact Pricing Text Requested -->
+          <div class="pricing-shagun-tag gold-gradient-text">
+            1001 Shagun
           </div>
 
-          <div class="font-cormorant gold-gradient-text" style="font-size: clamp(1.8rem, 5vw, 2.3rem); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.2;">
-            Dr. Faizan Salam
-          </div>
-          <div style="font-family: var(--font-cormorant); font-size: clamp(1.05rem, 2.8vw, 1.25rem); color: #F5D38B; font-style: italic; margin-top: 0.25rem;">
-            Son of Abdul Salam &amp; Shamim Bano
+          <div style="font-size: 1.15rem; color: #F5E5C9; font-family: var(--font-cormorant); font-style: italic; margin-bottom: 2rem;">
+            ₹1001 Only • Complete Handcrafted Event Nyota
           </div>
 
-          <div style="font-size: 0.85rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 1.25rem;">
-            Together With Their Families
+          <!-- Feature Grid Included in 1001 Shagun -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; text-align: left; margin: 2rem 0 2.5rem;">
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Personalized Custom Link</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">e.g. nyota.pages.dev/your-event</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Cinematic Grand Opening</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Royal curtains or 3D wax-seal envelope</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Sacred Celebration Music</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Your chosen song with smooth audio controls</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Interactive Guest Surprise</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Scratch-to-reveal heart card with live confetti</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Google Maps & Calendar</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">One-tap directions & 1-click calendar save</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Fast Delivery via WhatsApp</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Delivered ready to share with friends & family</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing CTA -->
+          <div style="border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 2rem;">
+            <p style="color: #CBD5E1; font-size: 0.95rem; margin-bottom: 1.25rem;">
+              Ready to create your custom Nyota for <strong>1001 Shagun</strong>? Click below to message us directly.
+            </p>
+            <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+              <span>💬</span>
+              <span>Message</span>
+            </a>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Sacred Blessing -->
-      <div style="margin-top: 2.5rem;">
-        <div class="invitation-bismillah font-cormorant gold-gradient-text" style="font-size: 2.2rem; margin-bottom: 0.5rem;">
-          بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
-        </div>
-        <p class="font-cormorant text-muted" style="font-size: 1.1rem; font-style: italic; max-width: 580px; margin: 0 auto; color: #CBD5E1;">
-          “May Allah bless you, shower His blessings upon you, and unite you both in goodness and harmony.”
+    <!-- ========================================================================= -->
+    <!-- PORTFOLIO / CREATED NYOTAS SHOWCASE -->
+    <!-- ========================================================================= -->
+    <section id="showcase" class="showcase-section">
+      <div style="text-align: center; max-width: 780px; margin: 0 auto;">
+        <span class="badge badge-gold">Live Portfolio</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          Nyotas Created With Love
+        </h2>
+        <p class="text-secondary" style="font-size: 1.1rem; line-height: 1.6;">
+          Browse live examples of bespoke digital invitations we have created. Tap any invite below to experience it firsthand, and message us on WhatsApp to order yours!
         </p>
       </div>
 
-      <!-- Direct Share & Navigation Actions -->
-      <div class="calendar-actions-bar" style="margin-top: 3rem;">
-        <a href="https://maps.app.goo.gl/PHBF5UkAH935i5Fw9" target="_blank" rel="noopener" class="btn btn-primary-gold btn-sm">
-          <span>Venue: The Florence Resort (Google Maps) 📍</span>
-        </a>
-        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Royal+Reception:+Dr+Faizan+%26+Dr+Mushira&dates=20261225T133000Z/20261225T183000Z&location=THE+FLORENCE+RESORT,+Jaipur" target="_blank" rel="noopener" class="calendar-pill-btn">
-          <span>Reception: 25 Dec 2026 📅</span>
-        </a>
+      <div class="showcase-grid">
+
+        <!-- ================================================================= -->
+        <!-- SPOTLIGHT 1: Dr. Faizan weds Dr. Mushira (User's Wedding Nyota) -->
+        <!-- ================================================================= -->
+        <article class="nyota-card" id="nyota-faizan-weds-mushira">
+          <div class="nyota-card-media">
+            <img src="/images/muslim-royal-couple.jpg" alt="Dr. Faizan weds Dr. Mushira Royal Wedding Invitation" loading="lazy" />
+            <div class="nyota-card-badge">✨ Featured Creation</div>
+          </div>
+
+          <div class="nyota-card-body">
+            <div style="margin-bottom: 0.5rem;">
+              <span class="nyota-tag-pill">👑 Royal Muslim Wedding</span>
+              <span class="nyota-tag-pill">🎵 Alfaaz Vocals</span>
+              <span class="nyota-tag-pill">💖 Scratch Reveal</span>
+            </div>
+
+            <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.85rem; font-weight: 700; margin: 0.5rem 0 0.25rem; line-height: 1.2;">
+              Dr. Faizan weds Dr. Mushira
+            </h3>
+
+            <p style="font-size: 0.85rem; color: #F5D38B; font-weight: 500; margin-bottom: 0.75rem;">
+              nyota.pages.dev/faizan-weds-mushira
+            </p>
+
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1;">
+              An animated royal wedding celebration featuring sacred Nikah at Masjid al-Haram (Mecca), Grand Reception at The Florence Resort, parent honors, heart scratch-to-reveal card, and Alfaaz celebration vocals.
+            </p>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <a href="/faizan-weds-mushira" target="_blank" rel="noopener" class="btn btn-primary-gold" style="flex: 1; min-width: 150px; text-decoration: none;">
+                <span>Open Live Nyota ↗</span>
+              </a>
+
+              <a href="https://wa.me/918302929248?text=Hey!%20I%20loved%20the%20Dr.%20Faizan%20weds%20Dr.%20Mushira%20Nyota.%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message" style="flex: 1; min-width: 150px;">
+                <span>💬</span>
+                <span>Get This Style</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ================================================================= -->
+        <!-- Extensible Slot for Next Client Nyota -->
+        <!-- ================================================================= -->
+        <article class="nyota-card" style="border-style: dashed; border-color: rgba(212, 175, 55, 0.4); background: rgba(14, 11, 24, 0.5); justify-content: center; align-items: center; text-align: center; padding: 3rem 2rem; min-height: 480px;">
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.4); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem;">
+            ✨
+          </div>
+
+          <h3 class="font-cormorant gold-gradient-text" style="font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem;">
+            Your Event Nyota Here
+          </h3>
+
+          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; max-width: 320px; margin-bottom: 2rem;">
+            Have an upcoming wedding, reception, engagement, or gala? Let's design your bespoke digital invitation for just <strong>1001 Shagun</strong>.
+          </p>
+
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- HOW IT WORKS SECTION -->
+    <!-- ========================================================================= -->
+    <section id="how-it-works" style="position: relative; z-index: 1; padding: 4.5rem 1.5rem; background: rgba(12, 9, 20, 0.6);">
+      <div style="max-width: 1040px; margin: 0 auto; text-align: center;">
+        <span class="badge badge-gold">Fast & Seamless</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          How To Get Your Nyota
+        </h2>
+        <p class="text-secondary" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 3.5rem;">
+          Getting a bespoke royal invitation is effortless. From concept to live link in 3 steps:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; text-align: left;">
+          
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              01
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              Message on WhatsApp
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              Tap <strong>Message</strong> and share your wedding/event names, dates, venue locations, and music choice with +918302929248.
+            </p>
+          </div>
+
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              02
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              We Handcraft Your Nyota
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              We tailor your invitation with royal animations, custom sound, interactive scratch-to-reveal cards, and high-res photos.
+            </p>
+          </div>
+
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              03
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              Share Your Live Link
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              Receive your dedicated link (e.g. <code>nyota.pages.dev/your-event</code>) and broadcast directly to family and WhatsApp groups!
+            </p>
+          </div>
+
+        </div>
+
+        <div style="margin-top: 3.5rem;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- FINAL CTA CONTACT BANNER -->
+    <!-- ========================================================================= -->
+    <section style="position: relative; z-index: 1; padding: 5rem 1.5rem; text-align: center;">
+      <div class="glass-panel" style="max-width: 820px; margin: 0 auto; padding: 3.5rem 2rem; border-color: rgba(212, 175, 55, 0.45); background: radial-gradient(circle at 50% 50%, rgba(35, 25, 50, 0.9) 0%, rgba(12, 8, 20, 0.95) 100%);">
+        <span style="font-size: 2.5rem; display: inline-block; margin-bottom: 0.75rem;">👑</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.2rem, 5.5vw, 3.2rem); font-weight: 700; margin-bottom: 1rem;">
+          Make Your Event Truly Unforgettable
+        </h2>
+        <p class="text-secondary" style="font-size: 1.15rem; max-width: 620px; margin: 0 auto 2rem; line-height: 1.7;">
+          Your invitations should be as special as your celebration. Message us on WhatsApp to order your custom Nyota for <strong>1001 Shagun</strong>.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+        </div>
+
+        <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #94A3B8;">
+          WhatsApp Number: <strong style="color: #F5D38B;">+91 83029 29248</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Sticky WhatsApp Button (Global) -->
+  <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="floating-home-whatsapp" title="Message on WhatsApp">
+    <span style="font-size: 1.35rem;">💬</span>
+    <span>Message</span>
+  </a>
+
+  <!-- Footer -->
+  <footer style="position: relative; z-index: 1; border-top: 1px solid rgba(212, 175, 55, 0.2); padding: 3rem 1.5rem; text-align: center; background: #040207;">
+    <div style="max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.25rem;">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.4rem;">👑</span>
+        <span class="font-cinzel gold-gradient-text" style="font-size: 1.4rem; font-weight: 700; letter-spacing: 0.15em;">NYOTA</span>
       </div>
 
-      <div style="margin-top: 3.5rem; font-size: 0.8rem; color: #64748B; letter-spacing: 0.15em; text-transform: uppercase;">
-        Crafted with Love for Dr. Faizan Salam & Dr. Mushira Shaikh • 2026
+      <p class="text-secondary" style="font-size: 0.95rem; max-width: 500px; line-height: 1.6;">
+        Bespoke Luxury Digital Invitations • Single-Page Animated Experiences
+      </p>
+
+      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; font-size: 0.85rem; color: #94A3B8;">
+        <a href="#showcase" style="color: #CBD5E1; text-decoration: none;">Created Nyotas</a>
+        <a href="#pricing" style="color: #CBD5E1; text-decoration: none;">1001 Shagun</a>
+        <a href="/faizan-weds-mushira" style="color: #F5D38B; text-decoration: none;">Dr. Faizan weds Dr. Mushira ↗</a>
+        <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" style="color: #25D366; text-decoration: none;">Message +918302929248</a>
       </div>
 
+      <div style="font-size: 0.8rem; color: #64748B; margin-top: 1rem;">
+        © 2026 Nyota (nyota.pages.dev) • Handcrafted With Love
+      </div>
     </div>
   </footer>
 
-  <!-- Toast Container -->
-  <div id="toast-container"></div>
+  <!-- Subtle Starlight Particles Background Script -->
+  <script>
+    (function initHomeParticles() {
+      const canvas = document.getElementById('home-starlight-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
 
-  <!-- Master ES Module Script -->
-  <script type="module" src="./js/wedding-app.js"></script>
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const count = Math.min(40, Math.floor(window.innerWidth / 30));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.7 + 0.2,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: (Math.random() - 0.5) * 0.3,
+          pulse: Math.random() * 0.02 + 0.008
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.alpha += Math.sin(Date.now() * p.pulse) * 0.008;
+
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+
+          const clampedAlpha = Math.max(0.1, Math.min(0.85, p.alpha));
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${clampedAlpha})`;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = 'rgba(255, 235, 160, 0.7)';
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+  </script>
 </body>
 </html>

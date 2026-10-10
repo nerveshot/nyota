@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp -r dist/audio dist/faizan-weds-mushira/audio",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -13,15 +13,7 @@ import { showToast, copyToClipboard } from './utils/helpers.js';
 // 1. ROUTING & URL SYNC (nyota.pages.dev/faizan-weds-mushira)
 // --------------------------------------------------------------------------
 function initRouting() {
-  const targetPath = '/faizan-weds-mushira';
-  // If user lands on root or without path, update URL in address bar smoothly
-  if (window.location.pathname === '/' || window.location.pathname === '') {
-    try {
-      window.history.replaceState(null, '', targetPath + window.location.search);
-    } catch (e) {
-      // In some sandbox environments history.replaceState may be restricted
-    }
-  }
+  // Routing sync: Keep URL clean
 }
 
 // --------------------------------------------------------------------------
@@ -240,7 +232,7 @@ function updateMusicUI(playing) {
   const vinylDisc = document.getElementById('music-vinyl-disc');
   const soundBars = document.getElementById('music-sound-bars');
   
-  if (musicText) musicText.textContent = playing ? 'Pause Music' : 'Alfaaz (Vocals Only) 🎵';
+  if (musicText) musicText.textContent = '🎵';
   if (vinylDisc) {
     if (playing) vinylDisc.classList.add('playing');
     else vinylDisc.classList.remove('playing');
@@ -263,11 +255,11 @@ function initMusicToggle() {
     } else if (musicEngine.isPlaying && musicEngine.isMuted) {
       musicEngine.toggleMute();
       updateMusicUI(true);
-      showToast('Playing Alfaaz (Vocals Only) 🎶');
+      showToast('Music playing 🎵');
     } else {
       musicEngine.startTrack('alfaazVocals');
       updateMusicUI(true);
-      showToast('Playing Alfaaz (Vocals Only) 🎶');
+      showToast('Music playing 🎵');
     }
   });
 }

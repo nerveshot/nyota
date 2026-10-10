@@ -3,367 +3,768 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nyota — Luxury Digital Invitations & Bespoke Event Experiences</title>
-  <meta name="description" content="Nyota crafts breathtaking, bespoke interactive event invitations. 3D unboxing, celebration music, interactive scratch-to-reveal, and live countdowns." />
+  <title>Nyota — Bespoke Luxury Digital Invitations & Interactive Experiences</title>
+  <meta name="description" content="Experience bespoke royal digital invitations with interactive scratch cards, 3D animated walkthroughs, ambient celebration music, and instant WhatsApp delivery for just 1001 Shagun." />
   
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nyota — Bespoke Luxury Digital Invitations" />
+  <meta property="og:description" content="Custom handcrafted digital wedding & event invitations with royal animations, interactive reveal cards, and venue maps for 1001 Shagun." />
+  <meta property="og:image" content="/images/muslim-royal-couple.jpg" />
+  <meta property="og:type" content="website" />
+
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 
-  <!-- Luxury Google Fonts -->
+  <!-- Royal Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&display=swap" rel="stylesheet" />
 
-  <!-- Stylesheet -->
+  <!-- Pure Vanilla CSS Stylesheets -->
 
   <style>
-    /* Homepage Specific Luxury Enhancements */
+    /* Custom Luxury Styles for Nyota Homepage */
     :root {
-      --emerald-darkest: #020C07;
-      --emerald-deep: #051A10;
-      --gold-primary: #D4AF37;
-      --gold-light: #F5D38B;
+      --home-gold-gradient: linear-gradient(135deg, #FFF0C8 0%, #D4AF37 45%, #F5D38B 70%, #9B7029 100%);
       --whatsapp-green: #25D366;
+      --whatsapp-green-hover: #20BA56;
     }
 
     body {
-      background-color: var(--emerald-darkest);
+      background-color: #06040A;
       color: #F8FAFC;
-      font-family: 'DM Sans', sans-serif;
-      margin: 0;
+      font-family: var(--font-sans);
       overflow-x: hidden;
+      position: relative;
     }
 
-    .home-navbar {
+    .home-starlight-canvas {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .home-mesh-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 15%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
+                  radial-gradient(circle at 15% 85%, rgba(244, 114, 182, 0.04) 0%, transparent 50%);
+      z-index: 0;
+    }
+
+    /* Fixed Navigation */
+    .home-navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
       z-index: 100;
-      padding: 1.25rem 2rem;
-      background: rgba(2, 12, 7, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(6, 4, 10, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .home-nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .brand-logo {
+    .home-brand-logo {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       text-decoration: none;
     }
 
-    .brand-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      background: linear-gradient(135deg, #FFF, #F5D38B, #D4AF37);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .home-logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2A1F0D, #140E05);
+      border: 1.5px solid #D4AF37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
-    .btn-whatsapp-dm {
+    .home-brand-text {
+      font-family: var(--font-cinzel);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .home-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .home-nav-link {
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .home-nav-link:hover {
+      color: #F5D38B;
+    }
+
+    /* WhatsApp Action Button */
+    .btn-whatsapp-message {
       display: inline-flex;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.75rem 1.6rem;
-      border-radius: 9999px;
+      justify-content: center;
+      gap: 0.6rem;
       background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
       color: #FFFFFF;
       font-weight: 600;
       font-size: 0.95rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 9999px;
       text-decoration: none;
-      box-shadow: 0 0 25px rgba(37, 211, 102, 0.45);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 18px rgba(37, 211, 102, 0.35);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .btn-whatsapp-dm:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.65);
+    .btn-whatsapp-message:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.55);
+      color: #FFFFFF;
     }
 
-    .hero-glow-sphere {
-      position: absolute;
-      top: 15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(800px, 90vw);
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.18) 0%, rgba(16, 185, 129, 0.12) 45%, transparent 75%);
-      filter: blur(70px);
-      pointer-events: none;
-      z-index: 0;
+    .btn-whatsapp-message-lg {
+      padding: 0.9rem 2.2rem;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 26px rgba(37, 211, 102, 0.45);
     }
 
-    .feature-card {
-      background: linear-gradient(145deg, rgba(8, 38, 26, 0.75) 0%, rgba(3, 16, 10, 0.85) 100%);
-      border: 1px solid rgba(212, 175, 55, 0.25);
+    /* Hero */
+    .hero-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .hero-headline {
+      font-family: var(--font-cormorant);
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      line-height: 1.1;
+      font-weight: 700;
+      margin: 1.25rem 0 1.5rem;
+      color: #FFFFFF;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+      color: #CBD5E1;
+      line-height: 1.7;
+      max-width: 760px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* Showcase Section */
+    .showcase-section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 2.25rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 640px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+      .home-nav-links {
+        display: none;
+      }
+    }
+
+    .nyota-card {
+      background: linear-gradient(145deg, rgba(22, 17, 36, 0.85) 0%, rgba(10, 7, 18, 0.95) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 20px;
-      padding: 2.25rem 1.75rem;
-      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-      text-align: left;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
     }
 
-    .feature-card:hover {
+    .nyota-card:hover {
       transform: translateY(-8px);
       border-color: rgba(212, 175, 55, 0.7);
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.25);
+      box-shadow: 0 22px 45px -10px rgba(212, 175, 55, 0.25);
     }
 
-    .feature-icon-box {
-      width: 58px;
-      height: 58px;
-      border-radius: 14px;
-      background: rgba(212, 175, 55, 0.15);
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .contact-glass-box {
-      background: linear-gradient(135deg, rgba(11, 46, 32, 0.85) 0%, rgba(4, 18, 12, 0.95) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.45);
-      border-radius: 28px;
-      padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(212, 175, 55, 0.25);
+    .nyota-card-media {
       position: relative;
+      height: 250px;
       overflow: hidden;
+      background: #0D0917;
+    }
+
+    .nyota-card-media img {
+      width: 100%;
+      height: 100%;
+      -o-object-fit: cover;
+         object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .nyota-card:hover .nyota-card-media img {
+      transform: scale(1.06);
+    }
+
+    .nyota-card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(6, 4, 10, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #F5D38B;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .nyota-card-body {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .nyota-tag-pill {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: #F5E5C9;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Pricing Card */
+    .pricing-hero-card {
+      background: linear-gradient(145deg, rgba(28, 20, 10, 0.9) 0%, rgba(14, 10, 5, 0.95) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 28px;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .pricing-shagun-tag {
+      font-family: var(--font-cormorant);
+      font-size: clamp(3.2rem, 8vw, 5rem);
+      font-weight: 700;
+      line-height: 1;
+      margin: 1rem 0;
+    }
+
+    /* Floating WhatsApp Pill (Sticky) */
+    .floating-home-whatsapp {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 999;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFF;
+      padding: 0.85rem 1.4rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.45);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .floating-home-whatsapp:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 35px rgba(37, 211, 102, 0.65);
+      color: #FFF;
     }
   </style>
-  <link rel="stylesheet" crossorigin href="/assets/wedding-royal-DkwAZMWw.css">
+  <link rel="stylesheet" crossorigin href="/assets/wedding-royal-sJAamG3G.css">
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <nav class="home-navbar">
-    <a href="/" class="brand-logo">
-      <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #F5D38B, #D4AF37, #062316); padding: 1.5px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(212,175,55,0.6);">
-        <div style="width: 100%; height: 100%; border-radius: 50%; background: #03120C; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
-          👑
-        </div>
-      </div>
-      <span class="brand-title">NYOTA</span>
-    </a>
+  <!-- Ambient Background Mesh & Starlight Canvas -->
+  <div class="home-mesh-bg"></div>
+  <canvas id="home-starlight-canvas" class="home-starlight-canvas"></canvas>
 
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <a href="/faizan-weds-mushira" class="btn btn-gold-outline btn-sm" style="display: none; @media(min-width: 640px){display: inline-flex;}">
-        <span>Live Wedding Demo 👑</span>
+  <!-- Sticky Navbar -->
+  <header class="home-navbar">
+    <div class="home-nav-container">
+      <a href="/" class="home-brand-logo">
+        <div class="home-logo-badge">👑</div>
+        <span class="home-brand-text gold-gradient-text">NYOTA</span>
       </a>
-      <a href="https://wa.me/918302929248?text=Hey!%20i%20want%20a%20customise%20Nyota%20for%20my%20event." target="_blank" rel="noopener" class="btn-whatsapp-dm">
-        <span>💬 WhatsApp DM</span>
-      </a>
-    </div>
-  </nav>
 
-  <!-- Ambient Glow -->
-  <div class="hero-glow-sphere"></div>
+      <nav>
+        <ul class="home-nav-links">
+          <li><a href="#showcase" class="home-nav-link">Created Nyotas</a></li>
+          <li><a href="#pricing" class="home-nav-link">Pricing (1001 Shagun)</a></li>
+          <li><a href="#features" class="home-nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="home-nav-link">How It Works</a></li>
+        </ul>
+      </nav>
 
-  <!-- Hero Section -->
-  <header style="padding-top: 8.5rem; padding-bottom: 5rem; position: relative; text-align: center;">
-    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10;">
-      
-      <div class="badge badge-gold" style="margin-bottom: 1.25rem; font-size: 0.85rem; letter-spacing: 0.25em; padding: 0.5rem 1.5rem;">
-        ✨ LUXURY DIGITAL & INTERACTIVE INVITATIONS ✨
-      </div>
-
-      <h1 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.8rem, 7vw, 4.8rem); font-weight: 700; line-height: 1.12; margin: 0.75rem 0 1.5rem; letter-spacing: 0.02em;">
-        Craft An Unforgettable Digital Invitation For Your Event
-      </h1>
-
-      <p style="font-size: clamp(1.05rem, 2.5vw, 1.35rem); color: #CBD5E1; max-width: 720px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300;">
-        Replace static paper cards with a breathtaking interactive digital experience. 3D wax-seal unboxing, ceremonial music, heart scratch cards, live countdowns, and instant directions.
-      </p>
-
-      <!-- Action Buttons -->
-      <div class="flex justify-center" style="gap: 1.25rem; flex-wrap: wrap;">
-        <a href="https://wa.me/918302929248?text=Hey!%20i%20want%20a%20customise%20Nyota%20for%20my%20event." target="_blank" rel="noopener" class="btn btn-primary-gold btn-lg" style="box-shadow: 0 0 30px rgba(212, 175, 55, 0.75);">
-          <span>Customise Your Nyota 💬</span>
-        </a>
-        <a href="/faizan-weds-mushira" class="btn btn-gold-outline btn-lg" style="background: rgba(3, 18, 12, 0.7);">
-          <span>Experience Royal Wedding Demo 👑</span>
+      <div>
+        <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message">
+          <span>💬</span>
+          <span>Message</span>
         </a>
       </div>
-
     </div>
   </header>
 
-  <!-- Live Showcase Card: Dr. Faizan & Dr. Mushira -->
-  <section style="padding: 2rem 1.5rem 5rem; position: relative;">
-    <div class="container" style="max-width: 860px; margin: 0 auto;">
-      
-      <div class="islamic-arch-frame" style="padding: 3rem 2rem; text-align: center; background: radial-gradient(circle at 50% 30%, #08291B 0%, #03120C 100%); border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(212,175,55,0.3);">
-        <div class="islamic-inner-arch"></div>
-        
-        <span class="badge badge-emerald" style="margin-bottom: 1rem;">🌟 LIVE SPOTLIGHT SAMPLE</span>
-        
-        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; margin: 0.5rem 0;">
-          Dr. Faizan Salam &amp; Dr. Mushira Shaikh
-        </h2>
-        
-        <p class="font-cormorant" style="font-size: clamp(1.1rem, 2.8vw, 1.35rem); font-style: italic; color: var(--gold-light); max-width: 600px; margin: 0 auto 1.75rem;">
-          Sacred Nikah at Masjid al-Haram, Mecca &amp; Grand Royal Reception at THE FLORENCE RESORT, Jaipur
-        </p>
+  <main>
+    <!-- ========================================================================= -->
+    <!-- HERO SECTION -->
+    <!-- ========================================================================= -->
+    <section class="hero-wrapper">
+      <div class="badge badge-gold" style="margin-bottom: 1.25rem; font-size: 0.85rem; letter-spacing: 0.2em; padding: 0.4rem 1.25rem;">
+        <span>✨</span>
+        <span>Bespoke Luxury Digital Invitations</span>
+        <span>✨</span>
+      </div>
 
-        <div class="flex justify-center" style="gap: 1rem; flex-wrap: wrap;">
-          <a href="/faizan-weds-mushira" class="btn btn-primary-gold btn-md" style="box-shadow: 0 0 25px rgba(212,175,55,0.6);">
-            <span>Open Royal Invitation (Walkthrough &amp; Music) ↗</span>
+      <h1 class="hero-headline">
+        Turn Your Celebrations Into A <br />
+        <span class="gold-gradient-text">Royal Digital Memory</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Say goodbye to ordinary PDFs and generic photo invites. Nyota crafts bespoke, animated, interactive luxury single-page invitation suites for weddings, receptions, and milestones — personalized with royal walkthroughs, custom music, interactive scratch cards, and venue directions.
+      </p>
+
+      <!-- Primary Intent Callout Box -->
+      <div class="glass-panel" style="max-width: 680px; margin: 0 auto 2.5rem; padding: 1.75rem 2rem; border-color: rgba(212, 175, 55, 0.45); background: rgba(24, 18, 36, 0.7);">
+        <p style="font-family: var(--font-cormorant); font-size: clamp(1.2rem, 3.2vw, 1.55rem); color: #F5E5C9; margin-bottom: 1.25rem; line-height: 1.4; font-style: italic;">
+          “If you want a Nyota customised for your event, contact us directly and let's bring your dream invitation to life.”
+        </p>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+          <a href="#showcase" class="btn btn-secondary btn-lg" style="border-radius: 9999px;">
+            <span>Explore Created Nyotas ↓</span>
           </a>
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- Features Grid -->
-  <section style="padding: 4rem 1.5rem 6rem; position: relative; background: linear-gradient(180deg, transparent 0%, rgba(4, 20, 13, 0.7) 100%);">
-    <div class="container" style="max-width: 1100px; margin: 0 auto; text-align: center;">
-      
-      <span class="badge badge-gold" style="margin-bottom: 0.75rem;">THE NYOTA SIGNATURE</span>
-      <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 700; margin-bottom: 3.5rem;">
-        Everything You Need To Enchant Your Cherished Guests
-      </h2>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-        
-        <!-- Feature 1 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">🏛️</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            Ceremonial 3D Unboxing
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            A multi-stage grand gateway with authentic wax seal cracking, parting velvet curtains, and celebratory gold confetti.
-          </p>
+      <!-- Quick Trust Indicators -->
+      <div style="display: flex; justify-content: center; gap: clamp(1.5rem, 5vw, 4rem); flex-wrap: wrap; margin-top: 2rem; color: #94A3B8; font-size: 0.9rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">👑</span> Royal Custom Themes
         </div>
-
-        <!-- Feature 2 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">🎵</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            Custom Celebration Music
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            Background soundtracks tailored to your event (Bollywood, Sufi vocals, royal orchestral, acoustic) with volume fades.
-          </p>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">🎵</span> Curated Background Music
         </div>
-
-        <!-- Feature 3 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">💖</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            Heart Scratch-To-Reveal
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            Guests rub away shimmering gold foil with their finger or mouse in an elegant heart shape to discover the date.
-          </p>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #D4AF37;">💖</span> Interactive Scratch Reveal
         </div>
-
-        <!-- Feature 4 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">⏳</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            Live Real-Time Countdown
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            Real-time second-by-second countdown clock creating anticipation until the auspicious moment arrives.
-          </p>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: #25D366;">⚡</span> WhatsApp Ready Delivery
         </div>
-
-        <!-- Feature 5 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">📍</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            Instant Maps &amp; Calendar
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            One-tap Google Maps GPS navigation to exact venue locations and seamless Google Calendar event saving.
-          </p>
-        </div>
-
-        <!-- Feature 6 -->
-        <div class="feature-card">
-          <div class="feature-icon-box">📱</div>
-          <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            WhatsApp &amp; Mobile Ready
-          </h3>
-          <p style="color: #CBD5E1; font-size: 0.95rem; line-height: 1.6;">
-            Flawless on iPhones, Androids, and tablets. Share instantly with your guests via a single personalized link.
-          </p>
-        </div>
-
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- CONTACT & CUSTOMISE INVITATION SECTION -->
-  <!-- ========================================================================= -->
-  <section id="customise-section" style="padding: 6rem 1.5rem; position: relative;">
-    <div class="container" style="max-width: 880px; margin: 0 auto; text-align: center;">
-      
-      <div class="contact-glass-box">
-        
-        <span class="badge badge-gold" style="margin-bottom: 1rem; font-size: 0.85rem; letter-spacing: 0.25em;">
-          CUSTOM ORDERS &amp; CONCIERGE
-        </span>
-
-        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 700; margin: 0.5rem 0 1rem; line-height: 1.15;">
-          Want A Customised Invitation For Your Event?
+    <!-- ========================================================================= -->
+    <!-- PRICING SECTION: 1001 SHAGUN -->
+    <!-- ========================================================================= -->
+    <section id="pricing" style="position: relative; z-index: 1; padding: 4.5rem 1.5rem; background: linear-gradient(180deg, transparent 0%, rgba(20, 14, 30, 0.7) 50%, transparent 100%);">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <span class="badge badge-gold">Transparent & Auspicious</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          Simple, Auspicious Pricing
         </h2>
-
-        <p style="font-size: clamp(1.05rem, 2.5vw, 1.25rem); color: #E2E8F0; line-height: 1.7; max-width: 680px; margin: 0 auto 2.5rem; font-weight: 300;">
-          Every Nyota invitation is exclusively handcrafted to reflect your cultural heritage, event itinerary, personal love story, and theme. Connect with us directly on WhatsApp to begin creating your bespoke Nyota!
+        <p class="text-secondary" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem;">
+          No confusing tiers, no hidden subscriptions. One fixed auspicious shagun amount for your entire handcrafted invitation suite.
         </p>
 
-        <!-- Direct WhatsApp DM Card -->
-        <div style="background: rgba(0, 0, 0, 0.45); border: 1.5px solid rgba(212, 175, 55, 0.35); border-radius: 20px; padding: 2.25rem 1.5rem; max-width: 580px; margin: 0 auto;">
+        <!-- Pricing Highlight Card -->
+        <div class="pricing-hero-card">
+          <div style="display: inline-block; padding: 0.4rem 1.25rem; background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 9999px; color: #F5D38B; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;">
+            👑 Complete Luxury Suite
+          </div>
+
+          <!-- Exact Pricing Text Requested -->
+          <div class="pricing-shagun-tag gold-gradient-text">
+            1001 Shagun
+          </div>
+
+          <div style="font-size: 1.15rem; color: #F5E5C9; font-family: var(--font-cormorant); font-style: italic; margin-bottom: 2rem;">
+            ₹1001 Only • Complete Handcrafted Event Nyota
+          </div>
+
+          <!-- Feature Grid Included in 1001 Shagun -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; text-align: left; margin: 2rem 0 2.5rem;">
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Personalized Custom Link</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">e.g. nyota.pages.dev/your-event</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Cinematic Grand Opening</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Royal curtains or 3D wax-seal envelope</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Sacred Celebration Music</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Your chosen song with smooth audio controls</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Interactive Guest Surprise</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Scratch-to-reveal heart card with live confetti</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Google Maps & Calendar</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">One-tap directions & 1-click calendar save</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: #D4AF37; font-size: 1.2rem;">✓</span>
+              <div>
+                <strong style="color: #FFF;">Fast Delivery via WhatsApp</strong>
+                <p style="font-size: 0.85rem; color: #94A3B8;">Delivered ready to share with friends & family</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing CTA -->
+          <div style="border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 2rem;">
+            <p style="color: #CBD5E1; font-size: 0.95rem; margin-bottom: 1.25rem;">
+              Ready to create your custom Nyota for <strong>1001 Shagun</strong>? Click below to message us directly.
+            </p>
+            <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+              <span>💬</span>
+              <span>Message</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PORTFOLIO / CREATED NYOTAS SHOWCASE -->
+    <!-- ========================================================================= -->
+    <section id="showcase" class="showcase-section">
+      <div style="text-align: center; max-width: 780px; margin: 0 auto;">
+        <span class="badge badge-gold">Live Portfolio</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          Nyotas Created With Love
+        </h2>
+        <p class="text-secondary" style="font-size: 1.1rem; line-height: 1.6;">
+          Browse live examples of bespoke digital invitations we have created. Tap any invite below to experience it firsthand, and message us on WhatsApp to order yours!
+        </p>
+      </div>
+
+      <div class="showcase-grid">
+
+        <!-- ================================================================= -->
+        <!-- SPOTLIGHT 1: Dr. Faizan weds Dr. Mushira (User's Wedding Nyota) -->
+        <!-- ================================================================= -->
+        <article class="nyota-card" id="nyota-faizan-weds-mushira">
+          <div class="nyota-card-media">
+            <img src="/images/muslim-royal-couple.jpg" alt="Dr. Faizan weds Dr. Mushira Royal Wedding Invitation" loading="lazy" />
+            <div class="nyota-card-badge">✨ Featured Creation</div>
+          </div>
+
+          <div class="nyota-card-body">
+            <div style="margin-bottom: 0.5rem;">
+              <span class="nyota-tag-pill">👑 Royal Muslim Wedding</span>
+              <span class="nyota-tag-pill">🎵 Alfaaz Vocals</span>
+              <span class="nyota-tag-pill">💖 Scratch Reveal</span>
+            </div>
+
+            <h3 class="font-cormorant gold-gradient-text" style="font-size: 1.85rem; font-weight: 700; margin: 0.5rem 0 0.25rem; line-height: 1.2;">
+              Dr. Faizan weds Dr. Mushira
+            </h3>
+
+            <p style="font-size: 0.85rem; color: #F5D38B; font-weight: 500; margin-bottom: 0.75rem;">
+              nyota.pages.dev/faizan-weds-mushira
+            </p>
+
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1;">
+              An animated royal wedding celebration featuring sacred Nikah at Masjid al-Haram (Mecca), Grand Reception at The Florence Resort, parent honors, heart scratch-to-reveal card, and Alfaaz celebration vocals.
+            </p>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <a href="/faizan-weds-mushira" target="_blank" rel="noopener" class="btn btn-primary-gold" style="flex: 1; min-width: 150px; text-decoration: none;">
+                <span>Open Live Nyota ↗</span>
+              </a>
+
+              <a href="https://wa.me/918302929248?text=Hey!%20I%20loved%20the%20Dr.%20Faizan%20weds%20Dr.%20Mushira%20Nyota.%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message" style="flex: 1; min-width: 150px;">
+                <span>💬</span>
+                <span>Get This Style</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ================================================================= -->
+        <!-- Extensible Slot for Next Client Nyota -->
+        <!-- ================================================================= -->
+        <article class="nyota-card" style="border-style: dashed; border-color: rgba(212, 175, 55, 0.4); background: rgba(14, 11, 24, 0.5); justify-content: center; align-items: center; text-align: center; padding: 3rem 2rem; min-height: 480px;">
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.4); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem;">
+            ✨
+          </div>
+
+          <h3 class="font-cormorant gold-gradient-text" style="font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem;">
+            Your Event Nyota Here
+          </h3>
+
+          <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6; max-width: 320px; margin-bottom: 2rem;">
+            Have an upcoming wedding, reception, engagement, or gala? Let's design your bespoke digital invitation for just <strong>1001 Shagun</strong>.
+          </p>
+
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- HOW IT WORKS SECTION -->
+    <!-- ========================================================================= -->
+    <section id="how-it-works" style="position: relative; z-index: 1; padding: 4.5rem 1.5rem; background: rgba(12, 9, 20, 0.6);">
+      <div style="max-width: 1040px; margin: 0 auto; text-align: center;">
+        <span class="badge badge-gold">Fast & Seamless</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.3rem, 6vw, 3.5rem); margin: 0.75rem 0 0.5rem; font-weight: 700;">
+          How To Get Your Nyota
+        </h2>
+        <p class="text-secondary" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto 3.5rem;">
+          Getting a bespoke royal invitation is effortless. From concept to live link in 3 steps:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; text-align: left;">
           
-          <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
-            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #25D366; box-shadow: 0 0 10px #25D366;"></span>
-            <span style="font-size: 0.85rem; color: #34D399; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;">Direct WhatsApp DM Available</span>
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              01
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              Message on WhatsApp
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              Tap <strong>Message</strong> and share your wedding/event names, dates, venue locations, and music choice with +918302929248.
+            </p>
           </div>
 
-          <div style="font-family: var(--font-cormorant); font-size: 1.75rem; color: #FFF; font-weight: 700; margin-bottom: 0.5rem;">
-            +91 83029 29248
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              02
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              We Handcraft Your Nyota
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              We tailor your invitation with royal animations, custom sound, interactive scratch-to-reveal cards, and high-res photos.
+            </p>
           </div>
 
-          <div style="font-size: 0.95rem; color: var(--gold-light); font-style: italic; margin-bottom: 1.75rem; background: rgba(212,175,55,0.1); padding: 0.75rem 1rem; border-radius: 10px; border: 1px dashed rgba(212,175,55,0.3);">
-            Prewritten message: <strong style="color: #FFF;">“Hey! i want a customise Nyota for my event.”</strong>
+          <div class="glass-panel" style="padding: 2.25rem; border-color: rgba(212, 175, 55, 0.25);">
+            <div style="font-family: var(--font-cinzel); font-size: 1.8rem; color: #D4AF37; font-weight: 700; margin-bottom: 0.75rem;">
+              03
+            </div>
+            <h4 class="font-cormorant" style="font-size: 1.45rem; color: #FFF; margin-bottom: 0.5rem; font-weight: 600;">
+              Share Your Live Link
+            </h4>
+            <p class="text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+              Receive your dedicated link (e.g. <code>nyota.pages.dev/your-event</code>) and broadcast directly to family and WhatsApp groups!
+            </p>
           </div>
 
-          <a href="https://wa.me/918302929248?text=Hey!%20i%20want%20a%20customise%20Nyota%20for%20my%20event." target="_blank" rel="noopener" class="btn-whatsapp-dm" style="font-size: 1.15rem; padding: 1rem 2.25rem; width: 100%; max-width: 380px; justify-content: center; margin: 0 auto;">
-            <span>💬 Send WhatsApp DM</span>
+        </div>
+
+        <div style="margin-top: 3.5rem;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
           </a>
-
         </div>
-
-        <div style="margin-top: 2rem; font-size: 0.85rem; color: #94A3B8;">
-          Weddings • Holy Nikahs • Grand Receptions • Birthdays • Corporate Galas
-        </div>
-
       </div>
+    </section>
 
-    </div>
-  </section>
+    <!-- ========================================================================= -->
+    <!-- FINAL CTA CONTACT BANNER -->
+    <!-- ========================================================================= -->
+    <section style="position: relative; z-index: 1; padding: 5rem 1.5rem; text-align: center;">
+      <div class="glass-panel" style="max-width: 820px; margin: 0 auto; padding: 3.5rem 2rem; border-color: rgba(212, 175, 55, 0.45); background: radial-gradient(circle at 50% 50%, rgba(35, 25, 50, 0.9) 0%, rgba(12, 8, 20, 0.95) 100%);">
+        <span style="font-size: 2.5rem; display: inline-block; margin-bottom: 0.75rem;">👑</span>
+        <h2 class="font-cormorant gold-gradient-text" style="font-size: clamp(2.2rem, 5.5vw, 3.2rem); font-weight: 700; margin-bottom: 1rem;">
+          Make Your Event Truly Unforgettable
+        </h2>
+        <p class="text-secondary" style="font-size: 1.15rem; max-width: 620px; margin: 0 auto 2rem; line-height: 1.7;">
+          Your invitations should be as special as your celebration. Message us on WhatsApp to order your custom Nyota for <strong>1001 Shagun</strong>.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="btn-whatsapp-message btn-whatsapp-message-lg">
+            <span>💬</span>
+            <span>Message</span>
+          </a>
+        </div>
+
+        <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #94A3B8;">
+          WhatsApp Number: <strong style="color: #F5D38B;">+91 83029 29248</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Sticky WhatsApp Button (Global) -->
+  <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" class="floating-home-whatsapp" title="Message on WhatsApp">
+    <span style="font-size: 1.35rem;">💬</span>
+    <span>Message</span>
+  </a>
 
   <!-- Footer -->
-  <footer style="padding: 3rem 1.5rem; border-top: 1px solid rgba(212, 175, 55, 0.15); text-align: center; background: #020805;">
-    <div class="container">
-      <div class="brand-title" style="font-size: 1.3rem; margin-bottom: 0.5rem;">NYOTA</div>
-      <p style="font-size: 0.85rem; color: #64748B; margin: 0;">
-        Crafted with Luxury &amp; Excellence • <a href="https://wa.me/918302929248?text=Hey!%20i%20want%20a%20customise%20Nyota%20for%20my%20event." style="color: var(--gold-light); text-decoration: none;">Contact Us on WhatsApp</a>
+  <footer style="position: relative; z-index: 1; border-top: 1px solid rgba(212, 175, 55, 0.2); padding: 3rem 1.5rem; text-align: center; background: #040207;">
+    <div style="max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.25rem;">
+      <div style="display: flex; align-items: center; gap: 0.6rem;">
+        <span style="font-size: 1.4rem;">👑</span>
+        <span class="font-cinzel gold-gradient-text" style="font-size: 1.4rem; font-weight: 700; letter-spacing: 0.15em;">NYOTA</span>
+      </div>
+
+      <p class="text-secondary" style="font-size: 0.95rem; max-width: 500px; line-height: 1.6;">
+        Bespoke Luxury Digital Invitations • Single-Page Animated Experiences
       </p>
+
+      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; font-size: 0.85rem; color: #94A3B8;">
+        <a href="#showcase" style="color: #CBD5E1; text-decoration: none;">Created Nyotas</a>
+        <a href="#pricing" style="color: #CBD5E1; text-decoration: none;">1001 Shagun</a>
+        <a href="/faizan-weds-mushira" style="color: #F5D38B; text-decoration: none;">Dr. Faizan weds Dr. Mushira ↗</a>
+        <a href="https://wa.me/918302929248?text=Hey!%20I%20need%20a%20Nyota%20for%20my%20Event." target="_blank" rel="noopener noreferrer" style="color: #25D366; text-decoration: none;">Message +918302929248</a>
+      </div>
+
+      <div style="font-size: 0.8rem; color: #64748B; margin-top: 1rem;">
+        © 2026 Nyota (nyota.pages.dev) • Handcrafted With Love
+      </div>
     </div>
   </footer>
 
+  <!-- Subtle Starlight Particles Background Script -->
+  <script>
+    (function initHomeParticles() {
+      const canvas = document.getElementById('home-starlight-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const count = Math.min(40, Math.floor(window.innerWidth / 30));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.7 + 0.2,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: (Math.random() - 0.5) * 0.3,
+          pulse: Math.random() * 0.02 + 0.008
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.alpha += Math.sin(Date.now() * p.pulse) * 0.008;
+
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+
+          const clampedAlpha = Math.max(0.1, Math.min(0.85, p.alpha));
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${clampedAlpha})`;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = 'rgba(255, 235, 160, 0.7)';
+          ctx.fill();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+  </script>
 </body>
 </html>

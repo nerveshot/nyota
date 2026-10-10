@@ -1,12 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Absolute paths for clean SPA routing on Cloudflare Pages and custom routes
+  base: '/', // Absolute paths for clean routing on Cloudflare Pages
   build: {
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        wedding: resolve(__dirname, 'faizan-weds-mushira/index.html'),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
