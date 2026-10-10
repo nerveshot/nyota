@@ -206,7 +206,7 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
 
             <!-- Grand Open Button -->
             <button id="open-royal-curtains-btn" class="btn btn-primary-gold btn-block btn-lg" style="font-size: 1.05rem; box-shadow: 0 0 30px rgba(212, 175, 55, 0.7); cursor: pointer;">
-              <span>Open Royal Invitation</span>
+              <span>Open Invitation</span>
               <span>✨</span>
             </button>
 
