@@ -425,25 +425,19 @@ export default function PremiumWebpageInvitation({
             <div className="absolute top-0 bottom-0 right-0 w-2 gold-fringe-pattern shadow-[0_0_12px_#D4AF37]" />
             <div className="absolute top-0 bottom-0 right-2 w-[1px] bg-amber-400/70" />
 
-            {/* Left Curtain Cartoon Bride Pulling Golden Rope (Transparent Cutout) */}
-            <div className="absolute top-[38%] -translate-y-1/2 right-1 sm:right-3 flex flex-col items-center z-30 pointer-events-none select-none">
-              {/* Golden Rope Cord leading from top valance */}
-              <div className="w-1.5 h-16 sm:h-24 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 shadow-glow-gold rounded-full mb-[-6px]" />
-              
+            {/* Left Curtain Cartoon Bride Pulling Curtain (Appears only on enter, positioned in between) */}
+            <div className={`absolute top-1/2 -translate-y-1/2 right-[-5px] sm:right-2 flex flex-col items-center z-50 pointer-events-none select-none transition-opacity duration-300 ${
+              isEntering ? 'opacity-100' : 'opacity-0'
+            }`}>
               {/* Free-standing Cutout Bride Character */}
               <div className={`relative w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-transform duration-[4200ms] ${
-                isEntering ? 'animate-tug-left scale-110' : 'hover:scale-105'
+                isEntering ? 'animate-tug-left scale-110' : ''
               }`}>
                 <img
                   src="/images/cartoon-bride-pulling.png"
                   alt="Royal Bride Pulling Curtain"
                   className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)]"
                 />
-              </div>
-
-              {/* Golden Braided Tassel at Bottom of Rope */}
-              <div className="w-3.5 h-10 sm:w-5 sm:h-14 rounded-b-full bg-gradient-to-b from-amber-400 via-amber-500 to-amber-700 shadow-glow-gold mt-[-6px] border-t border-amber-200 flex items-center justify-center">
-                <Sparkles className="w-2.5 h-2.5 text-slate-950 animate-pulse" />
               </div>
             </div>
           </div>
@@ -461,25 +455,19 @@ export default function PremiumWebpageInvitation({
             <div className="absolute top-0 bottom-0 left-0 w-2 gold-fringe-pattern shadow-[0_0_12px_#D4AF37]" />
             <div className="absolute top-0 bottom-0 left-2 w-[1px] bg-amber-400/70" />
 
-            {/* Right Curtain Cartoon Groom Pulling Golden Rope (Transparent Cutout) */}
-            <div className="absolute top-[38%] -translate-y-1/2 left-1 sm:left-3 flex flex-col items-center z-30 pointer-events-none select-none">
-              {/* Golden Rope Cord leading from top valance */}
-              <div className="w-1.5 h-16 sm:h-24 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 shadow-glow-gold rounded-full mb-[-6px]" />
-              
+            {/* Right Curtain Cartoon Groom Pulling Curtain (Appears only on enter, positioned in between) */}
+            <div className={`absolute top-1/2 -translate-y-1/2 left-[-5px] sm:left-2 flex flex-col items-center z-50 pointer-events-none select-none transition-opacity duration-300 ${
+              isEntering ? 'opacity-100' : 'opacity-0'
+            }`}>
               {/* Free-standing Cutout Groom Character */}
               <div className={`relative w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-transform duration-[4200ms] ${
-                isEntering ? 'animate-tug-right scale-110' : 'hover:scale-105'
+                isEntering ? 'animate-tug-right scale-110' : ''
               }`}>
                 <img
                   src="/images/cartoon-groom-pulling.png"
                   alt="Royal Groom Pulling Curtain"
                   className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)]"
                 />
-              </div>
-
-              {/* Golden Braided Tassel at Bottom of Rope */}
-              <div className="w-3.5 h-10 sm:w-5 sm:h-14 rounded-b-full bg-gradient-to-b from-amber-400 via-amber-500 to-amber-700 shadow-glow-gold mt-[-6px] border-t border-amber-200 flex items-center justify-center">
-                <Sparkles className="w-2.5 h-2.5 text-slate-950 animate-pulse" />
               </div>
             </div>
           </div>

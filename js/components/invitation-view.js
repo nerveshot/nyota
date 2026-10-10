@@ -136,13 +136,11 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
           <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
           <div class="gold-fringe-pattern" style="position: absolute; top: 0; bottom: 0; right: 0; width: 8px; box-shadow: 0 0 15px rgba(212,175,55,0.8);"></div>
 
-          <!-- Cartoon Bride Pulling Golden Braided Rope -->
-          <div style="position: absolute; top: 40%; right: 12px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 35; pointer-events: none;">
-            <div style="width: 5px; height: 80px; background: linear-gradient(180deg, #F5D38B, #B88B42); box-shadow: var(--shadow-gold); border-radius: 999px;"></div>
-            <div id="bride-puller" style="width: 140px; height: 140px; transition: transform 0.4s ease;">
-              <img src="/images/cartoon-bride-pulling.png" alt="Bride Pulling Curtain" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));" />
+          <!-- Cartoon Bride Pulling Curtain -->
+          <div class="curtain-puller-container curtain-puller-bride">
+            <div id="bride-puller" class="curtain-puller-char">
+              <img src="/images/cartoon-bride-pulling.png" alt="Bride Pulling Curtain" />
             </div>
-            <div style="width: 16px; height: 36px; border-radius: 0 0 8px 8px; background: linear-gradient(180deg, #D4AF37, #8F662C); box-shadow: var(--shadow-gold);"></div>
           </div>
         </div>
 
@@ -150,13 +148,11 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
           <div class="gold-damask-overlay" style="position: absolute; inset: 0;"></div>
           <div class="gold-fringe-pattern" style="position: absolute; top: 0; bottom: 0; left: 0; width: 8px; box-shadow: 0 0 15px rgba(212,175,55,0.8);"></div>
 
-          <!-- Cartoon Groom Pulling Golden Braided Rope -->
-          <div style="position: absolute; top: 40%; left: 12px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; z-index: 35; pointer-events: none;">
-            <div style="width: 5px; height: 80px; background: linear-gradient(180deg, #F5D38B, #B88B42); box-shadow: var(--shadow-gold); border-radius: 999px;"></div>
-            <div id="groom-puller" style="width: 140px; height: 140px; transition: transform 0.4s ease;">
-              <img src="/images/cartoon-groom-pulling.png" alt="Groom Pulling Curtain" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));" />
+          <!-- Cartoon Groom Pulling Curtain -->
+          <div class="curtain-puller-container curtain-puller-groom">
+            <div id="groom-puller" class="curtain-puller-char">
+              <img src="/images/cartoon-groom-pulling.png" alt="Groom Pulling Curtain" />
             </div>
-            <div style="width: 16px; height: 36px; border-radius: 0 0 8px 8px; background: linear-gradient(180deg, #D4AF37, #8F662C); box-shadow: var(--shadow-gold);"></div>
           </div>
         </div>
 
@@ -641,29 +637,36 @@ export function renderInvitationWebpage(containerId, invitationData = {}, option
 
       // Stage 1 Entrance: Outer Crimson curtains open, camera enters Crystal Chandelier Hallway
       curtainGateway.classList.add('entering');
+      curtainGateway.style.pointerEvents = 'none'; // Critical: allow immediate touch scrolling on iPhone/mobile
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
 
-      // Stage 2 Entrance (at 2s): Second Sapphire Silk curtains unfold & tie-back swoosh, revealing the Main Wedding Arena
+      // Stage 2 Entrance (at 1.2s): Second Sapphire Silk curtains unfold & tie-back swoosh, revealing the Main Wedding Arena
       setTimeout(() => {
         curtainGateway.classList.add('stage-2-active');
-      }, 1900);
+      }, 1200);
 
-      // Stage 3 Bismillah Rising (at 3.2s):
+      // Stage 3 Bismillah Rising (at 2s):
       if (risingBismillah) {
         risingBismillah.classList.remove('hidden');
         setTimeout(() => {
           risingBismillah.classList.add('rising');
-        }, 3200);
+        }, 2000);
       }
 
-      // Final Transition (at 5.8s): Smooth fade-out to reveal the full webpage invitation suite
+      // Final Transition (at 3.2s): Smooth fade-out to reveal the full webpage invitation suite
       setTimeout(() => {
         curtainGateway.classList.add('faded-out');
         setTimeout(() => {
-          curtainGateway.remove();
-          const heroEl = document.getElementById('invitation-hero');
-          if (heroEl) heroEl.scrollIntoView({ behavior: 'smooth' });
-        }, 1500);
-      }, 5800);
+          if (curtainGateway.parentNode) {
+            curtainGateway.remove();
+          }
+          if (window.scrollY < 80) {
+            const heroEl = document.getElementById('invitation-hero');
+            if (heroEl) heroEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 1000);
+      }, 3200);
     });
   }
 

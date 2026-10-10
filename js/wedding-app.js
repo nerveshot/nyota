@@ -194,30 +194,38 @@ function initRoyalOpeningWalkthrough() {
 
     // Stage 1 Entrance: Outer Crimson velvet curtains open, walk into Crystal Chandelier Hallway
     curtainGateway.classList.add('entering');
+    curtainGateway.style.pointerEvents = 'none'; // Critical: allow immediate touch scrolling on iPhone/mobile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
 
     // Stage 2 Entrance: Inner Sapphire Silk curtains tie-back swoosh, revealing Main Arena
     setTimeout(() => {
       curtainGateway.classList.add('stage-2-active');
-    }, 1900);
+    }, 1200);
 
     // Stage 3 Bismillah Rising:
     if (risingBismillah) {
       risingBismillah.classList.remove('hidden');
       setTimeout(() => {
         risingBismillah.classList.add('rising');
-      }, 3200);
+      }, 2000);
     }
 
     // Final Transition: Smooth fade-out to reveal the full webpage invitation suite
     setTimeout(() => {
       curtainGateway.classList.add('faded-out');
       setTimeout(() => {
-        curtainGateway.remove();
+        if (curtainGateway.parentNode) {
+          curtainGateway.remove();
+        }
         window.dispatchEvent(new Event('resize'));
-        const heroEl = document.getElementById('invitation-hero');
-        if (heroEl) heroEl.scrollIntoView({ behavior: 'smooth' });
-      }, 1400);
-    }, 5600);
+        // Only scroll to hero if guest has not already begun scrolling down
+        if (window.scrollY < 80) {
+          const heroEl = document.getElementById('invitation-hero');
+          if (heroEl) heroEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 1000);
+    }, 3200);
   });
 }
 

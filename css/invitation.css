@@ -197,15 +197,26 @@
 .webpage-hero {
   position: relative;
   min-height: 96vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6rem 1.5rem;
+  padding: 5rem 1.5rem;
   text-align: center;
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-position: center 25%;
+  background-repeat: no-repeat;
+  background-attachment: scroll; /* iOS Safari fix: 'fixed' scales to document height on iOS causing extreme zoom */
+}
+
+@media (min-width: 1025px) {
+  .webpage-hero {
+    background-attachment: fixed;
+    background-position: center center;
+    padding: 6rem 1.5rem;
+  }
 }
 
 .webpage-hero::before {
