@@ -4,7 +4,21 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'rewrite-faizan-weds-mushira',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const [pathname, search] = req.url.split('?');
+          if (pathname === '/faizan-weds-mushira' || pathname === '/faizan-weds-mushira/') {
+            req.url = '/faizan-weds-mushira/index.html' + (search ? '?' + search : '');
+          }
+          next();
+        });
+      },
+    },
+  ],
   base: '/', // Absolute paths for clean routing on Cloudflare Pages
   build: {
     rollupOptions: {

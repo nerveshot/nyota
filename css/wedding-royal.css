@@ -221,8 +221,8 @@ body, p, span, div, input, button, label,
 /* Romantic Heart Shape Scratch Card (100% Pure Heart Geometry - Zero Square Glow) */
 .heart-scratch-container {
   position: relative;
-  width: min(440px, 92vw);
-  height: min(410px, 86vw);
+  width: min(440px, 90vw);
+  height: min(410px, 84vw);
   margin: 2.5rem auto 0;
   display: flex;
   align-items: center;
@@ -230,7 +230,31 @@ body, p, span, div, input, button, label,
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
-  filter: none !important; /* Eliminates rectangular container drop-shadow */
+}
+
+.heart-ambient-light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(490px, 96vw);
+  height: min(450px, 90vw);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.28) 0%, rgba(245, 211, 139, 0.14) 35%, rgba(16, 185, 129, 0.08) 55%, transparent 72%);
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heart-glow-silhouette {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.75)) drop-shadow(0 0 32px rgba(212, 175, 55, 0.4));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .scratch-card-wrapper.heart-shape {
@@ -649,4 +673,54 @@ body, p, span, div, input, button, label,
 
 .gap-4 {
   gap: 1.75rem;
+}
+
+/* Mobile Responsiveness for Curtain Opening Card */
+#curtain-center-card {
+  width: min(440px, 92vw) !important;
+  max-width: 92vw !important;
+  box-sizing: border-box !important;
+  margin: 0 auto !important;
+}
+
+#curtain-center-card .invitation-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 480px) {
+  .royal-entrance-stage {
+    padding: 0.5rem !important;
+  }
+
+  #curtain-center-card {
+    padding: 0.25rem !important;
+    width: 94vw !important;
+    max-width: 94vw !important;
+  }
+
+  #curtain-center-card .invitation-card {
+    padding: 1.65rem 0.85rem !important;
+    border-radius: 75px 75px var(--radius-lg) var(--radius-lg) !important;
+  }
+
+  #curtain-center-card .invitation-arch-border {
+    border-radius: 68px 68px calc(var(--radius-lg) - 6px) calc(var(--radius-lg) - 6px) !important;
+  }
+
+  #curtain-center-card .names-stacked-wrapper span.gold-gradient-text {
+    font-size: 1.25rem !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  #curtain-center-card .invitation-bismillah {
+    font-size: 1.55rem !important;
+  }
+
+  .heart-scratch-container {
+    width: min(340px, 88vw) !important;
+    height: min(315px, 82vw) !important;
+  }
 }
