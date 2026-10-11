@@ -631,7 +631,7 @@ body, p, span, div, input, button, label,
   }
   
   .royal-section {
-    padding: 4.5rem 1.2rem;
+    padding: 4.5rem 1.2rem 6.5rem !important;
   }
   
   .event-card {
@@ -647,6 +647,37 @@ body, p, span, div, input, button, label,
     height: 44px;
     top: 1rem;
     right: 1rem;
+  }
+
+  /* Unified compact mobile dock: keeps controls together on bottom-right */
+  .floating-actions-dock {
+    position: fixed;
+    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem));
+    right: 1.15rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: auto;
+  }
+
+  .floating-actions-dock .floating-audio-control {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .floating-actions-dock .floating-quick-dock {
+    position: static !important;
+    bottom: auto !important;
+    right: auto !important;
+  }
+
+  .floating-actions-dock .floating-pill-control {
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.75rem !important;
   }
 }
 

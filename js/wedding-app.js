@@ -424,6 +424,14 @@ function initScratchCard() {
       instEl.style.color = '#34D399';
     }
 
+    // Hide reveal button immediately upon unlock
+    const revealWrap = document.getElementById('instant-reveal-btn-wrap');
+    if (revealWrap) {
+      revealWrap.style.display = 'none';
+    } else if (revealBtn) {
+      revealBtn.style.display = 'none';
+    }
+
     showToast('Reception Date Revealed! 🎉', 'success');
   }
 
