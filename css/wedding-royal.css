@@ -630,12 +630,36 @@ body, p, span, div, input, button, label,
     padding: 1.25rem 1.25rem;
   }
   
+  .container {
+    padding: 0 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   .royal-section {
-    padding: 4.5rem 1.2rem 6.5rem !important;
+    padding: 4.5rem 1rem 6.5rem !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
   }
   
+  .events-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 2.5rem !important;
+  }
+
   .event-card {
-    padding: 2rem 1.5rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 1.75rem 1.15rem !important;
+    overflow: hidden !important;
   }
 
   .scratch-card-reveal-layer {
@@ -649,35 +673,89 @@ body, p, span, div, input, button, label,
     right: 1rem;
   }
 
-  /* Unified compact mobile dock: keeps controls together on bottom-right */
-  .floating-actions-dock {
-    position: fixed;
-    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem));
-    right: 1.15rem;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    pointer-events: auto;
-  }
-
-  .floating-actions-dock .floating-audio-control {
-    position: static !important;
-    bottom: auto !important;
-    left: auto !important;
-    padding: 0.45rem 0.85rem !important;
-    font-size: 0.75rem !important;
-  }
-
-  .floating-actions-dock .floating-quick-dock {
-    position: static !important;
-    bottom: auto !important;
+  /* Audio bar fixed on the left on mobile */
+  .floating-audio-control {
+    position: fixed !important;
+    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem)) !important;
+    left: 1.15rem !important;
     right: auto !important;
-  }
-
-  .floating-actions-dock .floating-pill-control {
     padding: 0.45rem 0.85rem !important;
     font-size: 0.75rem !important;
+    z-index: 999 !important;
+  }
+
+  /* Nyota quick link fixed on the right on mobile */
+  .floating-quick-dock {
+    position: fixed !important;
+    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem)) !important;
+    right: 1.15rem !important;
+    left: auto !important;
+    z-index: 999 !important;
+  }
+
+  .floating-pill-control {
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Responsive typography scaling */
+  .invitation-bismillah {
+    font-size: clamp(1.6rem, 5.2vw, 2.4rem) !important;
+  }
+  .names-stacked-wrapper h1 {
+    font-size: clamp(1.55rem, 5vw, 2.4rem) !important;
+  }
+  .countdown-number {
+    font-size: clamp(1.4rem, 4.5vw, 2rem) !important;
+  }
+  .countdown-label {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.12em !important;
+  }
+  .countdown-box {
+    padding: 0.85rem 0.5rem !important;
+  }
+  .event-card h3 {
+    font-size: clamp(1.35rem, 4.2vw, 1.75rem) !important;
+  }
+  .btn-lg {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.9rem !important;
+  }
+  .badge {
+    font-size: 0.72rem !important;
+    padding: 0.35rem 0.85rem !important;
+    letter-spacing: 0.14em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .invitation-bismillah {
+    font-size: 1.65rem !important;
+  }
+  .names-stacked-wrapper h1 {
+    font-size: 1.5rem !important;
+  }
+  .names-stacked-wrapper div {
+    font-size: 0.88rem !important;
+  }
+  .countdown-number {
+    font-size: 1.35rem !important;
+  }
+  .countdown-box {
+    padding: 0.7rem 0.35rem !important;
+  }
+  .countdown-label {
+    font-size: 0.6rem !important;
+    margin-top: 0.3rem !important;
+  }
+  .scratch-instruction-pill {
+    font-size: 0.78rem !important;
+    padding: 0.4rem 0.9rem !important;
+  }
+  .event-badge-pill {
+    font-size: 0.72rem !important;
+    padding: 0.3rem 0.75rem !important;
   }
 }
 
@@ -822,19 +900,19 @@ footer {
   font-size: clamp(0.9rem, 2.7vw, 1.05rem) !important;
 }
 
-/* Heart Scratch Card Fit */
+/* Heart Scratch Card Fit (Prevents right-edge crop with safe margins) */
 .heart-scratch-container {
-  width: min(340px, 86vw) !important;
-  height: min(315px, 80vw) !important;
-  max-width: 86vw !important;
+  width: min(330px, 82vw) !important;
+  height: min(305px, 76vw) !important;
+  max-width: 82vw !important;
   margin: 2rem auto 0 !important;
   box-sizing: border-box !important;
   overflow: visible !important;
 }
 
 .heart-ambient-light {
-  width: min(360px, 86vw) !important;
-  height: min(340px, 80vw) !important;
+  width: min(350px, 86vw) !important;
+  height: min(325px, 80vw) !important;
 }
 
 @media (max-width: 640px) {

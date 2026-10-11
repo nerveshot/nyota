@@ -1016,45 +1016,27 @@
     font-size: 1.2rem;
   }
   
+  /* Floating Audio Controller (Left) */
   .floating-audio-control {
-    bottom: 1.25rem;
-    left: 1.25rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-  }
-
-  .floating-quick-dock {
-    bottom: 1.25rem;
-    right: 1.25rem;
-  }
-
-  /* Unified compact mobile dock: keeps controls together on bottom-right */
-  .floating-actions-dock {
-    position: fixed;
-    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem));
-    right: 1.15rem;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    pointer-events: auto;
-  }
-
-  .floating-actions-dock .floating-audio-control {
-    position: static !important;
-    bottom: auto !important;
-    left: auto !important;
+    position: fixed !important;
+    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem)) !important;
+    left: 1.15rem !important;
+    right: auto !important;
     padding: 0.45rem 0.85rem !important;
     font-size: 0.75rem !important;
+    z-index: 999 !important;
   }
 
-  .floating-actions-dock .floating-quick-dock {
-    position: static !important;
-    bottom: auto !important;
-    right: auto !important;
+  /* Floating Nyota Quick Dock (Right) */
+  .floating-quick-dock {
+    position: fixed !important;
+    bottom: max(1.15rem, env(safe-area-inset-bottom, 1.15rem)) !important;
+    right: 1.15rem !important;
+    left: auto !important;
+    z-index: 999 !important;
   }
 
-  .floating-actions-dock .floating-pill-control {
+  .floating-pill-control {
     padding: 0.45rem 0.85rem !important;
     font-size: 0.75rem !important;
   }
